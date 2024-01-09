@@ -1,0 +1,12 @@
+file(GLOB_RECURSE HEADERS "*.h")
+file(GLOB_RECURSE SOURCES "*.cpp")
+set(ALL_FILES ${HEADERS} ${SOURCES})
+add_library(Engine STATIC ${ALL_FILES})
+target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_FILES})
+
+target_link_libraries(Engine PRIVATE glfw)
+target_link_libraries(Engine PRIVATE glm)
+target_link_libraries(Engine PRIVATE spdlog)
+target_link_libraries(Engine PRIVATE tinygltf)
+target_link_libraries(Engine PRIVATE VulkanMemoryAllocator)
