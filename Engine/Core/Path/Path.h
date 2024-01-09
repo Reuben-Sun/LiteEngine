@@ -2,7 +2,7 @@
 
 #include "Marco.h"
 
-namespace Engine
+namespace ToolEngine
 {
     class Path final
     {

@@ -1,6 +1,6 @@
 #include "Time.h"
 
-namespace Engine
+namespace ToolEngine
 {
     Time::Time()
     {

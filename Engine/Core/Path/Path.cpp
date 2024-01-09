@@ -1,6 +1,6 @@
 #include "Path.h"
 
-namespace Engine
+namespace ToolEngine
 {
     Path::Path()
     {

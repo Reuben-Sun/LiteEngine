@@ -3,7 +3,7 @@
 #include "Marco.h"
 #include "Event.h"
 
-namespace Engine
+namespace ToolEngine
 {
     class EventDispatcher
     {

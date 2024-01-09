@@ -5,7 +5,7 @@
 #include <memory>
 #include <spdlog/spdlog.h>
 
-namespace Engine
+namespace ToolEngine
 {
     enum class LogLevel : uint8_t
     {

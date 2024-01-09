@@ -3,7 +3,7 @@
 #include "Marco.h"
 #include "Core/Event/Event.h"
 
-namespace Engine
+namespace ToolEngine
 {
     struct WindowProps
     {

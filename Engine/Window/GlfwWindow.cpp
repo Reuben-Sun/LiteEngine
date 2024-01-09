@@ -5,7 +5,7 @@
 #include "Core/Event/KeyEvent.h"
 #include "Core/Event/MouseEvent.h"
 
-namespace Engine
+namespace ToolEngine
 {
 	static void onErrorCallback(int error, const char* description)
 	{

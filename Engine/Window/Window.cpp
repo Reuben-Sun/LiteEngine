@@ -1,6 +1,6 @@
 #include "Window.h"
 
-namespace Engine
+namespace ToolEngine
 {
     Window::Window(const WindowProps& props)
     {

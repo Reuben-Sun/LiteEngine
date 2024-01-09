@@ -1,7 +1,7 @@
 #pragma once
 #include "Marco.h"
 
-namespace Engine
+namespace ToolEngine
 {
 	enum class EventType
 	{

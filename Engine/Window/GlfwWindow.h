@@ -4,7 +4,7 @@
 #include "Window.h"
 #include <GLFW/glfw3.h>
 
-namespace Engine
+namespace ToolEngine
 {
     class GlfwWindow final : public Window
     {
