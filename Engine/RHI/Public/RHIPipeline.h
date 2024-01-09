@@ -14,6 +14,7 @@ namespace ToolEngine
 		virtual ~RHIPipeline();
 
 		VkPipeline getHandle() const { return m_pipeline; }
+		void createPipeline(RHIPipelineState& pipeline_state);
 		const RHIPipelineState& getPipelineState() const { return m_pipeline_state; }
 
 	protected:
