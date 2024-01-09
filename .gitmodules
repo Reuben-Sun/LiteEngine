@@ -1,0 +1,15 @@
+[submodule "ThirdParty/glfw"]
+	path = ThirdParty/glfw
+	url = https://github.com/Reuben-Sun/glfw.git
+[submodule "ThirdParty/glm"]
+	path = ThirdParty/glm
+	url = https://github.com/Reuben-Sun/glm.git
+[submodule "ThirdParty/spdlog"]
+	path = ThirdParty/spdlog
+	url = https://github.com/Reuben-Sun/spdlog.git
+[submodule "ThirdParty/tinygltf"]
+	path = ThirdParty/tinygltf
+	url = https://github.com/Reuben-Sun/tinygltf.git
+[submodule "ThirdParty/vma"]
+	path = ThirdParty/vma
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
