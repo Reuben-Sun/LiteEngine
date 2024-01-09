@@ -5,6 +5,10 @@ add_library(Engine STATIC ${ALL_FILES})
 target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_FILES})
 
+find_package(Vulkan REQUIRED)
+target_link_libraries(Engine PUBLIC ${Vulkan_LIBRARIES})  
+target_include_directories(Engine PUBLIC ${Vulkan_INCLUDE_DIR})
+
 target_link_libraries(Engine PRIVATE glfw)
 target_link_libraries(Engine PRIVATE glm)
 target_link_libraries(Engine PRIVATE spdlog)
