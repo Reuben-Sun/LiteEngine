@@ -10,6 +10,9 @@
 #include <sstream>
 #include <optional>
 #include <set>
+#include <filesystem>
+#include <fstream>
+
 #include "Core/Log/Log.h"
 
 #define BIT(x) (1 << x)
