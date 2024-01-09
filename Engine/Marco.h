@@ -12,6 +12,7 @@
 #include <set>
 #include <filesystem>
 #include <fstream>
+#include <chrono>
 
 #include "Core/Log/Log.h"
 
