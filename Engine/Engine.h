@@ -4,6 +4,7 @@
 #include "Core/Event/ApplicationEvent.h"
 #include "Window/GlfwWindow.h"
 #include "RHI/Public/RHIContext.h"
+#include "Render/Render.h"
 
 namespace ToolEngine
 {
@@ -23,7 +24,7 @@ namespace ToolEngine
     private:
         std::unique_ptr<GlfwWindow> m_window;
         std::unique_ptr<RHIContext> m_rhi_context;
-        //std::unique_ptr<Renderer> m_renderer;
+        std::unique_ptr<Renderer> m_renderer;
         bool m_running = true;
 
         bool onWindowClose(WindowCloseEvent& e);
