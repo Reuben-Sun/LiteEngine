@@ -60,7 +60,6 @@ namespace ToolEngine
     {
         createPhysicalDevice();
         createLogicalDevice();
-        createCommandPool();
     }
     RHIDevice::~RHIDevice()
     {
@@ -155,6 +154,9 @@ namespace ToolEngine
             vkGetDeviceQueue(m_logical_device, indices.present_family.value(), 0, &m_present_queue);
         }
         LOG_INFO("Create Queue!");
+
+        m_command_pool = std::make_unique<RHICommandPool>(m_logical_device, indices.graphics_family.value());
+        LOG_INFO("Create Command Pool!");
     }
 
     VkFormat RHIDevice::getDepthFormatDetail()
@@ -175,9 +177,7 @@ namespace ToolEngine
         return depth_format;
     }
 
-    void RHIDevice::createCommandPool()
-    {
-    }
+
     bool RHIDevice::checkPresentSupport(VkPhysicalDevice device, uint32_t queue_family_index)
     {
         VkBool32 present_supported{ VK_FALSE };

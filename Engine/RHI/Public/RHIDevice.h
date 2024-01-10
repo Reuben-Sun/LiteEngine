@@ -3,6 +3,7 @@
 #include "Marco.h"
 #include <vulkan/vulkan.h>
 #include "RHIInstance.h"
+#include "RHICommandPool.h"
 
 namespace ToolEngine
 {
@@ -36,13 +37,13 @@ namespace ToolEngine
 
 		VkPhysicalDevice getPhysicalDevice() const { return m_physical_device; }
 		VkDevice getLogicalDevice() const { return m_logical_device; }
-
+		
 		VkFormat getDepthFormatDetail();
 
 		const std::vector<const char*> m_device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	private:
 		RHIInstance& m_instance;
-
+		std::unique_ptr<RHICommandPool> m_command_pool;
 		std::string m_name;
 		VkPhysicalDevice m_physical_device{ VK_NULL_HANDLE };
 		VkDevice m_logical_device{ VK_NULL_HANDLE };
@@ -54,7 +55,6 @@ namespace ToolEngine
 
 		void createPhysicalDevice();
 		void createLogicalDevice();
-		void createCommandPool();
 
 		bool checkDeviceSupport(VkPhysicalDevice device);
 		bool checkDeviceExtensionSupport(VkPhysicalDevice device);
