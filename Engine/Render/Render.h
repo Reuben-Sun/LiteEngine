@@ -3,6 +3,7 @@
 #include "Marco.h"
 #include "RHI/Public/RHIContext.h"
 #include "Render/Pipeline/ForwardPipeline.h"
+#include "RHI/Public/RHIFrameBuffer.h"
 
 namespace ToolEngine
 {
@@ -18,6 +19,6 @@ namespace ToolEngine
 	private:
 		RHIContext& m_rhi_context;
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
-		//std::unique_ptr<ForwardPass> m_render_pass;
+		std::vector<RHIFrameBuffer> m_frame_buffers;
 	};
 }
