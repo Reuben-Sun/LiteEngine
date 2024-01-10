@@ -15,6 +15,7 @@ namespace ToolEngine
 		void transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout);
 		VkImage getHandle() const { return m_image; }
 		VkFormat getFormat() const { return m_format; }
+		VkImageView getImageView() const { return m_image_view; }
 	private:
 		RHIDevice& m_device;
 		VkImage m_image{ VK_NULL_HANDLE };

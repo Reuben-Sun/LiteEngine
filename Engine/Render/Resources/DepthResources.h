@@ -13,6 +13,7 @@ namespace ToolEngine
 		DepthResources(RHIDevice& device, VkExtent2D extent);
 		virtual ~DepthResources();
 
+		VkImageView getImageView() { return m_image->getImageView(); }
 	protected:
 		std::unique_ptr<RHIImage> m_image;
 		RHIDevice& m_device;
