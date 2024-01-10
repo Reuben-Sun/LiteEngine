@@ -119,8 +119,8 @@ namespace ToolEngine
 		RHIPipelineState m_state;
 		m_state.m_vertex_shader_stage = vert_shader_stage_info;
 		m_state.m_fragment_shader_stage = frag_shader_stage_info;
-		//m_state.m_pipeline_layout = m_pipeline_layout->getHandle();
-		//m_state.m_render_pass = m_forward_pass->getHandle();
+		m_state.m_pipeline_layout = m_pipeline_layout->getHandle();
+		m_state.m_render_pass = m_forward_pass->getHandle();
 		m_state.m_vertex_input_state = vertex_input_state;
 		m_state.m_input_assembly_state = input_assembly_state;
 		m_state.m_viewport_state = viewport_state;
@@ -130,6 +130,7 @@ namespace ToolEngine
 		m_state.m_color_blend_state = colorBlending;
 		m_state.m_dynamic_state = dynamicState;
 		m_state.m_subpass_index = 0;
-		//m_pipeline = std::make_unique<GraphicsPipeline>(m_device, m_state);
+		m_pipeline = std::make_unique<RHIPipeline>(m_device);
+		m_pipeline->createPipeline(m_state);
 	}
 }
