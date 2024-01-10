@@ -18,5 +18,7 @@ namespace ToolEngine
 		RHIDevice& m_device;
 		RHISwapchain& m_swapchain;
 		uint32_t m_frames_count;
+
+		void createPipeline();
 	};
 }

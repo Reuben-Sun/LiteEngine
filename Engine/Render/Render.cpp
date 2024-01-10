@@ -14,6 +14,7 @@ namespace ToolEngine
 		render_target.m_extent = VkExtent2D(m_rhi_context.m_swapchain->getWidth(), m_rhi_context.m_swapchain->getHeight());
 		render_target.m_render_pass = m_render_pass.get();
 		m_blit_pipeline = std::make_unique<BlitPipeline>(*m_rhi_context.m_device, render_target);*/
+		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, *m_rhi_context.m_swapchain, MAX_FRAMES_IN_FLIGHT);
 	}
 
 	Renderer::~Renderer()
