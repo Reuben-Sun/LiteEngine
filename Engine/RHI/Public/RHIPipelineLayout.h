@@ -9,7 +9,7 @@ namespace ToolEngine
 	class RHIPipelineLayout
 	{
 	public:
-		RHIPipelineLayout(RHIDevice* device, const VkPipelineLayoutCreateInfo& info);
+		RHIPipelineLayout(RHIDevice& device, const VkPipelineLayoutCreateInfo& info);
 		~RHIPipelineLayout();
 
 		VkPipelineLayout getHandle() const { return m_pipeline_layout; }
