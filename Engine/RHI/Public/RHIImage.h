@@ -9,7 +9,7 @@ namespace ToolEngine
 	class RHIImage
 	{
 	public:
-		RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties);
+		RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties);
 		~RHIImage();
 
 		void transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout);
@@ -18,6 +18,7 @@ namespace ToolEngine
 	private:
 		RHIDevice& m_device;
 		VkImage m_image{ VK_NULL_HANDLE };
+		VkImageView m_image_view{ VK_NULL_HANDLE };
 		VkDeviceMemory m_image_memory{ VK_NULL_HANDLE };
 		VkFormat m_format = VK_FORMAT_R8G8B8A8_SRGB;
 

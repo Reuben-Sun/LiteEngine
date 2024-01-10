@@ -3,7 +3,7 @@
 
 namespace ToolEngine
 {
-	RHIImage::RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties)
+	RHIImage::RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties)
 		: m_device(device), m_format(format)
 	{
 		VkImageCreateInfo image_create_info{};
@@ -41,11 +41,35 @@ namespace ToolEngine
 
 		vkBindImageMemory(m_device.getLogicalDevice(), m_image, m_image_memory, 0);
 		LOG_INFO("Create Image!");
+
+		VkImageViewCreateInfo image_view_create_info{};
+		image_view_create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		image_view_create_info.image = m_image;
+		image_view_create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		image_view_create_info.format = m_format;
+		image_view_create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+		image_view_create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+		image_view_create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+		image_view_create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+		image_view_create_info.subresourceRange.aspectMask = aspect_flags;
+		image_view_create_info.subresourceRange.baseMipLevel = 0;
+		image_view_create_info.subresourceRange.levelCount = 1;
+		image_view_create_info.subresourceRange.baseArrayLayer = 0;
+		image_view_create_info.subresourceRange.layerCount = 1;
+		if (vkCreateImageView(m_device.getLogicalDevice(), &image_view_create_info, nullptr, &m_image_view) != VK_SUCCESS)
+		{
+			LOG_ERROR("failed to create image views!");
+		}
+		LOG_INFO("Create image view!");
 	}
 	RHIImage::~RHIImage()
 	{
 		vkDestroyImage(m_device.getLogicalDevice(), m_image, nullptr);
 		vkFreeMemory(m_device.getLogicalDevice(), m_image_memory, nullptr);
+		if (m_image_view != VK_NULL_HANDLE)
+		{
+			vkDestroyImageView(m_device.getLogicalDevice(), m_image_view, nullptr);
+		}
 	}
 	void RHIImage::transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout)
 	{
