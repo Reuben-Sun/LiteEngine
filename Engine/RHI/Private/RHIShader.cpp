@@ -6,7 +6,8 @@ namespace ToolEngine
 	RHIShader::RHIShader(RHIDevice& device, const std::string& shader_path) :
 		m_device(device), m_shader_path(shader_path)
 	{
-		std::vector<char> shader_code = Path::getInstance().read(shader_path);
+		std::string shader_local_path = Path::getInstance().getCurrentPath() + "/Shaders/" + m_shader_path;
+		std::vector<char> shader_code = Path::getInstance().read(shader_local_path);
 
 		VkShaderModuleCreateInfo create_info{};
 		create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -17,7 +18,7 @@ namespace ToolEngine
 		{
 			LOG_ERROR("failed to create shader module!");
 		}
-		LOG_INFO("load shader: %s", shader_path.c_str());
+		LOG_INFO("load shader: {0}", m_shader_path.c_str());
 	}
 
 	RHIShader::~RHIShader()
