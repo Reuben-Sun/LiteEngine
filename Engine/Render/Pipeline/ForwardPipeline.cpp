@@ -113,7 +113,8 @@ namespace ToolEngine
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();
 		pipeline_layout_info.pSetLayouts = descriptor_set_layouts.data();
 		m_pipeline_layout = std::make_unique<RHIPipelineLayout>(m_device, pipeline_layout_info);
-		// TODO: render pass
+		
+		m_forward_pass = std::make_unique<ForwardPass>(m_device, m_swapchain.getFormat());
 
 		RHIPipelineState m_state;
 		m_state.m_vertex_shader_stage = vert_shader_stage_info;

@@ -14,15 +14,16 @@ namespace ToolEngine
 
 		VkRenderPass getHandle() const { return m_render_pass; }
 	protected:
-		VkRenderPass m_render_pass;
+		VkRenderPass m_render_pass{ VK_NULL_HANDLE };
 		RHIDevice& m_device;
-		VkFormat m_format;
+		VkFormat m_color_format;
+		// TODO: move depth format to there
 	};
 
-	RHIRenderPass::RHIRenderPass(RHIDevice& device, VkFormat format): m_device(device), m_format(format)
+	inline RHIRenderPass::RHIRenderPass(RHIDevice& device, VkFormat format): m_device(device), m_color_format(format)
 	{
 	}
-	RHIRenderPass::~RHIRenderPass()
+	inline RHIRenderPass::~RHIRenderPass()
 	{
 		if (m_render_pass != VK_NULL_HANDLE)
 		{

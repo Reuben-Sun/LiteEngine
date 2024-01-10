@@ -6,6 +6,7 @@
 #include "RHI/Public/RHIPipeline.h"
 #include "RHI/Public/RHIPipelineLayout.h"
 #include "RHI/Public/RHIPipeline.h"
+#include "Render/Pass/ForwardPass.h"
 
 namespace ToolEngine
 {
@@ -22,6 +23,7 @@ namespace ToolEngine
 		uint32_t m_frames_count;
 
 		std::unique_ptr<RHIPipelineLayout> m_pipeline_layout;
+		std::unique_ptr<ForwardPass> m_forward_pass;
 		std::unique_ptr<RHIPipeline> m_pipeline;
 
 		void createPipeline();
