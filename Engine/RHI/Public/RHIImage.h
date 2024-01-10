@@ -12,7 +12,7 @@ namespace ToolEngine
 		RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties);
 		~RHIImage();
 
-		void transitionImageLayout(VkImageLayout new_layout);
+		void transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout);
 		VkImage getHandle() const { return m_image; }
 		VkFormat getFormat() const { return m_format; }
 	private:

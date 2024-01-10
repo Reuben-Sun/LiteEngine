@@ -12,7 +12,7 @@ namespace ToolEngine
 		RHISingleTimeCommandBuffer(RHIDevice& device);
 		~RHISingleTimeCommandBuffer();
 
-		void pipelineBarrier();
+		void pipelineBarrier(VkPipelineStageFlags source_stage, VkPipelineStageFlags destination_stage, VkImageMemoryBarrier& barrier);
 
 	private:
 		RHIDevice& m_device;

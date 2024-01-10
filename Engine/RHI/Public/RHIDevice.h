@@ -37,8 +37,9 @@ namespace ToolEngine
 
 		VkPhysicalDevice getPhysicalDevice() const { return m_physical_device; }
 		VkDevice getLogicalDevice() const { return m_logical_device; }
-		
+		VkCommandPool getCommandPool() const { return m_command_pool->getHandle(); }
 		VkFormat getDepthFormatDetail();
+		VkQueue getGraphicsQueue() const { return m_graphics_queue; }
 
 		const std::vector<const char*> m_device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	private:
