@@ -106,8 +106,14 @@ namespace ToolEngine
 		dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 		dynamicState.pDynamicStates = dynamicStates.data();
 
-		// TODO: descriptor set layouts
-		// TODO: pipeline layout 
+		// TODO: bind descriptor set
+		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { };
+		VkPipelineLayoutCreateInfo pipeline_layout_info{};
+		pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();
+		pipeline_layout_info.pSetLayouts = descriptor_set_layouts.data();
+		m_pipeline_layout = std::make_unique<RHIPipelineLayout>(m_device, pipeline_layout_info);
+		// TODO: render pass
 
 		RHIPipelineState m_state;
 		m_state.m_vertex_shader_stage = vert_shader_stage_info;
