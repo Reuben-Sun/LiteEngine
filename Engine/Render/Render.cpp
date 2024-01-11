@@ -36,8 +36,34 @@ namespace ToolEngine
 	void Renderer::tick()
 	{
 		uint32_t frame_index = getFrameIndex();
-		//m_in_flight_fences[frame_index]->wait();
+		m_in_flight_fences[frame_index]->wait();
+		uint32_t image_index;
+		VkResult result = vkAcquireNextImageKHR(m_rhi_context.m_device->getLogicalDevice(), 
+			m_rhi_context.m_swapchain->getHandle(), UINT64_MAX, 
+			m_image_available_semaphores[frame_index]->getHandle(), VK_NULL_HANDLE, &image_index);
+		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			//resizeFrame();
+			return;
+		}
+		else if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+		{
+			LOG_ERROR("failed to acquire swap chain image!");
+		}
 
-		//m_blit_pipeline->renderTick();
+		m_in_flight_fences[frame_index]->resetFence();
+
+		m_command_buffer->resetCommandBuffer(frame_index);
+
+		m_forward_pipeline->tick(*m_command_buffer, *m_frame_buffers[frame_index], frame_index);
+
+		std::vector<VkSemaphore> wait_semaphores { m_image_available_semaphores[frame_index]->getHandle() };
+		std::vector<VkSemaphore> signal_semaphores { m_render_finished_semaphores[frame_index]->getHandle() };
+		m_command_buffer->submitCommandBuffer(frame_index, wait_semaphores, 
+			signal_semaphores, m_in_flight_fences[frame_index]->getHandle());
+
+		std::vector<VkSwapchainKHR> swapchains{ m_rhi_context.m_swapchain->getHandle() };
+		m_rhi_context.m_device->present(signal_semaphores, image_index, swapchains);
+		m_current_frame++;
 	}
 }

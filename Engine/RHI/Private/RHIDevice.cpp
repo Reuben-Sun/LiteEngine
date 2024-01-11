@@ -177,6 +177,22 @@ namespace ToolEngine
         return depth_format;
     }
 
+    void RHIDevice::present(std::vector<VkSemaphore>& wait_semaphores, uint32_t image_index, std::vector<VkSwapchainKHR>& swapchains)
+    {
+        VkPresentInfoKHR present_info{};
+        present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+        present_info.waitSemaphoreCount = wait_semaphores.size();
+        present_info.pWaitSemaphores = wait_semaphores.data();
+
+        present_info.swapchainCount = swapchains.size();
+        present_info.pSwapchains = swapchains.data();
+
+        present_info.pImageIndices = &image_index;
+
+        vkQueuePresentKHR(m_present_queue, &present_info);
+    }
+
 
     bool RHIDevice::checkPresentSupport(VkPhysicalDevice device, uint32_t queue_family_index)
     {

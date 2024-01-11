@@ -3,6 +3,9 @@
 #include "Marco.h"
 #include <vulkan/vulkan.h>
 #include "RHIDevice.h"
+#include "RHI/Public/RHIRenderPass.h"
+#include "RHI/Public/RHIFrameBuffer.h"
+#include "RHI/Public/RHISwapchain.h"
 
 namespace ToolEngine
 {
@@ -14,7 +17,17 @@ namespace ToolEngine
 
 		VkCommandBuffer getHandle(uint32_t index) const { return m_command_buffers[index]; }
 		uint32_t getCommandBufferCount() const { return m_command_buffer_count; }
-		
+
+		void resetCommandBuffer(uint32_t current_frame);
+		void submitCommandBuffer(uint32_t current_frame, std::vector<VkSemaphore>& wait_semaphores, std::vector<VkSemaphore>& signal_semaphores, VkFence in_flight_fence);
+		void beginRecord(uint32_t current_frame);
+		void endRecord(uint32_t current_frame);
+		void beginRenderPass(uint32_t current_frame, RHIRenderPass& render_pass, RHIFrameBuffer& frame_buffer, uint32_t width, uint32_t height);
+		void endRenderPass(uint32_t current_frame);
+		void bindPipeline(uint32_t current_frame, VkPipeline pipeline);
+		void setViewport(uint32_t current_frame, uint32_t width, uint32_t height, float min_depth, float max_depth, uint32_t first_viewport_index, uint32_t viewport_count);
+		void setScissor(uint32_t current_frame, uint32_t width, uint32_t height, uint32_t first_scissor_index, uint32_t scissor_count);
+		void draw(uint32_t current_frame, uint32_t vertex_count, uint32_t instance_count, uint32_t first_vertex_index, uint32_t first_instance_index);
 	private:
 		RHIDevice& m_device;
 		std::vector<VkCommandBuffer> m_command_buffers;

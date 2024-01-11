@@ -41,6 +41,8 @@ namespace ToolEngine
 		VkFormat getDepthFormatDetail();
 		VkQueue getGraphicsQueue() const { return m_graphics_queue; }
 
+		void present(std::vector<VkSemaphore>& wait_semaphores, uint32_t image_index, std::vector<VkSwapchainKHR>& swapchains);
+
 		const std::vector<const char*> m_device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	private:
 		RHIInstance& m_instance;

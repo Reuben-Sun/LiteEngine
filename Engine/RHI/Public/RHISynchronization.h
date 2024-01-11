@@ -14,7 +14,7 @@ namespace ToolEngine
 
 		VkFence getHandle() const { return m_fence; }
 		void wait();
-		void reset();
+		void resetFence();
 	private:
 		VkFence m_fence{ VK_NULL_HANDLE };
 		RHIDevice& m_device;

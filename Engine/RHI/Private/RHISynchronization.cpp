@@ -21,7 +21,7 @@ namespace ToolEngine
 	{
 		vkWaitForFences(m_device.getLogicalDevice(), 1, &m_fence, VK_TRUE, UINT64_MAX);
 	}
-	void Fence::reset()
+	void Fence::resetFence()
 	{
 		vkResetFences(m_device.getLogicalDevice(), 1, &m_fence);
 	}

@@ -6,7 +6,10 @@
 #include "RHI/Public/RHIPipeline.h"
 #include "RHI/Public/RHIPipelineLayout.h"
 #include "RHI/Public/RHIPipeline.h"
+#include "RHI/Public/RHICommandBuffer.h"
+#include "RHI/Public/RHIFrameBuffer.h"
 #include "Render/Pass/ForwardPass.h"
+
 
 namespace ToolEngine
 {
@@ -18,7 +21,7 @@ namespace ToolEngine
 
 		RHIRenderPass& getRenderPass() const { return *m_forward_pass; }
 
-		//void tick();
+		void tick(RHICommandBuffer& cmd, RHIFrameBuffer& frame_buffer, uint32_t frame_index);
 	private:
 		RHIDevice& m_device;
 		RHISwapchain& m_swapchain;

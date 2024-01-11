@@ -13,6 +13,24 @@ namespace ToolEngine
 	ForwardPipeline::~ForwardPipeline()
 	{
 	}
+	void ForwardPipeline::tick(RHICommandBuffer& command_buffer, RHIFrameBuffer& frame_buffer, uint32_t frame_index)
+	{
+		command_buffer.beginRecord(frame_index);
+
+		command_buffer.beginRenderPass(frame_index, *m_forward_pass, frame_buffer, m_swapchain.getWidth(), m_swapchain.getHeight());
+
+		command_buffer.bindPipeline(frame_index, m_pipeline->getHandle());
+
+		command_buffer.setViewport(frame_index, m_swapchain.getWidth(), m_swapchain.getHeight(), 0.0f, 1.0f, 0, 1);
+
+		command_buffer.setScissor(frame_index, m_swapchain.getWidth(), m_swapchain.getHeight(), 0, 1);
+
+		command_buffer.draw(frame_index, 6, 1, 0, 0);
+
+		command_buffer.endRenderPass(frame_index);
+
+		command_buffer.endRecord(frame_index);
+	}
 	void ForwardPipeline::createPipeline()
 	{
 		// shader
