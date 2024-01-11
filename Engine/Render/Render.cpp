@@ -7,6 +7,8 @@ namespace ToolEngine
 		LOG_INFO("Create Renderer!")
 		VkFormat color_format = m_rhi_context.m_swapchain->getFormat();
 		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
+		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device,
+			m_rhi_context.m_swapchain->getWidth(), m_rhi_context.m_swapchain->getHeight());
 		/*m_render_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format, depth_format);
 		RHIRenderTarget render_target;
 		render_target.m_color_format = color_format;

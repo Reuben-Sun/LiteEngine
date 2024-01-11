@@ -10,7 +10,7 @@ namespace ToolEngine
 	class DepthResources
 	{
 	public:
-		DepthResources(RHIDevice& device, VkExtent2D extent);
+		DepthResources(RHIDevice& device, uint32_t width, uint32_t height);
 		virtual ~DepthResources();
 
 		VkImageView getImageView() { return m_image->getImageView(); }
@@ -19,8 +19,9 @@ namespace ToolEngine
 		RHIDevice& m_device;
 	};
 
-	inline DepthResources::DepthResources(RHIDevice& device, VkExtent2D extent) : m_device(device)
+	inline DepthResources::DepthResources(RHIDevice& device, uint32_t width, uint32_t height) : m_device(device)
 	{
+		VkExtent2D extent = { width, height };
 		m_image = std::make_unique<RHIImage>(m_device, extent, m_device.getDepthFormatDetail(),
 			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, 
 			VK_IMAGE_ASPECT_DEPTH_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
