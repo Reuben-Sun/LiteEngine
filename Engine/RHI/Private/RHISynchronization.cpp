@@ -8,6 +8,7 @@ namespace ToolEngine
 		fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 		vkCreateFence(m_device.getLogicalDevice(), &fence_info, nullptr, &m_fence);
+		LOG_INFO("Create Fence!");
 	}
 	Fence::~Fence()
 	{
@@ -30,6 +31,7 @@ namespace ToolEngine
 		VkSemaphoreCreateInfo semaphore_info{};
 		semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 		vkCreateSemaphore(m_device.getLogicalDevice(), &semaphore_info, nullptr, &m_semaphore);
+		LOG_INFO("Create Semaphore!");
 	}
 
 	Semaphore::~Semaphore()

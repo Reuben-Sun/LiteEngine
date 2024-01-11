@@ -4,6 +4,7 @@
 #include "RHI/Public/RHIContext.h"
 #include "RHI/Public/RHIFrameBuffer.h"
 #include "RHI/Public/RHICommandBuffer.h"
+#include "RHI/Public/RHISynchronization.h"
 #include "Render/Pipeline/ForwardPipeline.h"
 #include "Render/Resources/DepthResources.h"
 
@@ -24,5 +25,8 @@ namespace ToolEngine
 		std::unique_ptr<DepthResources> m_depth_resources;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_frame_buffers;
 		std::unique_ptr<RHICommandBuffer> m_command_buffer;
+		std::vector<std::unique_ptr<Fence>> m_in_flight_fences;
+		std::vector<std::unique_ptr<Semaphore>> m_image_available_semaphores;
+		std::vector<std::unique_ptr<Semaphore>> m_render_finished_semaphores;
 	};
 }

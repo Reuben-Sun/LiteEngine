@@ -21,6 +21,12 @@ namespace ToolEngine
 		}
 
 		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, MAX_FRAMES_IN_FLIGHT);
+		for (uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+		{
+			m_in_flight_fences.emplace_back(std::make_unique<Fence>(*m_rhi_context.m_device));
+			m_image_available_semaphores.emplace_back(std::make_unique<Semaphore>(*m_rhi_context.m_device));
+			m_render_finished_semaphores.emplace_back(std::make_unique<Semaphore>(*m_rhi_context.m_device));
+		}
 	}
 
 	Renderer::~Renderer()
