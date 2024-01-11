@@ -19,6 +19,8 @@ namespace ToolEngine
 				m_rhi_context.m_swapchain->getImageView(i), 
 				m_depth_resources->getImageView(), width, height));
 		}
+
+		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, MAX_FRAMES_IN_FLIGHT);
 	}
 
 	Renderer::~Renderer()

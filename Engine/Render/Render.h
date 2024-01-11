@@ -2,8 +2,9 @@
 
 #include "Marco.h"
 #include "RHI/Public/RHIContext.h"
-#include "Render/Pipeline/ForwardPipeline.h"
 #include "RHI/Public/RHIFrameBuffer.h"
+#include "RHI/Public/RHICommandBuffer.h"
+#include "Render/Pipeline/ForwardPipeline.h"
 #include "Render/Resources/DepthResources.h"
 
 namespace ToolEngine
@@ -21,7 +22,7 @@ namespace ToolEngine
 		RHIContext& m_rhi_context;
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
 		std::unique_ptr<DepthResources> m_depth_resources;
-		
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_frame_buffers;
+		std::unique_ptr<RHICommandBuffer> m_command_buffer;
 	};
 }
