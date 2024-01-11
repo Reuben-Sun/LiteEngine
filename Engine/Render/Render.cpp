@@ -35,6 +35,9 @@ namespace ToolEngine
 
 	void Renderer::tick()
 	{
+		uint32_t frame_index = getFrameIndex();
+		//m_in_flight_fences[frame_index]->wait();
+
 		//m_blit_pipeline->renderTick();
 	}
 }

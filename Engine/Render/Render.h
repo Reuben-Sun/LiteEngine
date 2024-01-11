@@ -19,6 +19,7 @@ namespace ToolEngine
 		const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
 
 		void tick();
+		// TODO: resize frame
 	private:
 		RHIContext& m_rhi_context;
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
@@ -28,5 +29,8 @@ namespace ToolEngine
 		std::vector<std::unique_ptr<Fence>> m_in_flight_fences;
 		std::vector<std::unique_ptr<Semaphore>> m_image_available_semaphores;
 		std::vector<std::unique_ptr<Semaphore>> m_render_finished_semaphores;
+
+		uint32_t m_current_frame{ 0 };
+		uint32_t getFrameIndex() const { return m_current_frame % MAX_FRAMES_IN_FLIGHT; }
 	};
 }
