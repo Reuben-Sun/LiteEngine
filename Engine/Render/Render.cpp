@@ -7,16 +7,18 @@ namespace ToolEngine
 		LOG_INFO("Create Renderer!")
 		VkFormat color_format = m_rhi_context.m_swapchain->getFormat();
 		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
-		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device,
-			m_rhi_context.m_swapchain->getWidth(), m_rhi_context.m_swapchain->getHeight());
-		/*m_render_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format, depth_format);
-		RHIRenderTarget render_target;
-		render_target.m_color_format = color_format;
-		render_target.m_depth_format = depth_format;
-		render_target.m_extent = VkExtent2D(m_rhi_context.m_swapchain->getWidth(), m_rhi_context.m_swapchain->getHeight());
-		render_target.m_render_pass = m_render_pass.get();
-		m_blit_pipeline = std::make_unique<BlitPipeline>(*m_rhi_context.m_device, render_target);*/
+		uint32_t width = m_rhi_context.m_swapchain->getWidth();
+		uint32_t height = m_rhi_context.m_swapchain->getHeight();
+		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
+
 		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, *m_rhi_context.m_swapchain, MAX_FRAMES_IN_FLIGHT);
+		for (uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+		{
+			m_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
+				m_forward_pipeline->getRenderPass().getHandle(), 
+				m_rhi_context.m_swapchain->getImageView(i), 
+				m_depth_resources->getImageView(), width, height));
+		}
 	}
 
 	Renderer::~Renderer()

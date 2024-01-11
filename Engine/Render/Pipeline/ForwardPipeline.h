@@ -16,6 +16,8 @@ namespace ToolEngine
 		ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, uint32_t frames_count);
 		~ForwardPipeline();
 
+		RHIRenderPass& getRenderPass() const { return *m_forward_pass; }
+
 		//void tick();
 	private:
 		RHIDevice& m_device;

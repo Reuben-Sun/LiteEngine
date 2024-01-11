@@ -14,6 +14,7 @@ namespace ToolEngine
 		~RHISwapchain();
 
 		VkSwapchainKHR getHandle() const { return m_swapchain; }
+		uint32_t getImageCount() const { return static_cast<uint32_t>(m_swap_chain_images.size()); }
 		VkImageView getImageView(uint32_t index) const { return m_swap_chain_image_views[index]; }
 		VkFormat getFormat() const { return m_surface_format.format; }
 		uint32_t getWidth() const { return m_width; }
