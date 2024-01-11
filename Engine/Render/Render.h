@@ -7,6 +7,7 @@
 #include "RHI/Public/RHISynchronization.h"
 #include "Render/Pipeline/ForwardPipeline.h"
 #include "Render/Resources/DepthResources.h"
+#include "Geometry/RenderScene.h"
 
 namespace ToolEngine
 {
@@ -18,7 +19,7 @@ namespace ToolEngine
 
 		const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
 
-		void tick();
+		void tick(RenderScene& scene);
 		// TODO: resize frame
 	private:
 		RHIContext& m_rhi_context;

@@ -13,7 +13,7 @@ namespace ToolEngine
 	ForwardPipeline::~ForwardPipeline()
 	{
 	}
-	void ForwardPipeline::tick(RHICommandBuffer& command_buffer, RHIFrameBuffer& frame_buffer, uint32_t frame_index)
+	void ForwardPipeline::tick(RHICommandBuffer& command_buffer, RHIFrameBuffer& frame_buffer, uint32_t frame_index, RenderScene& scene)
 	{
 		command_buffer.beginRecord(frame_index);
 
@@ -25,7 +25,15 @@ namespace ToolEngine
 
 		command_buffer.setScissor(frame_index, m_swapchain.getWidth(), m_swapchain.getHeight(), 0, 1);
 
-		command_buffer.draw(frame_index, 6, 1, 0, 0);
+		Mesh& mesh = scene.mesh_list[0];
+		uint32_t index_count = mesh.index_buffer.size();
+		m_index_buffer = std::make_unique<RHIIndexBuffer>(m_device, mesh.index_buffer);
+		m_vertex_buffer = std::make_unique<RHIVertexBuffer>(m_device, mesh.vertex_buffer);
+		VkDeviceSize offsets[] = { 0 };
+		command_buffer.bindIndexBuffer(frame_index, *m_index_buffer, 0, VK_INDEX_TYPE_UINT32);
+		command_buffer.bindVertexBuffer(frame_index, *m_vertex_buffer, offsets, 0, 1);
+
+		command_buffer.draw(frame_index, index_count, 1, 0, 0, 0);
 
 		command_buffer.endRenderPass(frame_index);
 

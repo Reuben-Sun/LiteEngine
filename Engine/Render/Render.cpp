@@ -33,7 +33,7 @@ namespace ToolEngine
 	{
 	}
 
-	void Renderer::tick()
+	void Renderer::tick(RenderScene& scene)
 	{
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->wait();
@@ -55,7 +55,7 @@ namespace ToolEngine
 
 		m_command_buffer->resetCommandBuffer(frame_index);
 
-		m_forward_pipeline->tick(*m_command_buffer, *m_frame_buffers[frame_index], frame_index);
+		m_forward_pipeline->tick(*m_command_buffer, *m_frame_buffers[frame_index], frame_index, scene);
 
 		std::vector<VkSemaphore> wait_semaphores { m_image_available_semaphores[frame_index]->getHandle() };
 		std::vector<VkSemaphore> signal_semaphores { m_render_finished_semaphores[frame_index]->getHandle() };

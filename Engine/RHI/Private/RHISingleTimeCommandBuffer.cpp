@@ -42,4 +42,10 @@ namespace ToolEngine
 			1, &barrier
 		);
 	}
+	void RHISingleTimeCommandBuffer::copyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer, VkDeviceSize size)
+	{
+		VkBufferCopy copyRegion{};
+		copyRegion.size = size;
+		vkCmdCopyBuffer(m_command_buffer, src_buffer, dst_buffer, 1, &copyRegion);
+	}
 }

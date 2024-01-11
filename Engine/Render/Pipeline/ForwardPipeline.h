@@ -9,6 +9,9 @@
 #include "RHI/Public/RHICommandBuffer.h"
 #include "RHI/Public/RHIFrameBuffer.h"
 #include "Render/Pass/ForwardPass.h"
+#include "Geometry/RenderScene.h"
+#include "RHI/Public/RHIVertexBuffer.h"
+#include "RHI/Public/RHIIndexBuffer.h"
 
 
 namespace ToolEngine
@@ -21,7 +24,7 @@ namespace ToolEngine
 
 		RHIRenderPass& getRenderPass() const { return *m_forward_pass; }
 
-		void tick(RHICommandBuffer& cmd, RHIFrameBuffer& frame_buffer, uint32_t frame_index);
+		void tick(RHICommandBuffer& cmd, RHIFrameBuffer& frame_buffer, uint32_t frame_index, RenderScene& scene);
 	private:
 		RHIDevice& m_device;
 		RHISwapchain& m_swapchain;
@@ -30,6 +33,9 @@ namespace ToolEngine
 		std::unique_ptr<RHIPipelineLayout> m_pipeline_layout;
 		std::unique_ptr<ForwardPass> m_forward_pass;
 		std::unique_ptr<RHIPipeline> m_pipeline;
+
+		std::unique_ptr<RHIIndexBuffer> m_index_buffer;
+		std::unique_ptr<RHIVertexBuffer> m_vertex_buffer;
 
 		void createPipeline();
 	};

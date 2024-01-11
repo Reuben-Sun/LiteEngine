@@ -1,4 +1,5 @@
 #include "RHI/Public/RHIDevice.h"
+#include "RHI/Public/RHISingleTimeCommandBuffer.h"
 
 namespace ToolEngine
 {
@@ -175,6 +176,57 @@ namespace ToolEngine
             }
         }
         return depth_format;
+    }
+
+    uint32_t RHIDevice::findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties)
+    {
+        VkPhysicalDeviceMemoryProperties mem_properties;
+        vkGetPhysicalDeviceMemoryProperties(m_physical_device, &mem_properties);
+
+        for (uint32_t i = 0; i < mem_properties.memoryTypeCount; i++)
+        {
+            if ((type_filter & (1 << i)) && (mem_properties.memoryTypes[i].propertyFlags & properties) == properties)
+            {
+                return i;
+            }
+        }
+        LOG_ERROR("failed to find suitable memory type!");
+        return 0;
+    }
+
+    void RHIDevice::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& buffer_memory)
+    {
+        VkBufferCreateInfo buffer_info{};
+        buffer_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        buffer_info.size = size;
+        buffer_info.usage = usage;
+        buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+        if (vkCreateBuffer(m_logical_device, &buffer_info, nullptr, &buffer) != VK_SUCCESS)
+        {
+            LOG_ERROR("failed to create vertex buffer!");
+        }
+
+        VkMemoryRequirements mem_requirements;
+        vkGetBufferMemoryRequirements(m_logical_device, buffer, &mem_requirements);
+
+        VkMemoryAllocateInfo alloc_info{};
+        alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        alloc_info.allocationSize = mem_requirements.size;
+        alloc_info.memoryTypeIndex = findMemoryType(mem_requirements.memoryTypeBits, properties);
+
+        if (vkAllocateMemory(m_logical_device, &alloc_info, nullptr, &buffer_memory) != VK_SUCCESS)
+        {
+            LOG_ERROR("failed to allocate vertex buffer memory!");
+        }
+
+        vkBindBufferMemory(m_logical_device, buffer, buffer_memory, 0);
+    }
+
+    void RHIDevice::copyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer, VkDeviceSize size)
+    {
+        std::unique_ptr<RHISingleTimeCommandBuffer> command_buffer = std::make_unique<RHISingleTimeCommandBuffer>(*this);
+        command_buffer->copyBuffer(src_buffer, dst_buffer, size);
     }
 
     void RHIDevice::present(std::vector<VkSemaphore>& wait_semaphores, uint32_t image_index, std::vector<VkSwapchainKHR>& swapchains)

@@ -6,6 +6,8 @@
 #include "RHI/Public/RHIRenderPass.h"
 #include "RHI/Public/RHIFrameBuffer.h"
 #include "RHI/Public/RHISwapchain.h"
+#include "RHI/Public/RHIVertexBuffer.h"
+#include "RHI/Public/RHIIndexBuffer.h"
 
 namespace ToolEngine
 {
@@ -28,6 +30,9 @@ namespace ToolEngine
 		void setViewport(uint32_t current_frame, uint32_t width, uint32_t height, float min_depth, float max_depth, uint32_t first_viewport_index, uint32_t viewport_count);
 		void setScissor(uint32_t current_frame, uint32_t width, uint32_t height, uint32_t first_scissor_index, uint32_t scissor_count);
 		void draw(uint32_t current_frame, uint32_t vertex_count, uint32_t instance_count, uint32_t first_vertex_index, uint32_t first_instance_index);
+		void draw(uint32_t current_frame, uint32_t index_count, uint32_t instance_count, uint32_t first_index, uint32_t vertex_offset, uint32_t first_instance);
+		void bindVertexBuffer(uint32_t current_frame, RHIVertexBuffer& buffer, VkDeviceSize* offset, uint32_t first_binding_index, uint32_t binding_count);
+		void bindIndexBuffer(uint32_t current_frame, RHIIndexBuffer& buffer, VkDeviceSize offset, VkIndexType index_type);
 	private:
 		RHIDevice& m_device;
 		std::vector<VkCommandBuffer> m_command_buffers;

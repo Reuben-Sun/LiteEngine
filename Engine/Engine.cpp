@@ -3,6 +3,7 @@
 #include "Core/Time/Time.h"
 #include "Core/Event/EventDispatcher.h"
 
+
 namespace ToolEngine
 {
     Engine::Engine()
@@ -22,13 +23,26 @@ namespace ToolEngine
         m_window->setEventCallback(std::bind(&Engine::processEvent, this, std::placeholders::_1));
         m_rhi_context = std::make_unique<RHIContext>(*m_window);
         m_renderer = std::make_unique<Renderer>(*m_rhi_context);
+
+        std::vector<uint32_t> plane_index_buffer = { 0, 1, 2, 2, 3, 0 };
+        const std::vector<Vertex> plane_vertex_buffer =
+        {
+            {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+            {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
+        };
+        Mesh mesh;
+        mesh.index_buffer = plane_index_buffer;
+        mesh.vertex_buffer = plane_vertex_buffer;
+        scene.mesh_list.push_back(mesh);
     }
     void Engine::tick()
     {
         Time::getInstance().tick();
         m_window->tick();
         m_rhi_context->tick();
-        m_renderer->tick();
+        m_renderer->tick(scene);
     }
     void Engine::cleanup()
     {

@@ -112,4 +112,17 @@ namespace ToolEngine
 	{
 		vkCmdDraw(m_command_buffers[current_frame], vertex_count, instance_count, first_vertex_index, first_instance_index);
 	}
+	void RHICommandBuffer::draw(uint32_t current_frame, uint32_t index_count, uint32_t instance_count, uint32_t first_index, uint32_t vertex_offset, uint32_t first_instance)
+	{
+		vkCmdDrawIndexed(m_command_buffers[current_frame], index_count, instance_count, first_index, vertex_offset, first_instance);
+	}
+	void RHICommandBuffer::bindVertexBuffer(uint32_t current_frame, RHIVertexBuffer& buffer, VkDeviceSize* offset, uint32_t first_binding_index, uint32_t binding_count)
+	{
+		VkBuffer vertex_buffers[] = { buffer.getHandle() };
+		vkCmdBindVertexBuffers(m_command_buffers[current_frame], first_binding_index, binding_count, vertex_buffers, offset);
+	}
+	void RHICommandBuffer::bindIndexBuffer(uint32_t current_frame, RHIIndexBuffer& buffer, VkDeviceSize offset, VkIndexType index_type)
+	{
+		vkCmdBindIndexBuffer(m_command_buffers[current_frame], buffer.getHandle(), offset, index_type);
+	}
 }

@@ -41,6 +41,10 @@ namespace ToolEngine
 		VkFormat getDepthFormatDetail();
 		VkQueue getGraphicsQueue() const { return m_graphics_queue; }
 
+		uint32_t findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties);
+		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& buffer_memory);
+		void copyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer, VkDeviceSize size);
+
 		void present(std::vector<VkSemaphore>& wait_semaphores, uint32_t image_index, std::vector<VkSwapchainKHR>& swapchains);
 
 		const std::vector<const char*> m_device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
