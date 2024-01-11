@@ -80,9 +80,7 @@ namespace ToolEngine
 			vkDestroySwapchainKHR(m_device.getLogicalDevice(), m_swapchain, nullptr);
 		}
 	}
-	void RHISwapchain::present(VkSemaphore* wait_semaphores, uint32_t image_index)
-	{
-	}
+
 	VkSurfaceFormatKHR RHISwapchain::chooseSwapSurfaceFormat()
 	{
 		for (const auto& available_format : m_swapchain_support_details.formats)

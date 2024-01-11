@@ -19,7 +19,7 @@ namespace ToolEngine
 		VkFormat getFormat() const { return m_surface_format.format; }
 		uint32_t getWidth() const { return m_width; }
 		uint32_t getHeight() const { return m_height; }
-		void present(VkSemaphore* wait_semaphores, uint32_t image_index);
+
 	private:
 		RHIInstance& m_instance;
 		RHIDevice& m_device;
