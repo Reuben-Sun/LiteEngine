@@ -12,7 +12,8 @@ namespace ToolEngine
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
 
 		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, *m_rhi_context.m_swapchain, MAX_FRAMES_IN_FLIGHT);
-		for (uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
+		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
 			m_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
 				m_forward_pipeline->getRenderPass().getHandle(), 
@@ -21,7 +22,7 @@ namespace ToolEngine
 		}
 
 		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, MAX_FRAMES_IN_FLIGHT);
-		for (uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
 			m_in_flight_fences.emplace_back(std::make_unique<Fence>(*m_rhi_context.m_device));
 			m_image_available_semaphores.emplace_back(std::make_unique<Semaphore>(*m_rhi_context.m_device));

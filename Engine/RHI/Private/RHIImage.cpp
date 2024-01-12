@@ -71,7 +71,7 @@ namespace ToolEngine
 			vkDestroyImageView(m_device.getLogicalDevice(), m_image_view, nullptr);
 		}
 	}
-	void RHIImage::transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout)
+	void RHIImage::transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_flags)
 	{
 		std::unique_ptr<RHISingleTimeCommandBuffer> command_buffer = std::make_unique<RHISingleTimeCommandBuffer>(m_device);
 		// use memory barrier to make sure image load before next operation, especially asynchronous programs
@@ -82,7 +82,7 @@ namespace ToolEngine
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.image = m_image;
-		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		barrier.subresourceRange.aspectMask = aspect_flags;
 		barrier.subresourceRange.baseMipLevel = 0;
 		barrier.subresourceRange.levelCount = 1;
 		barrier.subresourceRange.baseArrayLayer = 0;
