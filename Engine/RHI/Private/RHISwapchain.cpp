@@ -11,36 +11,36 @@ namespace ToolEngine
 		VkExtent2D swap_extent = getSwapCurrentExtent();
 		uint32_t image_count = getSwapchainImageCount();
 
-		VkSwapchainCreateInfoKHR createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		createInfo.surface = m_instance.getSurfaceHandle();
-		createInfo.minImageCount = image_count;
-		createInfo.imageFormat = m_surface_format.format;
-		createInfo.imageColorSpace = m_surface_format.colorSpace;
-		createInfo.imageExtent = swap_extent;
-		createInfo.imageArrayLayers = 1;
-		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		VkSwapchainCreateInfoKHR swapchain_create_info{};
+		swapchain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		swapchain_create_info.surface = m_instance.getSurfaceHandle();
+		swapchain_create_info.minImageCount = image_count;
+		swapchain_create_info.imageFormat = m_surface_format.format;
+		swapchain_create_info.imageColorSpace = m_surface_format.colorSpace;
+		swapchain_create_info.imageExtent = swap_extent;
+		swapchain_create_info.imageArrayLayers = 1;
+		swapchain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
 		QueueFamilyIndices indices = QueueFamilyIndices::getQueueFamilyIndices(m_device.getPhysicalDevice(), m_instance.getSurfaceHandle());
 		uint32_t queueFamilyIndices[] = { indices.graphics_family.value(), indices.present_family.value() };
 		if (indices.graphics_family != indices.present_family)
 		{
-			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-			createInfo.queueFamilyIndexCount = 2;
-			createInfo.pQueueFamilyIndices = queueFamilyIndices;
+			swapchain_create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+			swapchain_create_info.queueFamilyIndexCount = 2;
+			swapchain_create_info.pQueueFamilyIndices = queueFamilyIndices;
 		}
 		else
 		{
-			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			swapchain_create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		}
 
-		createInfo.preTransform = m_swapchain_support_details.capabilities.currentTransform;
-		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-		createInfo.presentMode = present_mode;
-		createInfo.clipped = VK_TRUE;
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
+		swapchain_create_info.preTransform = m_swapchain_support_details.capabilities.currentTransform;
+		swapchain_create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		swapchain_create_info.presentMode = present_mode;
+		swapchain_create_info.clipped = VK_TRUE;
+		swapchain_create_info.oldSwapchain = VK_NULL_HANDLE;
 
-		if (vkCreateSwapchainKHR(device.getLogicalDevice(), &createInfo, nullptr, &m_swapchain) != VK_SUCCESS)
+		if (vkCreateSwapchainKHR(device.getLogicalDevice(), &swapchain_create_info, nullptr, &m_swapchain) != VK_SUCCESS)
 		{
 			LOG_ERROR("failed to create swap chain!");
 		}
@@ -52,21 +52,21 @@ namespace ToolEngine
 		m_swap_chain_image_views.resize(image_count);
 		for (uint32_t i = 0; i < image_count; i++)
 		{
-			VkImageViewCreateInfo create_info{};
-			create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			create_info.image = m_swap_chain_images[i];
-			create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			create_info.format = m_surface_format.format;
-			create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-			create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-			create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-			create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-			create_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			create_info.subresourceRange.baseMipLevel = 0;
-			create_info.subresourceRange.levelCount = 1;
-			create_info.subresourceRange.baseArrayLayer = 0;
-			create_info.subresourceRange.layerCount = 1;
-			if (vkCreateImageView(m_device.getLogicalDevice(), &create_info, nullptr, &m_swap_chain_image_views[i]) != VK_SUCCESS)
+			VkImageViewCreateInfo image_view_create_info{};
+			image_view_create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			image_view_create_info.image = m_swap_chain_images[i];
+			image_view_create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			image_view_create_info.format = m_surface_format.format;
+			image_view_create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+			image_view_create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+			image_view_create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+			image_view_create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+			image_view_create_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			image_view_create_info.subresourceRange.baseMipLevel = 0;
+			image_view_create_info.subresourceRange.levelCount = 1;
+			image_view_create_info.subresourceRange.baseArrayLayer = 0;
+			image_view_create_info.subresourceRange.layerCount = 1;
+			if (vkCreateImageView(m_device.getLogicalDevice(), &image_view_create_info, nullptr, &m_swap_chain_image_views[i]) != VK_SUCCESS)
 			{
 				LOG_ERROR("failed to create image views!");
 			}
