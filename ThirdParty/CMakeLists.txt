@@ -1,3 +1,6 @@
+if (MSVC)
+    add_compile_options(/wd4996)
+endif()
 # glfw
 if (NOT TARGET glfw)
   set(GLFW_USE_HYBRID_HPG OFF)
