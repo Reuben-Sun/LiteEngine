@@ -17,7 +17,7 @@ namespace ToolEngine
 		StructuredBuffer
 	};
 
-	std::unordered_map<RHIDescriptorType, VkDescriptorType> RHIDescriptorTypeMap =
+	static std::unordered_map<RHIDescriptorType, VkDescriptorType> RHIDescriptorTypeMap =
 	{
 		{ RHIDescriptorType::Sampler, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER },
 		{ RHIDescriptorType::TextureSRV, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE },

@@ -33,6 +33,7 @@ namespace ToolEngine
 		void draw(uint32_t current_frame, uint32_t index_count, uint32_t instance_count, uint32_t first_index, uint32_t vertex_offset, uint32_t first_instance);
 		void bindVertexBuffer(uint32_t current_frame, RHIVertexBuffer& buffer, VkDeviceSize* offset, uint32_t first_binding_index, uint32_t binding_count);
 		void bindIndexBuffer(uint32_t current_frame, RHIIndexBuffer& buffer, VkDeviceSize offset, VkIndexType index_type);
+		void bindDescriptorSets(uint32_t current_frame, VkPipelineBindPoint bind_point, VkPipelineLayout layout, const std::vector<VkDescriptorSet> descriptor_sets, uint32_t first_set_index, uint32_t descriptor_set_count);
 	private:
 		RHIDevice& m_device;
 		std::vector<VkCommandBuffer> m_command_buffers;

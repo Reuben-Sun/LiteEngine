@@ -1,13 +1,19 @@
 #include "ForwardPipeline.h"
 #include "RHI/Public/RHIShader.h"
 #include "Geometry/Vertex.h"
+#include "Core/Time/Time.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace ToolEngine
 {
-	ForwardPipeline::ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, uint32_t frames_count)
-		: m_device(device), m_swapchain(swapchain), m_frames_count(frames_count)
+	ForwardPipeline::ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, RHIDescriptorPool& pool, uint32_t frames_count)
+		: m_device(device), m_swapchain(swapchain), m_descriptor_pool(pool), m_frames_count(frames_count)
 	{
+		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, 0);
 		createPipeline();
+		m_uniform_buffer = std::make_unique<RHIUniformBuffer>(m_device);
+		m_ubo_descriptor_set = std::make_unique<RHIDescriptorSet>(m_device, m_descriptor_pool, *m_ubo_descriptor_set_layout, *m_uniform_buffer);
 		LOG_INFO("Create ForwardPipeline!");
 	}
 	ForwardPipeline::~ForwardPipeline()
@@ -32,6 +38,17 @@ namespace ToolEngine
 		VkDeviceSize offsets[] = { 0 };
 		command_buffer.bindIndexBuffer(frame_index, *m_index_buffer, 0, VK_INDEX_TYPE_UINT32);
 		command_buffer.bindVertexBuffer(frame_index, *m_vertex_buffer, offsets, 0, 1);
+
+		GlobalUBO ubo{};
+		float time = Time::getInstance().getCurrentTime();
+		ubo.model_matrix = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_swapchain.getWidth() / (float) m_swapchain.getHeight(), 0.1f, 10.0f);
+		ubo.projection_matrix[1][1] *= -1;
+		m_uniform_buffer->updateBuffer(ubo);
+		const std::vector<VkDescriptorSet> descriptorsets = { m_ubo_descriptor_set->getHandle() };
+		command_buffer.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout->getHandle(), descriptorsets, 0, 1);
+
 
 		command_buffer.draw(frame_index, index_count, 1, 0, 0, 0);
 
@@ -132,8 +149,7 @@ namespace ToolEngine
 		dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 		dynamicState.pDynamicStates = dynamicStates.data();
 
-		// TODO: bind descriptor set
-		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { };
+		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle()};
 		VkPipelineLayoutCreateInfo pipeline_layout_info{};
 		pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();

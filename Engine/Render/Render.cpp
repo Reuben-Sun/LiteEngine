@@ -11,7 +11,7 @@ namespace ToolEngine
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
 
-		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, *m_rhi_context.m_swapchain, MAX_FRAMES_IN_FLIGHT);
+		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, *m_rhi_context.m_swapchain, *rhi_context.m_descriptor_pool, MAX_FRAMES_IN_FLIGHT);
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{

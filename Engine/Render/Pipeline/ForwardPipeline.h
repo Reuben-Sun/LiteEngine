@@ -12,6 +12,9 @@
 #include "Geometry/RenderScene.h"
 #include "RHI/Public/RHIVertexBuffer.h"
 #include "RHI/Public/RHIIndexBuffer.h"
+#include "RHI/Public/RHIUniformBuffer.h"
+#include "RHI/Public/RHIDescriptorSet.h"
+#include "RHI/Public/RHIDescriptorPool.h"
 
 
 namespace ToolEngine
@@ -19,7 +22,7 @@ namespace ToolEngine
 	class ForwardPipeline final
 	{
 	public:
-		ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, uint32_t frames_count);
+		ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, RHIDescriptorPool& pool, uint32_t frames_count);
 		~ForwardPipeline();
 
 		RHIRenderPass& getRenderPass() const { return *m_forward_pass; }
@@ -28,6 +31,7 @@ namespace ToolEngine
 	private:
 		RHIDevice& m_device;
 		RHISwapchain& m_swapchain;
+		RHIDescriptorPool& m_descriptor_pool;
 		uint32_t m_frames_count;
 
 		std::unique_ptr<RHIPipelineLayout> m_pipeline_layout;
@@ -36,6 +40,9 @@ namespace ToolEngine
 
 		std::unique_ptr<RHIIndexBuffer> m_index_buffer;
 		std::unique_ptr<RHIVertexBuffer> m_vertex_buffer;
+		std::unique_ptr<RHIUniformBuffer> m_uniform_buffer;
+		std::unique_ptr<RHIDescriptorSetLayout> m_ubo_descriptor_set_layout;
+		std::unique_ptr<RHIDescriptorSet> m_ubo_descriptor_set;
 
 		void createPipeline();
 	};
