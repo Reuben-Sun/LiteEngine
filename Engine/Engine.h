@@ -6,6 +6,10 @@
 #include "RHI/Public/RHIContext.h"
 #include "Render/Render.h"
 #include "Geometry/RenderScene.h"
+#include "imgui.h"
+#include "backends/imgui_impl_vulkan.h"
+#include "backends/imgui_impl_glfw.h"
+
 
 namespace ToolEngine
 {

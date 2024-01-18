@@ -1,3 +1,4 @@
+find_package(Vulkan REQUIRED)
 if (MSVC)
     add_compile_options(/wd4996)
 endif()
@@ -13,6 +14,20 @@ if (NOT TARGET glfw)
   add_subdirectory(glfw)
   set_property(TARGET glfw PROPERTY FOLDER "ThirdParty")
 endif()
+
+# imgui
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
+file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS ${IMGUI_DIR}/*.cpp)
+file(GLOB IMGUI_IMPL_SOURCES CONFIGURE_DEPENDS 
+  ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp 
+  ${IMGUI_DIR}/backends/imgui_impl_glfw.h 
+  ${IMGUI_DIR}/backends/imgui_impl_vulkan.cpp
+  ${IMGUI_DIR}/backends/imgui_impl_vulkan.h)
+add_library(imgui STATIC ${IMGUI_SOURCES} ${IMGUI_IMPL_SOURCES})
+target_include_directories(imgui PUBLIC ${IMGUI_DIR})
+target_include_directories(imgui PUBLIC ${Vulkan_INCLUDE_DIR})
+target_link_libraries(imgui PUBLIC glfw ${Vulkan_LIBRARIES})
+set_property(TARGET imgui PROPERTY FOLDER "ThirdParty")
 
 # glm
 if(NOT TARGET glm)
@@ -32,7 +47,10 @@ if(NOT TARGET spdlog)
   set_property(TARGET spdlog PROPERTY FOLDER "ThirdParty")
 endif()
 
+add_compile_options(spdlog /wd4996)
+
 # vma
 if(NOT TARGET VulkanMemoryAllocator)
   add_subdirectory(vma)
 endif()
+

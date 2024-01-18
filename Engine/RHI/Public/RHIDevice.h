@@ -40,7 +40,7 @@ namespace ToolEngine
 		VkCommandPool getCommandPool() const { return m_command_pool->getHandle(); }
 		VkFormat getDepthFormatDetail();
 		VkQueue getGraphicsQueue() const { return m_graphics_queue; }
-
+		uint32_t getGraphicsFamilyIndex() const { return m_graphics_family_index; }
 		uint32_t findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties);
 		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& buffer_memory);
 		void copyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer, VkDeviceSize size);
@@ -54,7 +54,8 @@ namespace ToolEngine
 		std::string m_name;
 		VkPhysicalDevice m_physical_device{ VK_NULL_HANDLE };
 		VkDevice m_logical_device{ VK_NULL_HANDLE };
-
+		
+		uint32_t m_graphics_family_index{ UINT32_MAX };
 		VkQueue m_graphics_queue{ VK_NULL_HANDLE };
 		VkQueue m_present_queue{ VK_NULL_HANDLE };
 

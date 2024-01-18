@@ -107,6 +107,7 @@ namespace ToolEngine
             indices.graphics_family.value(),
             indices.present_family.value()
         };
+        m_graphics_family_index = indices.graphics_family.value();
         float queuePriority = 1.0f;
         for (uint32_t queue_family_index : unique_queue_families)
         {
