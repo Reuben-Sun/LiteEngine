@@ -61,7 +61,7 @@ namespace ToolEngine
 	{
 		glm::vec3 up =
 		{
-			0, 1, 0
+			0, 0, 1
 		};
 		return up;
 	}

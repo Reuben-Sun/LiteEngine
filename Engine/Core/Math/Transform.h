@@ -6,6 +6,9 @@
 
 namespace ToolEngine
 {
+	/// <summary>
+	/// Right-handed coordinate system, Z is up
+	/// </summary>
 	struct Transform
 	{
 	public:
