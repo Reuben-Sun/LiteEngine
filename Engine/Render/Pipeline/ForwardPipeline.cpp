@@ -40,8 +40,10 @@ namespace ToolEngine
 		command_buffer.bindVertexBuffer(frame_index, *m_vertex_buffer, offsets, 0, 1);
 
 		GlobalUBO ubo{};
-		float time = Time::getInstance().getCurrentTime();
-		ubo.model_matrix = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		float time = Time::getInstance().getDeltaTime();
+		Transform& transform = scene.mesh_transform_list[0];
+		transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
+		ubo.model_matrix = transform.getModelMatrix();
 		ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_swapchain.getWidth() / (float) m_swapchain.getHeight(), 0.1f, 10.0f);
 		ubo.projection_matrix[1][1] *= -1;

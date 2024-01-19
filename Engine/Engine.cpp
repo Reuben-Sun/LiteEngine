@@ -36,6 +36,11 @@ namespace ToolEngine
         mesh.index_buffer = plane_index_buffer;
         mesh.vertex_buffer = plane_vertex_buffer;
         scene.mesh_list.push_back(mesh);
+        Transform transform;
+        transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
+        transform.rotation = Quaternion::Identity();
+        transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+        scene.mesh_transform_list.push_back(transform);
     }
     void Engine::tick()
     {
