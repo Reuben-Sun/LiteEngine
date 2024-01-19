@@ -42,8 +42,7 @@ namespace ToolEngine
 		GlobalUBO ubo{};
 		float time = Time::getInstance().getDeltaTime();
 		Transform& transform = scene.mesh_transform_list[0];
-		transform.position += transform.getUp() * time;
-		//transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
+		transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
 		ubo.model_matrix = transform.getModelMatrix();
 		ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_swapchain.getWidth() / (float) m_swapchain.getHeight(), 0.1f, 10.0f);
