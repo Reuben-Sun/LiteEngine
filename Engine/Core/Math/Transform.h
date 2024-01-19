@@ -9,9 +9,9 @@ namespace ToolEngine
 	struct Transform
 	{
 	public:
-		glm::vec3 m_position;
-		Quaternion m_rotation;
-		glm::vec3 m_scale;
+		glm::vec3 position;
+		Quaternion rotation;
+		glm::vec3 scale;
 
 		glm::mat4x4 getTranslationMatrix();
 		glm::mat4x4 getRotationMatrix();
