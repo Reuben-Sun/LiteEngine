@@ -2,13 +2,13 @@
 
 namespace ToolEngine
 {
-	Quaternion::Quaternion(const Quaternion& other): m_x(other.m_x), m_y(other.m_y), m_z(other.m_z), m_w(other.m_w)
+	Quaternion::Quaternion(const Quaternion& other): x(other.x), y(other.y), z(other.z), w(other.w)
 	{
 	}
-	Quaternion::Quaternion(float x, float y, float z, float w): m_x(x), m_y(y), m_z(z), m_w(w)
+	Quaternion::Quaternion(float x, float y, float z, float w): x(x), y(y), z(z), w(w)
 	{
 	}
-	Quaternion::Quaternion(glm::vec3& v, float w): m_x(v.x), m_y(v.y), m_z(v.z), m_w(w)
+	Quaternion::Quaternion(glm::vec3& v, float w): x(v.x), y(v.y), z(v.z), w(w)
 	{
 	}
 	Quaternion Quaternion::Zero()

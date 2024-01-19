@@ -5,7 +5,7 @@
 
 namespace ToolEngine
 {
-	class Quaternion
+	struct Quaternion
 	{
 	public:
 		Quaternion() = default;
@@ -21,11 +21,6 @@ namespace ToolEngine
 		static Quaternion fromRotationZ(float angleInRadians);
 		static Quaternion fromEulerRadiansXYZ(const glm::vec3& eulerRadians);
 
-		float X() const { return m_x; }
-		float Y() const { return m_y; }
-		float Z() const { return m_z; }
-		float W() const { return m_w; }
-	private:
-		float m_x, m_y, m_z, m_w;
+		float x, y, z, w;		
 	};
 }
