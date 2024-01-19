@@ -20,12 +20,11 @@ namespace ToolEngine
 		Renderer(RHIContext& rhi_context);
 		~Renderer();
 
-		const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
-
 		void tick(RenderScene& scene);
 		// TODO: resize frame
 	private:
 		RHIContext& m_rhi_context;
+		uint32_t m_max_frames_in_flight{ 3 };
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
 		std::unique_ptr<DepthResources> m_depth_resources;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_frame_buffers;
@@ -35,6 +34,6 @@ namespace ToolEngine
 		std::vector<std::unique_ptr<Semaphore>> m_render_finished_semaphores;
 
 		uint32_t m_current_frame{ 0 };
-		uint32_t getFrameIndex() const { return m_current_frame % MAX_FRAMES_IN_FLIGHT; }
+		uint32_t getFrameIndex() const { return m_current_frame % m_max_frames_in_flight; }
 	};
 }

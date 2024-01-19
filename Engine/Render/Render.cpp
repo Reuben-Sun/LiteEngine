@@ -11,8 +11,9 @@ namespace ToolEngine
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
 
-		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, *m_rhi_context.m_swapchain, *rhi_context.m_descriptor_pool, MAX_FRAMES_IN_FLIGHT);
+		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, *m_rhi_context.m_swapchain, *rhi_context.m_descriptor_pool, m_max_frames_in_flight);
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
+		m_max_frames_in_flight = swapchain_image_count;
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
 			m_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
@@ -21,7 +22,7 @@ namespace ToolEngine
 				m_depth_resources->getImageView(), width, height));
 		}
 
-		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, MAX_FRAMES_IN_FLIGHT);
+		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, m_max_frames_in_flight);
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
 			m_in_flight_fences.emplace_back(std::make_unique<Fence>(*m_rhi_context.m_device));
