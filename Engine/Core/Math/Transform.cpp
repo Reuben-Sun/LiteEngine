@@ -49,10 +49,12 @@ namespace ToolEngine
 	}
 	glm::vec3 Transform::getForward()
 	{
+		// TODO: forward
 		return glm::vec3();
 	}
 	glm::vec3 Transform::getRight()
 	{
+		// TODO: right
 		return glm::vec3();
 	}
 	glm::vec3 Transform::getUp()
