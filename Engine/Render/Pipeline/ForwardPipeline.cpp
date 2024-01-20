@@ -15,6 +15,7 @@ namespace ToolEngine
 		m_uniform_buffer = std::make_unique<RHIUniformBuffer>(m_device);
 		m_ubo_descriptor_set = std::make_unique<RHIDescriptorSet>(m_device, m_descriptor_pool, *m_ubo_descriptor_set_layout, *m_uniform_buffer);
 		LOG_INFO("Create ForwardPipeline!");
+		m_culling_result = std::make_unique<CullingResult>(m_device);
 	}
 	ForwardPipeline::~ForwardPipeline()
 	{
@@ -31,28 +32,30 @@ namespace ToolEngine
 
 		command_buffer.setScissor(frame_index, m_swapchain.getWidth(), m_swapchain.getHeight(), 0, 1);
 
-		Mesh& mesh = scene.mesh_list[0];
-		uint32_t index_count = mesh.index_buffer.size();
-		m_index_buffer = std::make_unique<RHIIndexBuffer>(m_device, mesh.index_buffer);
-		m_vertex_buffer = std::make_unique<RHIVertexBuffer>(m_device, mesh.vertex_buffer);
-		VkDeviceSize offsets[] = { 0 };
-		command_buffer.bindIndexBuffer(frame_index, *m_index_buffer, 0, VK_INDEX_TYPE_UINT32);
-		command_buffer.bindVertexBuffer(frame_index, *m_vertex_buffer, offsets, 0, 1);
+		m_culling_result->cull(scene);
+		for (int i = 0; i < scene.mesh_list.size(); i++)
+		{
+			uint32_t index_count = scene.mesh_list[i].index_buffer.size();
+			RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(scene.mesh_name_list[i]);
+			RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(scene.mesh_name_list[i]);
+			VkDeviceSize offsets[] = { 0 };
+			command_buffer.bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
+			command_buffer.bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
 
-		GlobalUBO ubo{};
-		float time = Time::getInstance().getDeltaTime();
-		Transform& transform = scene.mesh_transform_list[0];
-		transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
-		ubo.model_matrix = transform.getModelMatrix();
-		ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_swapchain.getWidth() / (float) m_swapchain.getHeight(), 0.1f, 10.0f);
-		ubo.projection_matrix[1][1] *= -1;
-		m_uniform_buffer->updateBuffer(ubo);
-		const std::vector<VkDescriptorSet> descriptorsets = { m_ubo_descriptor_set->getHandle() };
-		command_buffer.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout->getHandle(), descriptorsets, 0, 1);
+			GlobalUBO ubo{};
+			float time = Time::getInstance().getDeltaTime();
+			Transform& transform = scene.mesh_transform_list[0];
+			transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
+			ubo.model_matrix = transform.getModelMatrix();
+			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_swapchain.getWidth() / (float)m_swapchain.getHeight(), 0.1f, 10.0f);
+			ubo.projection_matrix[1][1] *= -1;
+			m_uniform_buffer->updateBuffer(ubo);
+			const std::vector<VkDescriptorSet> descriptorsets = { m_ubo_descriptor_set->getHandle() };
+			command_buffer.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout->getHandle(), descriptorsets, 0, 1);
 
-
-		command_buffer.draw(frame_index, index_count, 1, 0, 0, 0);
+			command_buffer.draw(frame_index, index_count, 1, 0, 0, 0);
+		}
 
 		command_buffer.endRenderPass(frame_index);
 

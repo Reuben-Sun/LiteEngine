@@ -8,6 +8,7 @@
 #include "Render/Pipeline/ForwardPipeline.h"
 #include "Render/Resources/DepthResources.h"
 #include "Geometry/RenderScene.h"
+#include "CullingResult.h"
 #include "imgui.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "backends/imgui_impl_glfw.h"
