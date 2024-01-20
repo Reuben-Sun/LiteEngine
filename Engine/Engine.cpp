@@ -46,6 +46,10 @@ namespace ToolEngine
     {
         Time::getInstance().tick();
         m_window->tick();
+        for (Layer* layer : m_layer_stack)
+        {
+            layer->onUpdate();
+        }
         m_rhi_context->tick();
         m_renderer->tick(scene);
     }
@@ -58,6 +62,15 @@ namespace ToolEngine
         EventDispatcher dispatcher(e);
         dispatcher.dispatch<WindowCloseEvent>(std::bind(&Engine::onWindowClose, this, std::placeholders::_1));
         //LOG_INFO("{0}", e.toString());
+        for (auto it = m_layer_stack.end(); it != m_layer_stack.begin();)
+        {
+            it--;
+            (*it)->onEvent(e);
+            if (e.had_handled)
+            {
+                break;
+            }
+        }
     }
     bool Engine::onWindowClose(WindowCloseEvent& e)
     {

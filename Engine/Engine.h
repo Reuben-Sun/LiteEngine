@@ -6,6 +6,7 @@
 #include "RHI/Public/RHIContext.h"
 #include "Render/Render.h"
 #include "Geometry/RenderScene.h"
+#include "Core/Layer/LayerStack.h"
 #include "imgui.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "backends/imgui_impl_glfw.h"
@@ -32,7 +33,7 @@ namespace ToolEngine
         std::unique_ptr<Renderer> m_renderer;
         RenderScene scene;
         bool m_running = true;
-
+        LayerStack m_layer_stack;
         bool onWindowClose(WindowCloseEvent& e);
     };
 }
