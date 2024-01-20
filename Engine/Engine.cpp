@@ -41,6 +41,13 @@ namespace ToolEngine
         transform.rotation = Quaternion::Identity();
         transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
         scene.mesh_transform_list.push_back(transform);
+
+        Transform transform2;
+        transform2.position = glm::vec3(0.0f, 0.0f, 1.0f);
+        transform2.rotation = Quaternion::Identity();
+        transform2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+        scene.mesh_list.push_back(mesh);
+        scene.mesh_transform_list.push_back(transform2);
     }
     void Engine::tick()
     {
