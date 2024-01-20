@@ -2,6 +2,7 @@
 #include "Core/Path/Path.h"
 #include "Core/Time/Time.h"
 #include "Core/Event/EventDispatcher.h"
+#include "Geometry/GltfLoader.h"
 
 
 namespace ToolEngine
@@ -35,12 +36,26 @@ namespace ToolEngine
         Mesh mesh;
         mesh.index_buffer = plane_index_buffer;
         mesh.vertex_buffer = plane_vertex_buffer;
-        scene.mesh_list.push_back(mesh);
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
         transform.rotation = Quaternion::Identity();
-        transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+        transform.scale = glm::vec3(2.0f, 2.0f, 2.0f);
+        scene.mesh_name_list.push_back("Plane");
+        scene.mesh_list.push_back(mesh);
         scene.mesh_transform_list.push_back(transform);
+
+        std::string model_path = Path::getInstance().getCurrentPath() + "\\Assets\\cube.gltf";
+        std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
+        Mesh mesh2;
+        mesh2.index_buffer = loader->loaded_index_buffer;
+        mesh2.vertex_buffer = loader->loaded_vertex_buffer;
+        scene.mesh_name_list.push_back("Cube");
+		scene.mesh_list.push_back(mesh2);
+        Transform transform2;
+        transform2.position = glm::vec3(0.0f, 0.0f, 0.5f);
+        transform2.rotation = Quaternion::Identity();
+        transform2.scale = glm::vec3(0.5f, 0.5f, 0.5f);
+        scene.mesh_transform_list.push_back(transform2);
     }
     void Engine::tick()
     {

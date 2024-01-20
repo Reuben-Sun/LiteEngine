@@ -21,5 +21,6 @@ namespace ToolEngine
 		VkImageView m_depth_image_view;
 		uint32_t m_width;
 		uint32_t m_height;
+		// TODO: move fence and semphore to there
 	};
 }
