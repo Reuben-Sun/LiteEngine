@@ -11,8 +11,9 @@ namespace ToolEngine
 	};
 	struct Material
 	{
+		// TODO: use material to select shader
 		std::string vertex_shader_path;
 		std::string frag_shader_path;
-		std::vector<TextureBinding> texture_bindings;
+		std::vector<TextureBinding> texture_bindings;	// current only use this
 	};
 }
