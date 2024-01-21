@@ -61,14 +61,7 @@ namespace ToolEngine
 			command_buffer.draw(frame_index, index_count, 1, 0, 0, 0);
 		}
 
-		ImGui_ImplVulkan_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		ImGui::ShowDemoWindow();
-
-		ImGui::Render();
-		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), command_buffer.getHandle(frame_index));
+		drawUI(command_buffer.getHandle(frame_index));
 
 		command_buffer.endRenderPass(frame_index);
 
@@ -192,5 +185,16 @@ namespace ToolEngine
 		m_state.m_subpass_index = 0;
 		m_pipeline = std::make_unique<RHIPipeline>(m_device);
 		m_pipeline->createPipeline(m_state);
+	}
+	void ForwardPipeline::drawUI(VkCommandBuffer cmd)
+	{
+		ImGui_ImplVulkan_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::ShowDemoWindow();
+
+		ImGui::Render();
+		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
 	}
 }

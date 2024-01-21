@@ -45,5 +45,6 @@ namespace ToolEngine
 		std::unique_ptr<CullingResult> m_culling_result;
 
 		void createPipeline();
+		void drawUI(VkCommandBuffer cmd);
 	};
 }
