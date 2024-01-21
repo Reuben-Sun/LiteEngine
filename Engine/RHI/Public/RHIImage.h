@@ -12,7 +12,7 @@ namespace ToolEngine
 		RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties);
 		~RHIImage();
 
-		void transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_flags);
+		void transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_flags = VK_IMAGE_ASPECT_COLOR_BIT);
 		VkImage getHandle() const { return m_image; }
 		VkFormat getFormat() const { return m_format; }
 		VkImageView getImageView() const { return m_image_view; }
