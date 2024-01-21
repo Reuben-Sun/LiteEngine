@@ -38,7 +38,7 @@ namespace ToolEngine
 			vkDestroyDescriptorSetLayout(m_device.getLogicalDevice(), m_layout, nullptr);
 		}
 	}
-	RHIDescriptorSet::RHIDescriptorSet(RHIDevice& device, RHIDescriptorPool& descriptor_pool, RHIDescriptorSetLayout& descriptor_set_layout, RHIUniformBuffer& ubo_buffer, RHITextureImage& texture_image)
+	RHIDescriptorSet::RHIDescriptorSet(RHIDevice& device, RHIDescriptorPool& descriptor_pool, RHIDescriptorSetLayout& descriptor_set_layout)
 		: m_device(device), m_descriptor_pool(descriptor_pool), m_descriptor_set_layout(descriptor_set_layout)
 	{
 		std::vector<VkDescriptorSetLayout> layouts = { m_descriptor_set_layout.getHandle() };
@@ -52,28 +52,34 @@ namespace ToolEngine
 		{
 			LOG_ERROR("failed to allocate descriptor sets!");
 		}
-
-		std::vector<VkWriteDescriptorSet> descriptor_writes(2);
+	}
+	RHIDescriptorSet::~RHIDescriptorSet()
+	{
+	}
+	void RHIDescriptorSet::updateUniformBuffer(RHIUniformBuffer& ubo_buffer, uint32_t binding_index)
+	{
+		std::vector<VkWriteDescriptorSet> descriptor_writes(1);
 		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptor_writes[0].dstSet = m_descriptor_set;
-		descriptor_writes[0].dstBinding = 0;
+		descriptor_writes[0].dstBinding = binding_index;
 		descriptor_writes[0].dstArrayElement = 0;
 		descriptor_writes[0].descriptorType = RHIDescriptorTypeMap[RHIDescriptorType::ConstantBuffer];
 		descriptor_writes[0].descriptorCount = 1;
 		descriptor_writes[0].pBufferInfo = &ubo_buffer.m_descriptor;
-
-		descriptor_writes[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptor_writes[1].dstSet = m_descriptor_set;
-		descriptor_writes[1].dstBinding = 1;
-		descriptor_writes[1].dstArrayElement = 0;
-		descriptor_writes[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptor_writes[1].descriptorCount = 1;
-		descriptor_writes[1].pImageInfo = &texture_image.m_descriptor;
-
 		uint32_t descriptor_write_count = static_cast<uint32_t>(descriptor_writes.size());
 		vkUpdateDescriptorSets(m_device.getLogicalDevice(), descriptor_write_count, descriptor_writes.data(), 0, nullptr);
 	}
-	RHIDescriptorSet::~RHIDescriptorSet()
+	void RHIDescriptorSet::updateTextureImage(RHITextureImage& texture_image, uint32_t binding_index)
 	{
+		std::vector<VkWriteDescriptorSet> descriptor_writes(1);
+		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptor_writes[0].dstSet = m_descriptor_set;
+		descriptor_writes[0].dstBinding = binding_index;
+		descriptor_writes[0].dstArrayElement = 0;
+		descriptor_writes[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptor_writes[0].descriptorCount = 1;
+		descriptor_writes[0].pImageInfo = &texture_image.m_descriptor;
+		uint32_t descriptor_write_count = static_cast<uint32_t>(descriptor_writes.size());
+		vkUpdateDescriptorSets(m_device.getLogicalDevice(), descriptor_write_count, descriptor_writes.data(), 0, nullptr);
 	}
 }

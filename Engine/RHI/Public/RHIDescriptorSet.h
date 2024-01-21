@@ -42,10 +42,12 @@ namespace ToolEngine
 	class RHIDescriptorSet
 	{
 	public:
-		RHIDescriptorSet(RHIDevice& device, RHIDescriptorPool& descriptor_pool, RHIDescriptorSetLayout& descriptor_set_layout, RHIUniformBuffer& ubo_buffer, RHITextureImage& texture_image);
+		RHIDescriptorSet(RHIDevice& device, RHIDescriptorPool& descriptor_pool, RHIDescriptorSetLayout& descriptor_set_layout);
 		~RHIDescriptorSet();
 
 		VkDescriptorSet getHandle() const { return m_descriptor_set; }
+		void updateUniformBuffer(RHIUniformBuffer& ubo_buffer, uint32_t binding_index);
+		void updateTextureImage(RHITextureImage& texture_image, uint32_t binding_index);
 	private:
 		VkDescriptorSet m_descriptor_set{ VK_NULL_HANDLE };
 		RHIDevice& m_device;
