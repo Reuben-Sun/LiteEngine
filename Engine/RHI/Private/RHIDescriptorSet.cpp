@@ -2,11 +2,11 @@
 
 namespace ToolEngine
 {
-	RHIDescriptorSetLayout::RHIDescriptorSetLayout(RHIDevice& device, uint32_t binding_index)
+	RHIDescriptorSetLayout::RHIDescriptorSetLayout(RHIDevice& device)
 		: m_device(device)
 	{
 		VkDescriptorSetLayoutBinding ubo_layout_binding{};
-		ubo_layout_binding.binding = binding_index;
+		ubo_layout_binding.binding = 0;
 		ubo_layout_binding.descriptorCount = 1;
 		ubo_layout_binding.descriptorType = RHIDescriptorTypeMap[RHIDescriptorType::ConstantBuffer];
 		ubo_layout_binding.pImmutableSamplers = nullptr;

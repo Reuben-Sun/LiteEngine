@@ -30,7 +30,7 @@ namespace ToolEngine
 	class RHIDescriptorSetLayout
 	{
 	public:
-		RHIDescriptorSetLayout(RHIDevice& device, uint32_t binding_index);
+		RHIDescriptorSetLayout(RHIDevice& device);
 		~RHIDescriptorSetLayout();
 
 		VkDescriptorSetLayout getHandle() const { return m_layout; }

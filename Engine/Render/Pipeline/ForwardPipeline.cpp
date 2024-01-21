@@ -10,7 +10,7 @@ namespace ToolEngine
 	ForwardPipeline::ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, RHIDescriptorPool& pool, uint32_t frames_count)
 		: m_device(device), m_swapchain(swapchain), m_descriptor_pool(pool), m_frames_count(frames_count)
 	{
-		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, 0);
+		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device);
 		createPipeline();
 		LOG_INFO("Create ForwardPipeline!");
 		m_culling_result = std::make_unique<CullingResult>(m_device, *m_ubo_descriptor_set_layout, m_descriptor_pool);
