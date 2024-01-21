@@ -51,6 +51,7 @@ namespace ToolEngine
 	{
 		VkCommandBufferBeginInfo begin_info{};
 		begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 		if (vkBeginCommandBuffer(m_command_buffers[current_frame], &begin_info) != VK_SUCCESS)
 		{

@@ -14,7 +14,7 @@ namespace ToolEngine
 		createPipeline();
 		LOG_INFO("Create ForwardPipeline!");
 		m_culling_result = std::make_unique<CullingResult>(m_device, *m_ubo_descriptor_set_layout, m_descriptor_pool);
-	}
+		}
 	ForwardPipeline::~ForwardPipeline()
 	{
 	}
@@ -60,6 +60,15 @@ namespace ToolEngine
 			// draw
 			command_buffer.draw(frame_index, index_count, 1, 0, 0, 0);
 		}
+
+		ImGui_ImplVulkan_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::ShowDemoWindow();
+
+		ImGui::Render();
+		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), command_buffer.getHandle(frame_index));
 
 		command_buffer.endRenderPass(frame_index);
 

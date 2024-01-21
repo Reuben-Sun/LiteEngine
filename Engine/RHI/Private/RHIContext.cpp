@@ -2,7 +2,7 @@
 
 namespace ToolEngine
 {
-	RHIContext::RHIContext(GlfwWindow& window)
+	RHIContext::RHIContext(GlfwWindow& window): m_window(window)
 	{
 		m_instance = std::make_unique<RHIInstance>(window);
 		m_device = std::make_unique<RHIDevice>(*m_instance);

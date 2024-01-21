@@ -16,6 +16,9 @@
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHIDescriptorPool.h"
 #include "Render/CullingResult.h"
+#include "imgui.h"
+#include "backends/imgui_impl_vulkan.h"
+#include "backends/imgui_impl_glfw.h"
 
 
 namespace ToolEngine

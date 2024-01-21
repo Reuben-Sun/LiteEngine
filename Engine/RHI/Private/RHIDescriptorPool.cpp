@@ -16,9 +16,10 @@ namespace ToolEngine
 
 		VkDescriptorPoolCreateInfo pool_create_info{};
 		pool_create_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		pool_create_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 		pool_create_info.poolSizeCount = pool_size.size();
 		pool_create_info.pPoolSizes = pool_size.data();
-		pool_create_info.maxSets = 2;
+		pool_create_info.maxSets = 10;
 
 		if (vkCreateDescriptorPool(m_device.getLogicalDevice(), &pool_create_info, nullptr, &m_descriptor_pool) != VK_SUCCESS)
 		{

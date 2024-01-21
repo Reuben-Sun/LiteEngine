@@ -22,7 +22,8 @@ namespace ToolEngine
 		std::unique_ptr<RHIDevice> m_device;
 		std::unique_ptr<RHISwapchain> m_swapchain;
 		std::unique_ptr<RHIDescriptorPool> m_descriptor_pool;
+		GlfwWindow& m_window;
 	private:
-
+		
 	};
 }

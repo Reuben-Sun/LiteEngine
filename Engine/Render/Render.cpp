@@ -1,4 +1,5 @@
 #include "Render.h"
+#include "RHI/Public/RHISingleTimeCommandBuffer.h"
 
 namespace ToolEngine
 {
@@ -29,6 +30,8 @@ namespace ToolEngine
 			m_image_available_semaphores.emplace_back(std::make_unique<Semaphore>(*m_rhi_context.m_device));
 			m_render_finished_semaphores.emplace_back(std::make_unique<Semaphore>(*m_rhi_context.m_device));
 		}
+
+		initUI();
 	}
 
 	Renderer::~Renderer()
@@ -53,11 +56,13 @@ namespace ToolEngine
 			LOG_ERROR("failed to acquire swap chain image!");
 		}
 
+		m_forward_pipeline->tick(*m_command_buffer, *m_frame_buffers[frame_index], frame_index, scene);
+
 		m_in_flight_fences[frame_index]->resetFence();
 
-		m_command_buffer->resetCommandBuffer(frame_index);
+		//m_command_buffer->resetCommandBuffer(frame_index);
 
-		m_forward_pipeline->tick(*m_command_buffer, *m_frame_buffers[frame_index], frame_index, scene);
+		
 
 		std::vector<VkSemaphore> wait_semaphores { m_image_available_semaphores[frame_index]->getHandle() };
 		std::vector<VkSemaphore> signal_semaphores { m_render_finished_semaphores[frame_index]->getHandle() };
@@ -67,5 +72,22 @@ namespace ToolEngine
 		std::vector<VkSwapchainKHR> swapchains{ m_rhi_context.m_swapchain->getHandle() };
 		m_rhi_context.m_device->present(signal_semaphores, image_index, swapchains);
 		m_current_frame++;
+	}
+	void Renderer::initUI()
+	{
+		ImGui::CreateContext();
+		ImGui_ImplGlfw_InitForVulkan(m_rhi_context.m_window.getHandle(), true);
+		ImGui_ImplVulkan_InitInfo init_info = {};
+		init_info.Instance = m_rhi_context.m_instance->getHandle();
+		init_info.PhysicalDevice = m_rhi_context.m_device->getPhysicalDevice();
+		init_info.Device = m_rhi_context.m_device->getLogicalDevice();
+		init_info.QueueFamily = m_rhi_context.m_device->getGraphicsFamilyIndex();
+		init_info.Queue = m_rhi_context.m_device->getGraphicsQueue();
+		init_info.DescriptorPool = m_rhi_context.m_descriptor_pool->getHandle();
+		init_info.MinImageCount = 3;
+		init_info.ImageCount = 3;
+		ImGui_ImplVulkan_Init(&init_info, m_forward_pipeline->getRenderPass().getHandle());
+		std::unique_ptr<RHISingleTimeCommandBuffer> single_time_command_buffer = std::make_unique<RHISingleTimeCommandBuffer>(*m_rhi_context.m_device);
+		ImGui_ImplVulkan_CreateFontsTexture(single_time_command_buffer->getHandle());
 	}
 }
