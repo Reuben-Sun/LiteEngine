@@ -34,9 +34,9 @@ namespace ToolEngine
 		vkFreeMemory(m_device.getLogicalDevice(), staging_buffer_memory, nullptr);
 		m_sampler = std::make_unique<RHISampler>(m_device);
 
-		m_descriptor_image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		m_descriptor_image_info.imageView = m_image->getImageView();
-		m_descriptor_image_info.sampler = m_sampler->getHandle();
+		m_descriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		m_descriptor.imageView = m_image->getImageView();
+		m_descriptor.sampler = m_sampler->getHandle();
 		LOG_INFO("Create texture image!");
 	}
 	RHITextureImage::~RHITextureImage()

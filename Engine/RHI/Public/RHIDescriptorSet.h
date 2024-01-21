@@ -5,6 +5,7 @@
 #include "RHIDevice.h"
 #include "RHIUniformBuffer.h"
 #include "RHIDescriptorPool.h"
+#include "RHI/Public/RHITextureImage.h"
 
 namespace ToolEngine
 {
@@ -41,7 +42,7 @@ namespace ToolEngine
 	class RHIDescriptorSet
 	{
 	public:
-		RHIDescriptorSet(RHIDevice& device, RHIDescriptorPool& descriptor_pool, RHIDescriptorSetLayout& descriptor_set_layout, RHIUniformBuffer& ubo_buffer);
+		RHIDescriptorSet(RHIDevice& device, RHIDescriptorPool& descriptor_pool, RHIDescriptorSetLayout& descriptor_set_layout, RHIUniformBuffer& ubo_buffer, RHITextureImage& texture_image);
 		~RHIDescriptorSet();
 
 		VkDescriptorSet getHandle() const { return m_descriptor_set; }
