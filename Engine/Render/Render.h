@@ -36,5 +36,7 @@ namespace ToolEngine
 
 		uint32_t m_current_frame{ 0 };
 		uint32_t getFrameIndex() const { return m_current_frame % m_max_frames_in_flight; }
+
+		void initUI();
 	};
 }
