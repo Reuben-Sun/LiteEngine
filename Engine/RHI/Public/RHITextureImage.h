@@ -8,11 +8,11 @@
 
 namespace ToolEngine
 {
-	class TextureImage
+	class RHITextureImage
 	{
 	public:
-		TextureImage(RHIDevice& device, const std::string& path);
-		~TextureImage();
+		RHITextureImage(RHIDevice& device, const std::string& path);
+		~RHITextureImage();
 
 
 	private:

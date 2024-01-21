@@ -1,11 +1,11 @@
-#include "TextureImage.h"
+#include "RHI/Public/RHITextureImage.h"
 #include "Core/Path/Path.h"
 #include "stb_image.h"
 #include "RHI/Public/RHISingleTimeCommandBuffer.h"
 
 namespace ToolEngine
 {
-	TextureImage::TextureImage(RHIDevice& device, const std::string& path): m_device(device)
+	RHITextureImage::RHITextureImage(RHIDevice& device, const std::string& path): m_device(device)
 	{
 		std::string texture_local_path = Path::getInstance().getCurrentPath() + "/Assets/" + path;
 		int texture_width, texture_height, texture_channels;
@@ -39,10 +39,10 @@ namespace ToolEngine
 		m_descriptor_image_info.sampler = m_sampler->getHandle();
 		LOG_INFO("Create texture image!");
 	}
-	TextureImage::~TextureImage()
+	RHITextureImage::~RHITextureImage()
 	{
 	}
-	void TextureImage::createImageFormBuffer(VkBuffer buffer, uint32_t width, uint32_t height)
+	void RHITextureImage::createImageFormBuffer(VkBuffer buffer, uint32_t width, uint32_t height)
 	{
 		std::unique_ptr<RHISingleTimeCommandBuffer> command_buffer = std::make_unique<RHISingleTimeCommandBuffer>(m_device);
 		VkBufferImageCopy region{};
