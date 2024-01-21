@@ -40,9 +40,12 @@ namespace ToolEngine
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
         transform.rotation = Quaternion::Identity();
         transform.scale = glm::vec3(2.0f, 2.0f, 2.0f);
+        Material material;
+        material.texture_bindings.push_back({ 1, "Calibration.png" });
         scene.mesh_name_list.push_back("Plane");
         scene.mesh_list.push_back(mesh);
         scene.mesh_transform_list.push_back(transform);
+        scene.material_list.push_back(material);
 
         std::string model_path = Path::getInstance().getCurrentPath() + "\\Assets\\cube.gltf";
         std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
@@ -55,7 +58,10 @@ namespace ToolEngine
         transform2.position = glm::vec3(0.0f, 0.0f, 0.5f);
         transform2.rotation = Quaternion::Identity();
         transform2.scale = glm::vec3(0.5f, 0.5f, 0.5f);
+        Material material2;
+        material2.texture_bindings.push_back({ 1, "MarblesTiles.jpg" });
         scene.mesh_transform_list.push_back(transform2);
+        scene.material_list.push_back(material2);
     }
     void Engine::tick()
     {
