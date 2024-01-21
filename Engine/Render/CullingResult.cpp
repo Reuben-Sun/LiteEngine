@@ -5,6 +5,9 @@ namespace ToolEngine
 	CullingResult::CullingResult(RHIDevice& device, RHIDescriptorSetLayout& layout, RHIDescriptorPool& pool)
 		: m_device(device), m_ubo_descriptor_set_layout(layout), m_ubo_descriptor_pool(pool)
 	{
+		// TODO: load image form material system
+		std::string image_name = "Calibration.png";
+		m_texture_name_to_image.emplace(image_name, std::make_unique<RHITextureImage>(m_device, image_name));
 	}
 	CullingResult::~CullingResult()
 	{
@@ -26,7 +29,8 @@ namespace ToolEngine
 				m_model_name_to_uniform_buffer.emplace(model_name, std::make_unique<RHIUniformBuffer>(m_device));
 				m_model_name_to_ubo_descriptor_set.emplace(model_name,
 					std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, 
-						m_ubo_descriptor_set_layout, *m_model_name_to_uniform_buffer[model_name]));
+						m_ubo_descriptor_set_layout, *m_model_name_to_uniform_buffer[model_name],
+						*m_texture_name_to_image["Calibration.png"]));
 			}
 		}
 	}

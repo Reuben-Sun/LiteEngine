@@ -48,4 +48,8 @@ namespace ToolEngine
 		copyRegion.size = size;
 		vkCmdCopyBuffer(m_command_buffer, src_buffer, dst_buffer, 1, &copyRegion);
 	}
+	void RHISingleTimeCommandBuffer::copyImage(VkBuffer src_buffer, VkImage dst_image, VkImageLayout image_layout, uint32_t region_count, const VkBufferImageCopy* regions)
+	{
+		vkCmdCopyBufferToImage(m_command_buffer, src_buffer, dst_image, image_layout, region_count, regions);
+	}
 }
