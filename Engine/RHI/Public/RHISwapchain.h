@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.h>
 #include "RHIDevice.h"
 #include "RHIInstance.h"
+#include "RHISynchronization.h"
 
 namespace ToolEngine
 {
@@ -19,6 +20,8 @@ namespace ToolEngine
 		VkFormat getFormat() const { return m_surface_format.format; }
 		uint32_t getWidth() const { return m_width; }
 		uint32_t getHeight() const { return m_height; }
+
+		uint32_t acquireNextTexture(Semaphore& semaphore);
 
 	private:
 		RHIInstance& m_instance;

@@ -46,19 +46,9 @@ namespace ToolEngine
 	{
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->wait();
-		uint32_t image_index;
-		VkResult result = vkAcquireNextImageKHR(m_rhi_context.m_device->getLogicalDevice(), 
-			m_rhi_context.m_swapchain->getHandle(), UINT64_MAX, 
-			m_image_available_semaphores[frame_index]->getHandle(), VK_NULL_HANDLE, &image_index);
-		if (result == VK_ERROR_OUT_OF_DATE_KHR)
-		{
-			//resizeFrame();
-			return;
-		}
-		else if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-		{
-			LOG_ERROR("failed to acquire swap chain image!");
-		}
+
+		uint32_t image_index = m_rhi_context.m_swapchain->acquireNextTexture(*m_image_available_semaphores[frame_index]);
+		
 		m_culling_result->cull(scene);
 
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
