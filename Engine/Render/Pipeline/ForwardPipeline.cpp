@@ -1,72 +1,20 @@
 #include "ForwardPipeline.h"
 #include "RHI/Public/RHIShader.h"
 #include "Geometry/Vertex.h"
-#include "Core/Time/Time.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace ToolEngine
 {
-	ForwardPipeline::ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, RHIDescriptorPool& pool, uint32_t frames_count)
-		: m_device(device), m_swapchain(swapchain), m_descriptor_pool(pool), m_frames_count(frames_count)
+	ForwardPipeline::ForwardPipeline(RHIDevice& device, VkRenderPass render_pass)
+		: m_device(device), m_render_pass(render_pass)
 	{
 		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device);
 		createPipeline();
 		LOG_INFO("Create ForwardPipeline!");
-		m_culling_result = std::make_unique<CullingResult>(m_device, *m_ubo_descriptor_set_layout, m_descriptor_pool);
-		}
+	}
 	ForwardPipeline::~ForwardPipeline()
 	{
 	}
-	void ForwardPipeline::tick(RHICommandBuffer& command_buffer, RHIFrameBuffer& frame_buffer, uint32_t frame_index, RenderScene& scene)
-	{
-		command_buffer.beginRecord(frame_index);
 
-		command_buffer.beginRenderPass(frame_index, *m_forward_pass, frame_buffer, m_swapchain.getWidth(), m_swapchain.getHeight());
-
-		command_buffer.bindPipeline(frame_index, m_pipeline->getHandle());
-
-		command_buffer.setViewport(frame_index, m_swapchain.getWidth(), m_swapchain.getHeight(), 0.0f, 1.0f, 0, 1);
-
-		command_buffer.setScissor(frame_index, m_swapchain.getWidth(), m_swapchain.getHeight(), 0, 1);
-
-		// culling
-		m_culling_result->cull(scene);
-		// draw culling result
-		for (int i = 0; i < scene.mesh_list.size(); i++)
-		{
-			// binding index buffer and vertex buffer
-			uint32_t index_count = scene.mesh_list[i].index_buffer.size();
-			RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(scene.mesh_name_list[i]);
-			RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(scene.mesh_name_list[i]);
-			VkDeviceSize offsets[] = { 0 };
-			command_buffer.bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
-			command_buffer.bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
-			// update ubo
-			GlobalUBO ubo{};
-			float time = Time::getInstance().getDeltaTime();
-			Transform& transform = scene.mesh_transform_list[i];
-			transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
-			ubo.model_matrix = transform.getModelMatrix();
-			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_swapchain.getWidth() / (float)m_swapchain.getHeight(), 0.1f, 10.0f);
-			ubo.projection_matrix[1][1] *= -1;
-			// binding ubo
-			RHIUniformBuffer& uniform_buffer = m_culling_result->getUniformBuffer(scene.mesh_name_list[i]);
-			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(scene.mesh_name_list[i]);
-			uniform_buffer.updateBuffer(ubo);
-			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
-			command_buffer.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout->getHandle(), descriptorsets, 0, 1);
-			// draw
-			command_buffer.draw(frame_index, index_count, 1, 0, 0, 0);
-		}
-
-		drawUI(command_buffer.getHandle(frame_index));
-
-		command_buffer.endRenderPass(frame_index);
-
-		command_buffer.endRecord(frame_index);
-	}
 	void ForwardPipeline::createPipeline()
 	{
 		// shader
@@ -166,14 +114,12 @@ namespace ToolEngine
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();
 		pipeline_layout_info.pSetLayouts = descriptor_set_layouts.data();
 		m_pipeline_layout = std::make_unique<RHIPipelineLayout>(m_device, pipeline_layout_info);
-		
-		m_forward_pass = std::make_unique<ForwardPass>(m_device, m_swapchain.getFormat());
 
 		RHIPipelineState m_state;
 		m_state.m_vertex_shader_stage = vert_shader_stage_info;
 		m_state.m_fragment_shader_stage = frag_shader_stage_info;
 		m_state.m_pipeline_layout = m_pipeline_layout->getHandle();
-		m_state.m_render_pass = m_forward_pass->getHandle();
+		m_state.m_render_pass = m_render_pass;
 		m_state.m_vertex_input_state = vertex_input_state;
 		m_state.m_input_assembly_state = input_assembly_state;
 		m_state.m_viewport_state = viewport_state;
@@ -185,16 +131,5 @@ namespace ToolEngine
 		m_state.m_subpass_index = 0;
 		m_pipeline = std::make_unique<RHIPipeline>(m_device);
 		m_pipeline->createPipeline(m_state);
-	}
-	void ForwardPipeline::drawUI(VkCommandBuffer cmd)
-	{
-		ImGui_ImplVulkan_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		ImGui::ShowDemoWindow();
-
-		ImGui::Render();
-		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
 	}
 }

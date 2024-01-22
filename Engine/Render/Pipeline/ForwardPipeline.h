@@ -16,9 +16,6 @@
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHIDescriptorPool.h"
 #include "Render/CullingResult.h"
-#include "imgui.h"
-#include "backends/imgui_impl_vulkan.h"
-#include "backends/imgui_impl_glfw.h"
 
 
 namespace ToolEngine
@@ -26,25 +23,22 @@ namespace ToolEngine
 	class ForwardPipeline final
 	{
 	public:
-		ForwardPipeline(RHIDevice& device, RHISwapchain& swapchain, RHIDescriptorPool& pool, uint32_t frames_count);
+		ForwardPipeline(RHIDevice& device, VkRenderPass render_pass);
 		~ForwardPipeline();
 
-		RHIRenderPass& getRenderPass() const { return *m_forward_pass; }
-
-		void tick(RHICommandBuffer& cmd, RHIFrameBuffer& frame_buffer, uint32_t frame_index, RenderScene& scene);
+		RHIDescriptorSetLayout& getDescriptorSetLayout() const { return *m_ubo_descriptor_set_layout; }
+		
+		VkPipeline getHandle() const { return m_pipeline->getHandle(); }
+		VkPipelineLayout getLayout() const { return m_pipeline_layout->getHandle(); }
+		
 	private:
 		RHIDevice& m_device;
-		RHISwapchain& m_swapchain;
-		RHIDescriptorPool& m_descriptor_pool;
-		uint32_t m_frames_count;
+		VkRenderPass m_render_pass;
 
 		std::unique_ptr<RHIPipelineLayout> m_pipeline_layout;
-		std::unique_ptr<ForwardPass> m_forward_pass;
 		std::unique_ptr<RHIPipeline> m_pipeline;
 		std::unique_ptr<RHIDescriptorSetLayout> m_ubo_descriptor_set_layout;
-		std::unique_ptr<CullingResult> m_culling_result;
 
 		void createPipeline();
-		void drawUI(VkCommandBuffer cmd);
 	};
 }
