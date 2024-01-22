@@ -40,6 +40,6 @@ namespace ToolEngine
 		uint32_t getFrameIndex() const { return m_current_frame % m_max_frames_in_flight; }
 
 		void initUI();
-		void drawUI(VkCommandBuffer cmd);
+		void drawUI(RHICommandBuffer& cmd, uint32_t frame_index);
 	};
 }

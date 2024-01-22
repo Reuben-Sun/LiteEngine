@@ -95,7 +95,7 @@ namespace ToolEngine
 			m_command_buffer->draw(frame_index, index_count, 1, 0, 0, 0);
 		}
 
-		drawUI(m_command_buffer->getHandle(frame_index));
+		drawUI(*m_command_buffer, frame_index);
 
 		m_command_buffer->endRenderPass(frame_index);
 
@@ -136,7 +136,7 @@ namespace ToolEngine
 		}
 		ImGui_ImplVulkan_DestroyFontUploadObjects();
 	}
-	void Renderer::drawUI(VkCommandBuffer cmd)
+	void Renderer::drawUI(RHICommandBuffer& cmd, uint32_t frame_index)
 	{
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -145,6 +145,6 @@ namespace ToolEngine
 		ImGui::ShowDemoWindow();
 
 		ImGui::Render();
-		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
+		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
 	}
 }
