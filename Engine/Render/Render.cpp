@@ -42,7 +42,7 @@ namespace ToolEngine
 		m_culling_result = std::make_unique<CullingResult>(*m_rhi_context.m_device, 
 			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
 
-		initUI();
+		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_forward_pass);
 	}
 
 	Renderer::~Renderer()
@@ -106,7 +106,7 @@ namespace ToolEngine
 			m_command_buffer->draw(frame_index, index_count, 1, 0, 0, 0);
 		}
 
-		drawUI(*m_command_buffer, frame_index);
+		m_render_ui->tick(*m_command_buffer, frame_index);
 
 		m_command_buffer->endRenderPass(frame_index);
 
@@ -125,36 +125,5 @@ namespace ToolEngine
 		m_rhi_context.m_device->present(signal_semaphores, image_index, swapchains);
 
 		m_current_frame++;
-	}
-	void Renderer::initUI()
-	{
-		ImGui::CreateContext();
-		ImGui_ImplGlfw_InitForVulkan(m_rhi_context.m_window.getHandle(), true);
-		ImGui_ImplVulkan_InitInfo init_info = {};
-		init_info.Instance = m_rhi_context.m_instance->getHandle();
-		init_info.PhysicalDevice = m_rhi_context.m_device->getPhysicalDevice();
-		init_info.Device = m_rhi_context.m_device->getLogicalDevice();
-		init_info.QueueFamily = m_rhi_context.m_device->getGraphicsFamilyIndex();
-		init_info.Queue = m_rhi_context.m_device->getGraphicsQueue();
-		init_info.DescriptorPool = m_rhi_context.m_descriptor_pool->getHandle();
-		init_info.MinImageCount = 3;
-		init_info.ImageCount = 3;
-		ImGui_ImplVulkan_Init(&init_info, m_forward_pass->getHandle());
-		{
-			std::unique_ptr<RHISingleTimeCommandBuffer> single_time_command_buffer = std::make_unique<RHISingleTimeCommandBuffer>(*m_rhi_context.m_device);
-			ImGui_ImplVulkan_CreateFontsTexture(single_time_command_buffer->getHandle());
-		}
-		ImGui_ImplVulkan_DestroyFontUploadObjects();
-	}
-	void Renderer::drawUI(RHICommandBuffer& cmd, uint32_t frame_index)
-	{
-		ImGui_ImplVulkan_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		ImGui::ShowDemoWindow();
-
-		ImGui::Render();
-		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
 	}
 }

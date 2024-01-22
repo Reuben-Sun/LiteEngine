@@ -9,9 +9,7 @@
 #include "Render/Resources/DepthResources.h"
 #include "Geometry/RenderScene.h"
 #include "CullingResult.h"
-#include "imgui.h"
-#include "backends/imgui_impl_vulkan.h"
-#include "backends/imgui_impl_glfw.h"
+#include "Render/Feature/UI/RenderUI.h"
 
 namespace ToolEngine
 {
@@ -35,11 +33,9 @@ namespace ToolEngine
 		std::vector<std::unique_ptr<Semaphore>> m_image_available_semaphores;
 		std::vector<std::unique_ptr<Semaphore>> m_render_finished_semaphores;
 		std::unique_ptr<CullingResult> m_culling_result;
+		std::unique_ptr<RenderUI> m_render_ui;
 
 		uint32_t m_current_frame{ 0 };
 		uint32_t getFrameIndex() const { return m_current_frame % m_max_frames_in_flight; }
-
-		void initUI();
-		void drawUI(RHICommandBuffer& cmd, uint32_t frame_index);
 	};
 }
