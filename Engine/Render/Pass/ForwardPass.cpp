@@ -2,10 +2,10 @@
 
 namespace ToolEngine
 {
-	ForwardPass::ForwardPass(RHIDevice& device, VkFormat color_format): RHIRenderPass(device, color_format)
+	ForwardPass::ForwardPass(RHIDevice& device, VkFormat color_format, VkFormat depth_format): RHIRenderPass(device)
 	{
         VkAttachmentDescription color_attachment{};
-        color_attachment.format = m_color_format;
+        color_attachment.format = color_format;
         color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
         color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -19,7 +19,7 @@ namespace ToolEngine
         color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         VkAttachmentDescription depth_attachment{};
-        depth_attachment.format = m_device.getDepthFormatDetail();
+        depth_attachment.format = depth_format;
         depth_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;

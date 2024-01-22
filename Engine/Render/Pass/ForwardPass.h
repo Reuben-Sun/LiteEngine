@@ -9,7 +9,7 @@ namespace ToolEngine
 	class ForwardPass : public RHIRenderPass
 	{
 	public:
-		ForwardPass(RHIDevice& device, VkFormat color_format);
+		ForwardPass(RHIDevice& device, VkFormat color_format, VkFormat depth_format);
 		~ForwardPass();
 	};
 }

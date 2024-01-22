@@ -13,9 +13,13 @@ namespace ToolEngine
 		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
+
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
-		m_forward_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format);
+
+		m_forward_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format, depth_format);
+
 		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, m_forward_pass->getHandle());
+
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
 		m_max_frames_in_flight = swapchain_image_count;
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
@@ -27,14 +31,17 @@ namespace ToolEngine
 		}
 
 		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, m_max_frames_in_flight);
+
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
 			m_in_flight_fences.emplace_back(std::make_unique<Fence>(*m_rhi_context.m_device));
 			m_image_available_semaphores.emplace_back(std::make_unique<Semaphore>(*m_rhi_context.m_device));
 			m_render_finished_semaphores.emplace_back(std::make_unique<Semaphore>(*m_rhi_context.m_device));
 		}
+
 		m_culling_result = std::make_unique<CullingResult>(*m_rhi_context.m_device, 
 			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
+
 		initUI();
 	}
 
@@ -45,6 +52,7 @@ namespace ToolEngine
 	void Renderer::tick(RenderScene& scene)
 	{
 		uint32_t frame_index = getFrameIndex();
+
 		m_in_flight_fences[frame_index]->wait();
 
 		uint32_t image_index = m_rhi_context.m_swapchain->acquireNextTexture(*m_image_available_semaphores[frame_index]);
@@ -76,6 +84,7 @@ namespace ToolEngine
 			VkDeviceSize offsets[] = { 0 };
 			m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
 			m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
+
 			// update ubo
 			GlobalUBO ubo{};
 			float time = Time::getInstance().getDeltaTime();
@@ -85,12 +94,14 @@ namespace ToolEngine
 			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, 10.0f);
 			ubo.projection_matrix[1][1] *= -1;
+
 			// binding ubo
 			RHIUniformBuffer& uniform_buffer = m_culling_result->getUniformBuffer(scene.mesh_name_list[i]);
 			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(scene.mesh_name_list[i]);
 			uniform_buffer.updateBuffer(ubo);
 			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
+			
 			// draw
 			m_command_buffer->draw(frame_index, index_count, 1, 0, 0, 0);
 		}
@@ -105,8 +116,6 @@ namespace ToolEngine
 
 		//m_command_buffer->resetCommandBuffer(frame_index);
 
-		
-
 		std::vector<VkSemaphore> wait_semaphores { m_image_available_semaphores[frame_index]->getHandle() };
 		std::vector<VkSemaphore> signal_semaphores { m_render_finished_semaphores[frame_index]->getHandle() };
 		m_command_buffer->submitCommandBuffer(frame_index, wait_semaphores, 
@@ -114,6 +123,7 @@ namespace ToolEngine
 
 		std::vector<VkSwapchainKHR> swapchains{ m_rhi_context.m_swapchain->getHandle() };
 		m_rhi_context.m_device->present(signal_semaphores, image_index, swapchains);
+
 		m_current_frame++;
 	}
 	void Renderer::initUI()
