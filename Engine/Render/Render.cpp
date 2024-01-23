@@ -62,17 +62,17 @@ namespace ToolEngine
 		
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
-
 		uint32_t w_start = 0;
 		uint32_t h_start = 0;
 		uint32_t w_width = width;
 		uint32_t h_height = height;
 		if(enable_ui)
 		{
-			w_start = width * m_render_ui->m_left_padding;
-			h_start = height * m_render_ui->m_top_padding;
-			w_width = width * (1 - m_render_ui->m_left_padding - m_render_ui->m_right_padding);
-			h_height = height * (1 - m_render_ui->m_top_padding - m_render_ui->m_bottom_padding);
+			auto extent = m_render_ui->getDisplayExtent(width, height);
+			w_start = extent[0];
+			w_width = extent[1];
+			h_start = extent[2];		
+			h_height = extent[3];
 		}
 
 		m_command_buffer->beginRecord(frame_index);
