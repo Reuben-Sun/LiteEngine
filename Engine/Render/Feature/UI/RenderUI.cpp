@@ -6,6 +6,8 @@ namespace ToolEngine
 	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass)
 	{
 		ImGui::CreateContext();
+		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui_ImplGlfw_InitForVulkan(rhi_context.m_window.getHandle(), true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
 		init_info.Instance = rhi_context.m_instance->getHandle();
@@ -29,10 +31,17 @@ namespace ToolEngine
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
+		ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+		
 		ImGui::ShowDemoWindow();
 
 		ImGui::Render();
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
+		ImGuiIO& io = ImGui::GetIO();
+		/*if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}*/
 	}
 }
