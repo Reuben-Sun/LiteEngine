@@ -15,4 +15,4 @@
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
 [submodule "ThirdParty/imgui"]
 	path = ThirdParty/imgui
-	url = https://github.com/Reuben-Sun/imgui.git
+	url = https://github.com/ocornut/imgui.git
