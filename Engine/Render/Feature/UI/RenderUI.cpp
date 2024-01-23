@@ -6,8 +6,6 @@ namespace ToolEngine
 	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass)
 	{
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		ImGui_ImplGlfw_InitForVulkan(rhi_context.m_window.getHandle(), true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
 		init_info.Instance = rhi_context.m_instance->getHandle();
@@ -19,6 +17,11 @@ namespace ToolEngine
 		init_info.MinImageCount = rhi_context.m_swapchain->getImageCount();	// 3
 		init_info.ImageCount = rhi_context.m_swapchain->getImageCount();	// 3;
 		ImGui_ImplVulkan_Init(&init_info, render_pass.getHandle());
+		{
+			std::unique_ptr<RHISingleTimeCommandBuffer> single_time_command_buffer = std::make_unique<RHISingleTimeCommandBuffer>(*rhi_context.m_device);
+			ImGui_ImplVulkan_CreateFontsTexture(single_time_command_buffer->getHandle());
+		}
+		ImGui_ImplVulkan_DestroyFontUploadObjects();
 	}
 	RenderUI::~RenderUI()
 	{
@@ -36,11 +39,5 @@ namespace ToolEngine
 
 		ImGui::Render();
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
-		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-		}
 	}
 }
