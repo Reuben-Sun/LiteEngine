@@ -22,6 +22,7 @@ namespace ToolEngine
 			LOG_ERROR("Failed to initialize GLFW!");
 		}
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);		// TODO: resize window
 		m_window = glfwCreateWindow(m_data.m_width, m_data.m_height, m_data.m_title.c_str(), nullptr, nullptr);
 		glfwSetWindowUserPointer(m_window, &m_data);
 

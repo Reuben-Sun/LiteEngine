@@ -17,8 +17,22 @@ namespace ToolEngine
 		RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass);
 		~RenderUI();
 
+		// 0 is w_start, 1 is w_width, 2 is h_start, 3 is h_height
+		std::vector<float> getDisplayExtent(uint32_t width, uint32_t height);
+		std::vector<float> getSceneExtent(uint32_t width, uint32_t height);
+		std::vector<float> getBrowserExtent(uint32_t width, uint32_t height);
+		std::vector<float> getDetailExtent(uint32_t width, uint32_t height);
+
 		void tick(RHICommandBuffer& cmd, uint32_t frame_index);
 	private:
+		RHIContext& m_rhi_context;
+		float m_left_padding = 0.2;
+		float m_right_padding = 0.2;
+		float m_top_padding = 0;
+		float m_bottom_padding = 0.4;
 
+		void drawScene(uint32_t width, uint32_t height);
+		void drawBrowser(uint32_t width, uint32_t height);
+		void drawDetail(uint32_t width, uint32_t height);
 	};
 }

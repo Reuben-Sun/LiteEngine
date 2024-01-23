@@ -59,8 +59,21 @@ namespace ToolEngine
 		
 		m_culling_result->cull(scene);
 
+		
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
+		uint32_t w_start = 0;
+		uint32_t h_start = 0;
+		uint32_t w_width = width;
+		uint32_t h_height = height;
+		if(enable_ui)
+		{
+			auto extent = m_render_ui->getDisplayExtent(width, height);
+			w_start = extent[0];
+			w_width = extent[1];
+			h_start = extent[2];		
+			h_height = extent[3];
+		}
 
 		m_command_buffer->beginRecord(frame_index);
 
@@ -68,9 +81,9 @@ namespace ToolEngine
 
 		m_command_buffer->bindPipeline(frame_index, m_forward_pipeline->getHandle());
 
-		m_command_buffer->setViewport(frame_index, width, height, 0.0f, 1.0f, 0, 1);
+		m_command_buffer->setViewport(frame_index, w_start, w_width, h_start, h_height, 0.0f, 1.0f, 0, 1);
 
-		m_command_buffer->setScissor(frame_index, width, height, 0, 1);
+		m_command_buffer->setScissor(frame_index, w_start, w_width, h_start, h_height, 0, 1);
 
 		// culling
 		m_culling_result->cull(scene);
@@ -105,8 +118,11 @@ namespace ToolEngine
 			// draw
 			m_command_buffer->draw(frame_index, index_count, 1, 0, 0, 0);
 		}
-
-		m_render_ui->tick(*m_command_buffer, frame_index);
+		if (enable_ui)
+		{
+			m_render_ui->tick(*m_command_buffer, frame_index);
+		}
+		
 
 		m_command_buffer->endRenderPass(frame_index);
 
