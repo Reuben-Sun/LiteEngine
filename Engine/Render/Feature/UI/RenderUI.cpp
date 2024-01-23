@@ -17,11 +17,6 @@ namespace ToolEngine
 		init_info.MinImageCount = rhi_context.m_swapchain->getImageCount();	// 3
 		init_info.ImageCount = rhi_context.m_swapchain->getImageCount();	// 3;
 		ImGui_ImplVulkan_Init(&init_info, render_pass.getHandle());
-		{
-			std::unique_ptr<RHISingleTimeCommandBuffer> single_time_command_buffer = std::make_unique<RHISingleTimeCommandBuffer>(*rhi_context.m_device);
-			ImGui_ImplVulkan_CreateFontsTexture(single_time_command_buffer->getHandle());
-		}
-		ImGui_ImplVulkan_DestroyFontUploadObjects();
 	}
 	RenderUI::~RenderUI()
 	{
