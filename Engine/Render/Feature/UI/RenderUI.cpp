@@ -62,6 +62,33 @@ namespace ToolEngine
 		extent[3] = height;
 		return extent;
 	}
+	void RenderUI::drawScene(uint32_t width, uint32_t height)
+	{
+		auto scene_extent = getSceneExtent(width, height);
+		ImGui::SetNextWindowPos(ImVec2(scene_extent[0], scene_extent[2]));
+		ImGui::SetNextWindowSize(ImVec2(scene_extent[1], scene_extent[3]));
+		ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+		ImGui::End();
+	}
+	void RenderUI::drawBrowser(uint32_t width, uint32_t height)
+	{
+		auto browser_extent = getBrowserExtent(width, height);
+		ImGui::SetNextWindowPos(ImVec2(browser_extent[0], browser_extent[2]));
+		ImGui::SetNextWindowSize(ImVec2(browser_extent[1], browser_extent[3]));
+		ImGui::Begin("Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+		ImGui::End();
+	}
+	void RenderUI::drawDetail(uint32_t width, uint32_t height)
+	{
+		auto detail_extent = getDetailExtent(width, height);
+		ImGui::SetNextWindowPos(ImVec2(detail_extent[0], detail_extent[2]));
+		ImGui::SetNextWindowSize(ImVec2(detail_extent[1], detail_extent[3]));
+		ImGui::Begin("Detail", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+		ImGui::End();
+	}
 	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
 	{
 		ImGui_ImplVulkan_NewFrame();
@@ -72,29 +99,11 @@ namespace ToolEngine
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 
-		auto scene_extent = getSceneExtent(width, height);
-		ImGui::SetNextWindowPos(ImVec2(scene_extent[0], scene_extent[2]));
-		ImGui::SetNextWindowSize(ImVec2(scene_extent[1], scene_extent[3]));
-		ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-		ImGui::End();
-
-		auto browser_extent = getBrowserExtent(width, height);
-		ImGui::SetNextWindowPos(ImVec2(browser_extent[0], browser_extent[2]));
-		ImGui::SetNextWindowSize(ImVec2(browser_extent[1], browser_extent[3]));
-		ImGui::Begin("Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-		ImGui::End();
-
-		auto detail_extent = getDetailExtent(width, height);
-		ImGui::SetNextWindowPos(ImVec2(detail_extent[0], detail_extent[2]));
-		ImGui::SetNextWindowSize(ImVec2(detail_extent[1], detail_extent[3]));
-		ImGui::Begin("Detail", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-		ImGui::End();
-
+		drawScene(width, height);
+		drawBrowser(width, height);
+		drawDetail(width, height);
+		
 		ImGui::Render();
-
 
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
 		ImGuiIO& io = ImGui::GetIO();
