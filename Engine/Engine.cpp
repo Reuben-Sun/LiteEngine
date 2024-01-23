@@ -67,10 +67,6 @@ namespace ToolEngine
     {
         Time::getInstance().tick();
         m_window->tick();
-        for (Layer* layer : m_layer_stack)
-        {
-            layer->onUpdate();
-        }
         m_rhi_context->tick();
         m_renderer->tick(scene);
     }
@@ -82,20 +78,22 @@ namespace ToolEngine
     {
         EventDispatcher dispatcher(e);
         dispatcher.dispatch<WindowCloseEvent>(std::bind(&Engine::onWindowClose, this, std::placeholders::_1));
+        dispatcher.dispatch<KeyPressedEvent>(std::bind(&Engine::onKeyPressed, this, std::placeholders::_1));
         //LOG_INFO("{0}", e.toString());
-        for (auto it = m_layer_stack.end(); it != m_layer_stack.begin();)
-        {
-            it--;
-            (*it)->onEvent(e);
-            if (e.had_handled)
-            {
-                break;
-            }
-        }
     }
     bool Engine::onWindowClose(WindowCloseEvent& e)
     {
         m_running = false;
+        return true;
+    }
+    bool Engine::onKeyPressed(KeyPressedEvent& e)
+    {
+        LOG_INFO("{0}", e.getKeyCode());
+        if (e.getKeyCode() == 85)   // 85 is u, TODO: move this to resource
+        {
+            m_renderer->enable_ui = !m_renderer->enable_ui;
+        }
+        
         return true;
     }
 }

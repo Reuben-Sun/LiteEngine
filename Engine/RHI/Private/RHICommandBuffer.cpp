@@ -89,23 +89,23 @@ namespace ToolEngine
 	{
 		vkCmdBindPipeline(m_command_buffers[current_frame], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 	}
-	void RHICommandBuffer::setViewport(uint32_t current_frame, uint32_t width, uint32_t height, float min_depth, float max_depth, uint32_t first_viewport_index, uint32_t viewport_count)
+	void RHICommandBuffer::setViewport(uint32_t current_frame, float w_start, float width, float h_start, float height, float min_depth, float max_depth, uint32_t first_viewport_index, uint32_t viewport_count)
 	{
-		VkExtent2D extent{ width, height };
 		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = extent.width;
-		viewport.height = extent.height;
+		viewport.x = w_start;
+		viewport.y = h_start;
+		viewport.width = width;
+		viewport.height = height;
 		viewport.minDepth = min_depth;
 		viewport.maxDepth = max_depth;
 		vkCmdSetViewport(m_command_buffers[current_frame], first_viewport_index, viewport_count, &viewport);
 	}
-	void RHICommandBuffer::setScissor(uint32_t current_frame, uint32_t width, uint32_t height, uint32_t first_scissor_index, uint32_t scissor_count)
+	void RHICommandBuffer::setScissor(uint32_t current_frame, uint32_t w_start, uint32_t width, uint32_t h_start, uint32_t height, uint32_t first_scissor_index, uint32_t scissor_count)
 	{
 		VkExtent2D extent{ width, height };
+		VkOffset2D offset{ w_start, h_start };
 		VkRect2D scissor{};
-		scissor.offset = { 0, 0 };
+		scissor.offset = offset;
 		scissor.extent = extent;
 		vkCmdSetScissor(m_command_buffers[current_frame], first_scissor_index, scissor_count, &scissor);
 	}

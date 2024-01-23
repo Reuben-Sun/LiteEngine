@@ -2,6 +2,7 @@
 #include "Marco.h"
 #include "Core/Event/Event.h"
 #include "Core/Event/ApplicationEvent.h"
+#include "Core/Event/KeyEvent.h"
 #include "Window/GlfwWindow.h"
 #include "RHI/Public/RHIContext.h"
 #include "Render/Render.h"
@@ -33,7 +34,8 @@ namespace ToolEngine
         std::unique_ptr<Renderer> m_renderer;
         RenderScene scene;
         bool m_running = true;
-        LayerStack m_layer_stack;
+        
         bool onWindowClose(WindowCloseEvent& e);
+        bool onKeyPressed(KeyPressedEvent& e);
     };
 }
