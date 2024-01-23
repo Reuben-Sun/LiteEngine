@@ -102,6 +102,20 @@ namespace ToolEngine
 		drawScene(width, height);
 		drawBrowser(width, height);
 		drawDetail(width, height);
+		/*if (ImGui::BeginMainMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				if (ImGui::MenuItem("Create")) {
+				}
+				if (ImGui::MenuItem("Open", "Ctrl+O")) {
+				}
+				if (ImGui::MenuItem("Save", "Ctrl+S")) {
+				}
+				if (ImGui::MenuItem("Save as..")) {
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}*/
 		
 		ImGui::Render();
 
