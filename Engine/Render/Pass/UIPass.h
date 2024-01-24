@@ -6,5 +6,10 @@
 
 namespace ToolEngine
 {
-
+	class UIPass : public RHIRenderPass
+	{
+	public:
+		UIPass(RHIDevice& device, VkFormat color_format);
+		~UIPass();
+	};
 }

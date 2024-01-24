@@ -6,6 +6,7 @@
 #include "RHI/Public/RHICommandBuffer.h"
 #include "RHI/Public/RHISynchronization.h"
 #include "Render/Pipeline/ForwardPipeline.h"
+#include "Render/Pass/UIPass.h"
 #include "Render/Resources/DepthResources.h"
 #include "Geometry/RenderScene.h"
 #include "CullingResult.h"
@@ -26,6 +27,7 @@ namespace ToolEngine
 		RHIContext& m_rhi_context;
 		uint32_t m_max_frames_in_flight{ 3 };
 		std::unique_ptr<ForwardPass> m_forward_pass;
+		std::unique_ptr<UIPass> m_ui_pass;
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
 		std::unique_ptr<DepthResources> m_depth_resources;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_frame_buffers;

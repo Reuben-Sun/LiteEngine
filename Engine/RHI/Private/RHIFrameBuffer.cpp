@@ -5,7 +5,8 @@ namespace ToolEngine
 	RHIFrameBuffer::RHIFrameBuffer(RHIDevice& device, VkRenderPass render_pass, VkImageView color_image_view, VkImageView depth_image_view, uint32_t width, uint32_t height)
         : m_device(device), m_render_pass(render_pass), m_color_image_view(color_image_view), m_depth_image_view(depth_image_view), m_width(width), m_height(height)
 	{
-        std::vector<VkImageView> attachments = { m_color_image_view, m_depth_image_view };
+        //std::vector<VkImageView> attachments = { m_color_image_view, m_depth_image_view };
+        std::vector<VkImageView> attachments = { m_color_image_view };
 
         VkFramebufferCreateInfo frame_buffer_info{};
         frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
