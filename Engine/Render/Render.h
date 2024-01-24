@@ -7,6 +7,7 @@
 #include "RHI/Public/RHISynchronization.h"
 #include "Render/Pipeline/ForwardPipeline.h"
 #include "Render/Pass/UIPass.h"
+#include "Render/Resources/ColorResources.h"
 #include "Render/Resources/DepthResources.h"
 #include "Geometry/RenderScene.h"
 #include "CullingResult.h"
@@ -29,6 +30,7 @@ namespace ToolEngine
 		std::unique_ptr<ForwardPass> m_forward_pass;
 		std::unique_ptr<UIPass> m_ui_pass;
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
+		std::unique_ptr<ColorResources> m_color_resources;
 		std::unique_ptr<DepthResources> m_depth_resources;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_forward_frame_buffers;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_ui_frame_buffers;
