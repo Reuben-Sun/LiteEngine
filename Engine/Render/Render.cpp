@@ -28,7 +28,7 @@ namespace ToolEngine
 			m_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
 				m_ui_pass->getHandle(),
 				m_rhi_context.m_swapchain->getImageView(i), 
-				m_depth_resources->getImageView(), width, height));
+				width, height));
 		}
 
 		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, m_max_frames_in_flight);
