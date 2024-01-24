@@ -14,9 +14,12 @@ namespace ToolEngine
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 
+		m_color_resources = std::make_unique<ColorResources>(*m_rhi_context.m_device, width, height, color_format);
+		m_color_sampler = std::make_unique<RHISampler>(*m_rhi_context.m_device);
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
 
 		m_forward_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format, depth_format);
+		m_ui_pass = std::make_unique<UIPass>(*m_rhi_context.m_device, color_format);
 
 		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, m_forward_pass->getHandle());
 
@@ -24,10 +27,15 @@ namespace ToolEngine
 		m_max_frames_in_flight = swapchain_image_count;
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
-			m_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
-				m_forward_pass->getHandle(),
+			m_forward_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
+				m_forward_pass->getHandle(), 
+				m_color_resources->getImageView(), 
+				m_depth_resources->getImageView(), 
+				width, height));
+			m_ui_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
+				m_ui_pass->getHandle(),
 				m_rhi_context.m_swapchain->getImageView(i), 
-				m_depth_resources->getImageView(), width, height));
+				width, height));
 		}
 
 		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, m_max_frames_in_flight);
@@ -42,7 +50,7 @@ namespace ToolEngine
 		m_culling_result = std::make_unique<CullingResult>(*m_rhi_context.m_device, 
 			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
 
-		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_forward_pass);
+		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_ui_pass);
 	}
 
 	Renderer::~Renderer()
@@ -66,18 +74,18 @@ namespace ToolEngine
 		uint32_t h_start = 0;
 		uint32_t w_width = width;
 		uint32_t h_height = height;
-		if(enable_ui)
+		/*if(enable_ui)
 		{
 			auto extent = m_render_ui->getDisplayExtent(width, height);
 			w_start = extent[0];
 			w_width = extent[1];
 			h_start = extent[2];		
 			h_height = extent[3];
-		}
+		}*/
 
 		m_command_buffer->beginRecord(frame_index);
 
-		m_command_buffer->beginRenderPass(frame_index, *m_forward_pass, *m_frame_buffers[frame_index], width, height);
+		m_command_buffer->beginRenderPass(frame_index, *m_forward_pass, *m_forward_frame_buffers[frame_index], width, height);
 
 		m_command_buffer->bindPipeline(frame_index, m_forward_pipeline->getHandle());
 
@@ -118,11 +126,16 @@ namespace ToolEngine
 			// draw
 			m_command_buffer->draw(frame_index, index_count, 1, 0, 0, 0);
 		}
+		
+
+		m_command_buffer->endRenderPass(frame_index);
+
+		m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
+
 		if (enable_ui)
 		{
-			m_render_ui->tick(*m_command_buffer, frame_index);
+			m_render_ui->tick(*m_command_buffer, frame_index, m_color_resources->getImageView(), m_color_sampler->getHandle());
 		}
-		
 
 		m_command_buffer->endRenderPass(frame_index);
 

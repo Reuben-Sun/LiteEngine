@@ -9,6 +9,9 @@ namespace ToolEngine
 	class RHIFrameBuffer
 	{
 	public:
+		// Frame buffer without depth
+		RHIFrameBuffer(RHIDevice& device, VkRenderPass render_pass, VkImageView color_image_view, uint32_t width, uint32_t height);
+		// Frame buffer with depth
 		RHIFrameBuffer(RHIDevice& device, VkRenderPass render_pass, VkImageView color_image_view, VkImageView depth_image_view, uint32_t width, uint32_t height);
 		~RHIFrameBuffer();
 

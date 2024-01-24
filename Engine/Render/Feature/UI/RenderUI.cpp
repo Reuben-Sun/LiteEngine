@@ -1,12 +1,12 @@
 #include "RenderUI.h"
 #include "RHI/Public/RHISingleTimeCommandBuffer.h"
+#include "Core/Path/Path.h"
 
 namespace ToolEngine
 {
 	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass): m_rhi_context(rhi_context)
 	{
 		ImGui::CreateContext();
-		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui_ImplGlfw_InitForVulkan(rhi_context.m_window.getHandle(), true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
@@ -62,34 +62,29 @@ namespace ToolEngine
 		extent[3] = height;
 		return extent;
 	}
+	void RenderUI::drawHierarchy(uint32_t width, uint32_t height)
+	{
+		ImGui::Begin("Hierarchy");
+		ImGui::End();
+	}
 	void RenderUI::drawScene(uint32_t width, uint32_t height)
 	{
-		auto scene_extent = getSceneExtent(width, height);
-		ImGui::SetNextWindowPos(ImVec2(scene_extent[0], scene_extent[2]));
-		ImGui::SetNextWindowSize(ImVec2(scene_extent[1], scene_extent[3]));
-		ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
+		ImGui::Begin("SceneView");
+		/*auto color_descriptor_set = ImGui_ImplVulkan_AddTexture(color_sampler, color_image, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		ImGui::Image((ImTextureID)color_descriptor_set, ImVec2(width, height));*/
 		ImGui::End();
 	}
 	void RenderUI::drawBrowser(uint32_t width, uint32_t height)
 	{
-		auto browser_extent = getBrowserExtent(width, height);
-		ImGui::SetNextWindowPos(ImVec2(browser_extent[0], browser_extent[2]));
-		ImGui::SetNextWindowSize(ImVec2(browser_extent[1], browser_extent[3]));
-		ImGui::Begin("Browser", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
+		ImGui::Begin("Browser");
 		ImGui::End();
 	}
 	void RenderUI::drawDetail(uint32_t width, uint32_t height)
 	{
-		auto detail_extent = getDetailExtent(width, height);
-		ImGui::SetNextWindowPos(ImVec2(detail_extent[0], detail_extent[2]));
-		ImGui::SetNextWindowSize(ImVec2(detail_extent[1], detail_extent[3]));
-		ImGui::Begin("Detail", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
+		ImGui::Begin("Detail");
 		ImGui::End();
 	}
-	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
+	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index, VkImageView color_image, VkSampler color_sampler)
 	{
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -99,10 +94,11 @@ namespace ToolEngine
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 
+		drawHierarchy(width, height);
 		drawScene(width, height);
 		drawBrowser(width, height);
 		drawDetail(width, height);
-		/*if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 				if (ImGui::MenuItem("Create")) {
 				}
@@ -115,11 +111,10 @@ namespace ToolEngine
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
-		}*/
+		}
 		
 		ImGui::Render();
 
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
-		ImGuiIO& io = ImGui::GetIO();
 	}
 }
