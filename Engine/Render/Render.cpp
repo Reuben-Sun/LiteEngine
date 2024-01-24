@@ -15,6 +15,7 @@ namespace ToolEngine
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 
 		m_color_resources = std::make_unique<ColorResources>(*m_rhi_context.m_device, width, height, color_format);
+		m_color_sampler = std::make_unique<RHISampler>(*m_rhi_context.m_device);
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
 
 		m_forward_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format, depth_format);
@@ -73,14 +74,14 @@ namespace ToolEngine
 		uint32_t h_start = 0;
 		uint32_t w_width = width;
 		uint32_t h_height = height;
-		if(enable_ui)
+		/*if(enable_ui)
 		{
 			auto extent = m_render_ui->getDisplayExtent(width, height);
 			w_start = extent[0];
 			w_width = extent[1];
 			h_start = extent[2];		
 			h_height = extent[3];
-		}
+		}*/
 
 		m_command_buffer->beginRecord(frame_index);
 
@@ -133,7 +134,7 @@ namespace ToolEngine
 
 		if (enable_ui)
 		{
-			m_render_ui->tick(*m_command_buffer, frame_index);
+			m_render_ui->tick(*m_command_buffer, frame_index, m_color_resources->getImageView(), m_color_sampler->getHandle());
 		}
 
 		m_command_buffer->endRenderPass(frame_index);
