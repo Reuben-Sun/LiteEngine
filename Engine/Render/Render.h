@@ -30,7 +30,8 @@ namespace ToolEngine
 		std::unique_ptr<UIPass> m_ui_pass;
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
 		std::unique_ptr<DepthResources> m_depth_resources;
-		std::vector<std::unique_ptr<RHIFrameBuffer>> m_frame_buffers;
+		std::vector<std::unique_ptr<RHIFrameBuffer>> m_forward_frame_buffers;
+		std::vector<std::unique_ptr<RHIFrameBuffer>> m_ui_frame_buffers;
 		std::unique_ptr<RHICommandBuffer> m_command_buffer;
 		std::vector<std::unique_ptr<Fence>> m_in_flight_fences;
 		std::vector<std::unique_ptr<Semaphore>> m_image_available_semaphores;

@@ -25,7 +25,7 @@ namespace ToolEngine
 		m_max_frames_in_flight = swapchain_image_count;
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
-			m_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
+			m_ui_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
 				m_ui_pass->getHandle(),
 				m_rhi_context.m_swapchain->getImageView(i), 
 				width, height));
@@ -127,7 +127,7 @@ namespace ToolEngine
 
 		//m_command_buffer->endRenderPass(frame_index);
 
-		m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_frame_buffers[frame_index], width, height);
+		m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
 		if (enable_ui)
 		{
