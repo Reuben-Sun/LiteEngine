@@ -1,12 +1,12 @@
 #include "RenderUI.h"
 #include "RHI/Public/RHISingleTimeCommandBuffer.h"
+#include "Core/Path/Path.h"
 
 namespace ToolEngine
 {
 	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass): m_rhi_context(rhi_context)
 	{
 		ImGui::CreateContext();
-		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		ImGui_ImplGlfw_InitForVulkan(rhi_context.m_window.getHandle(), true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
@@ -116,6 +116,5 @@ namespace ToolEngine
 		ImGui::Render();
 
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
-		ImGuiIO& io = ImGui::GetIO();
 	}
 }
