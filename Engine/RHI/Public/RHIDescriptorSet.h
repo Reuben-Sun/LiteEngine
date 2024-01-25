@@ -30,7 +30,7 @@ namespace ToolEngine
 	class RHIDescriptorSetLayout
 	{
 	public:
-		RHIDescriptorSetLayout(RHIDevice& device);
+		RHIDescriptorSetLayout(RHIDevice& device);	// TODO: generate descriptor set by shader meta file
 		~RHIDescriptorSetLayout();
 
 		VkDescriptorSetLayout getHandle() const { return m_layout; }
