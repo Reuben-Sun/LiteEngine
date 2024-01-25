@@ -84,7 +84,7 @@ namespace ToolEngine
 		ImGui::Begin("Detail");
 		ImGui::End();
 	}
-	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index, VkImageView color_image, VkSampler color_sampler)
+	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
 	{
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

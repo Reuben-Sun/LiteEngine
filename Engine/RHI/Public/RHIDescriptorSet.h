@@ -27,10 +27,16 @@ namespace ToolEngine
 		{ RHIDescriptorType::StructuredBuffer, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER }
 	};
 
+	static std::unordered_map<RHIDescriptorType, VkShaderStageFlags> RHIDescriptorShaderStageMap =
+	{
+		{ RHIDescriptorType::Sampler, VK_SHADER_STAGE_FRAGMENT_BIT },
+		{ RHIDescriptorType::ConstantBuffer, VK_SHADER_STAGE_VERTEX_BIT}
+	};
+
 	class RHIDescriptorSetLayout
 	{
 	public:
-		RHIDescriptorSetLayout(RHIDevice& device);
+		RHIDescriptorSetLayout(RHIDevice& device, std::vector<RHIDescriptorType>& layout_descriptor);	// TODO: generate descriptor set by shader meta file
 		~RHIDescriptorSetLayout();
 
 		VkDescriptorSetLayout getHandle() const { return m_layout; }

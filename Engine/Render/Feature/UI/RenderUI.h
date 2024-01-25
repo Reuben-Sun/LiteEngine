@@ -23,7 +23,7 @@ namespace ToolEngine
 		std::vector<float> getBrowserExtent(uint32_t width, uint32_t height);
 		std::vector<float> getDetailExtent(uint32_t width, uint32_t height);
 
-		void tick(RHICommandBuffer& cmd, uint32_t frame_index, VkImageView color_image, VkSampler color_sampler);
+		void tick(RHICommandBuffer& cmd, uint32_t frame_index);
 	private:
 		RHIContext& m_rhi_context;
 		float m_left_padding = 0.2;

@@ -1,28 +1,25 @@
-#include "ForwardPipeline.h"
+#include "BlitPipeline.h"
 #include "RHI/Public/RHIShader.h"
 #include "Geometry/Vertex.h"
 
 namespace ToolEngine
 {
-	ForwardPipeline::ForwardPipeline(RHIDevice& device, VkRenderPass render_pass)
-		: m_device(device), m_render_pass(render_pass)
+	BlitPipeline::BlitPipeline(RHIDevice& device, VkRenderPass render_pass): m_device(device), m_render_pass(render_pass)
 	{
 		std::vector<RHIDescriptorType> layout_descriptor;
-		layout_descriptor.push_back(RHIDescriptorType::ConstantBuffer);
 		layout_descriptor.push_back(RHIDescriptorType::Sampler);
 		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, layout_descriptor);
 		createPipeline();
-		LOG_INFO("Create ForwardPipeline!");
+		LOG_INFO("Create BlitPipeline!");
 	}
-	ForwardPipeline::~ForwardPipeline()
+	BlitPipeline::~BlitPipeline()
 	{
 	}
-
-	void ForwardPipeline::createPipeline()
+	void BlitPipeline::createPipeline()
 	{
 		// shader
-		RHIShader vertex_shader_module(m_device, "Unlit_vert.spv");
-		RHIShader fragment_shader_module(m_device, "Unlit_frag.spv");
+		RHIShader vertex_shader_module(m_device, "Blit_vert.spv");
+		RHIShader fragment_shader_module(m_device, "Blit_frag.spv");
 		VkPipelineShaderStageCreateInfo vert_shader_stage_info{};
 		vert_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		vert_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -111,7 +108,7 @@ namespace ToolEngine
 		dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 		dynamicState.pDynamicStates = dynamicStates.data();
 
-		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle()};
+		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle() };
 		VkPipelineLayoutCreateInfo pipeline_layout_info{};
 		pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();
