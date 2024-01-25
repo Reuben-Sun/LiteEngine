@@ -30,7 +30,7 @@ namespace ToolEngine
 		void setViewport(uint32_t current_frame, float w_start, float width, float h_start, float height, float min_depth, float max_depth, uint32_t first_viewport_index, uint32_t viewport_count);
 		void setScissor(uint32_t current_frame, uint32_t w_start, uint32_t width, uint32_t h_start, uint32_t height, uint32_t first_scissor_index, uint32_t scissor_count);
 		void draw(uint32_t current_frame, uint32_t vertex_count, uint32_t instance_count, uint32_t first_vertex_index, uint32_t first_instance_index);
-		void draw(uint32_t current_frame, uint32_t index_count, uint32_t instance_count, uint32_t first_index, uint32_t vertex_offset, uint32_t first_instance);
+		void drawIndexed(uint32_t current_frame, uint32_t index_count, uint32_t instance_count, uint32_t first_index, uint32_t vertex_offset, uint32_t first_instance);
 		void bindVertexBuffer(uint32_t current_frame, RHIVertexBuffer& buffer, VkDeviceSize* offset, uint32_t first_binding_index, uint32_t binding_count);
 		void bindIndexBuffer(uint32_t current_frame, RHIIndexBuffer& buffer, VkDeviceSize offset, VkIndexType index_type);
 		void bindDescriptorSets(uint32_t current_frame, VkPipelineBindPoint bind_point, VkPipelineLayout layout, const std::vector<VkDescriptorSet> descriptor_sets, uint32_t first_set_index, uint32_t descriptor_set_count);

@@ -12,6 +12,8 @@
 #include "Geometry/RenderScene.h"
 #include "CullingResult.h"
 #include "Render/Feature/UI/RenderUI.h"
+#include "Render/Pass/BlitPass.h"
+#include "Render/Pipeline/BlitPipeline.h"
 
 namespace ToolEngine
 {
@@ -38,6 +40,10 @@ namespace ToolEngine
 		std::unique_ptr<UIPass> m_ui_pass;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_ui_frame_buffers;
 		std::unique_ptr<RenderUI> m_render_ui;
+
+		std::unique_ptr<BlitPass> m_blit_pass;
+		std::unique_ptr<BlitPipeline> m_blit_pipeline;
+		std::vector<std::unique_ptr<RHIFrameBuffer>> m_blit_frame_buffers;
 
 		std::unique_ptr<RHICommandBuffer> m_command_buffer;
 		std::vector<std::unique_ptr<Fence>> m_in_flight_fences;

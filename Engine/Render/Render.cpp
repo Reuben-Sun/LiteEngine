@@ -19,8 +19,10 @@ namespace ToolEngine
 
 		m_forward_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format, depth_format);
 		m_ui_pass = std::make_unique<UIPass>(*m_rhi_context.m_device, color_format);
+		m_blit_pass = std::make_unique<BlitPass>(*m_rhi_context.m_device, color_format);
 
 		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, m_forward_pass->getHandle());
+		m_blit_pipeline = std::make_unique<BlitPipeline>(*m_rhi_context.m_device, m_blit_pass->getHandle());
 
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
 		m_max_frames_in_flight = swapchain_image_count;
@@ -34,6 +36,10 @@ namespace ToolEngine
 			m_ui_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
 				m_ui_pass->getHandle(),
 				m_rhi_context.m_swapchain->getImageView(i), 
+				width, height));
+			m_blit_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device,
+				m_blit_pass->getHandle(),
+				m_rhi_context.m_swapchain->getImageView(i),
 				width, height));
 		}
 
@@ -123,18 +129,26 @@ namespace ToolEngine
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 			
 			// draw
-			m_command_buffer->draw(frame_index, index_count, 1, 0, 0, 0);
+			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}
 		
 
 		m_command_buffer->endRenderPass(frame_index);
 
-		m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
+		//m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
-		if (enable_ui)
-		{
-			//m_render_ui->tick(*m_command_buffer, frame_index, m_color_resources->getImageView(), m_color_sampler->getHandle());
-		}
+		//if (enable_ui)
+		//{
+		//	//m_render_ui->tick(*m_command_buffer, frame_index, m_color_resources->getImageView(), m_color_sampler->getHandle());
+		//}
+
+		//m_command_buffer->endRenderPass(frame_index);
+
+		m_command_buffer->beginRenderPass(frame_index, *m_blit_pass, *m_blit_frame_buffers[frame_index], width, height);
+
+		m_command_buffer->bindPipeline(frame_index, m_blit_pipeline->getHandle());
+
+		m_command_buffer->draw(frame_index, 3, 1, 0, 0);
 
 		m_command_buffer->endRenderPass(frame_index);
 
