@@ -2,24 +2,22 @@
 
 namespace ToolEngine
 {
-	RHIDescriptorSetLayout::RHIDescriptorSetLayout(RHIDevice& device)
+	RHIDescriptorSetLayout::RHIDescriptorSetLayout(RHIDevice& device, std::vector<RHIDescriptorType>& layout_descriptor)
 		: m_device(device)
 	{
-		VkDescriptorSetLayoutBinding ubo_layout_binding{};
-		ubo_layout_binding.binding = 0;
-		ubo_layout_binding.descriptorCount = 1;
-		ubo_layout_binding.descriptorType = RHIDescriptorTypeMap[RHIDescriptorType::ConstantBuffer];
-		ubo_layout_binding.pImmutableSamplers = nullptr;
-		ubo_layout_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		std::vector<VkDescriptorSetLayoutBinding> bindings;
 
-		VkDescriptorSetLayoutBinding sampler_layout_binding{};
-		sampler_layout_binding.binding = 1;
-		sampler_layout_binding.descriptorCount = 1;
-		sampler_layout_binding.descriptorType = RHIDescriptorTypeMap[RHIDescriptorType::Sampler];
-		sampler_layout_binding.pImmutableSamplers = nullptr;
-		sampler_layout_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		for (uint32_t i = 0; i < layout_descriptor.size(); i++)
+		{
+			VkDescriptorSetLayoutBinding binding{};
+			binding.binding = i;
+			binding.descriptorCount = 1;
+			binding.descriptorType = RHIDescriptorTypeMap[layout_descriptor[i]];
+			binding.pImmutableSamplers = nullptr;
+			binding.stageFlags = RHIDescriptorShaderStageMap[layout_descriptor[i]];
+			bindings.push_back(binding);
+		}
 
-		std::vector<VkDescriptorSetLayoutBinding> bindings = { ubo_layout_binding, sampler_layout_binding };
 		VkDescriptorSetLayoutCreateInfo layout_info{};
 		layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 		layout_info.bindingCount = static_cast<uint32_t>(bindings.size());

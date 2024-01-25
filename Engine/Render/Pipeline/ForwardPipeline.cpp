@@ -7,7 +7,10 @@ namespace ToolEngine
 	ForwardPipeline::ForwardPipeline(RHIDevice& device, VkRenderPass render_pass)
 		: m_device(device), m_render_pass(render_pass)
 	{
-		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device);
+		std::vector<RHIDescriptorType> layout_descriptor;
+		layout_descriptor.push_back(RHIDescriptorType::ConstantBuffer);
+		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, layout_descriptor);
 		createPipeline();
 		LOG_INFO("Create ForwardPipeline!");
 	}
