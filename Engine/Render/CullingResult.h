@@ -26,6 +26,7 @@ namespace ToolEngine
 		RHIIndexBuffer& getIndexBuffer(const std::string& model_name);
 		RHIUniformBuffer& getUniformBuffer(const std::string& model_name);
 		RHIDescriptorSet& getDescriptorSet(const std::string& model_name);
+		RHITextureImage& getTextureImage(const std::string& texture_name);
 
 	private:
 		RHIDevice& m_device;

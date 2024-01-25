@@ -74,4 +74,10 @@ namespace ToolEngine
 		RHIDescriptorSet& descriptor_set_ref = *(it->second.get());
 		return descriptor_set_ref;
 	}
+	RHITextureImage& CullingResult::getTextureImage(const std::string& texture_name)
+	{
+		auto it = m_texture_name_to_image.find(texture_name);
+		RHITextureImage& texture_image_ref = *(it->second.get());
+		return texture_image_ref;
+	}
 }
