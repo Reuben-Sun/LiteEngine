@@ -32,7 +32,6 @@ namespace ToolEngine
 		std::unique_ptr<ForwardPass> m_forward_pass;
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
 		std::unique_ptr<ColorResources> m_color_resources;
-		std::unique_ptr<RHISampler> m_color_sampler;
 		std::unique_ptr<DepthResources> m_depth_resources;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_forward_frame_buffers;
 		
