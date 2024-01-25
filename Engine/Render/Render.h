@@ -43,6 +43,7 @@ namespace ToolEngine
 
 		std::unique_ptr<BlitPass> m_blit_pass;
 		std::unique_ptr<BlitPipeline> m_blit_pipeline;
+		std::unique_ptr<RHIDescriptorSet> m_blit_descriptor_set;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_blit_frame_buffers;
 
 		std::unique_ptr<RHICommandBuffer> m_command_buffer;

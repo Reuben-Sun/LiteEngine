@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.h>
 #include "RHI/Public/RHIDevice.h"
 #include "RHI/Public/RHIImage.h"
+#include "RHI/Public/RHISampler.h"
 
 namespace ToolEngine
 {
@@ -14,8 +15,10 @@ namespace ToolEngine
 		~ColorResources();
 
 		VkImageView getImageView() { return m_image->getImageView(); }
+		VkDescriptorImageInfo m_descriptor;
 	protected:
 		std::unique_ptr<RHIImage> m_image;
+		std::unique_ptr<RHISampler> m_sampler;
 		RHIDevice& m_device;
 	};
 }
