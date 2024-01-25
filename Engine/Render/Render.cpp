@@ -80,14 +80,6 @@ namespace ToolEngine
 		uint32_t h_start = 0;
 		uint32_t w_width = width;
 		uint32_t h_height = height;
-		/*if(enable_ui)
-		{
-			auto extent = m_render_ui->getDisplayExtent(width, height);
-			w_start = extent[0];
-			w_width = extent[1];
-			h_start = extent[2];		
-			h_height = extent[3];
-		}*/
 
 		m_command_buffer->beginRecord(frame_index);
 
@@ -136,37 +128,39 @@ namespace ToolEngine
 
 		m_command_buffer->endRenderPass(frame_index);
 
-		//m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
+		if (enable_ui)
+		{
+			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
-		//if (enable_ui)
-		//{
-		//	//m_render_ui->tick(*m_command_buffer, frame_index, m_color_resources->getImageView(), m_color_sampler->getHandle());
-		//}
+			m_render_ui->tick(*m_command_buffer, frame_index);
 
-		//m_command_buffer->endRenderPass(frame_index);
+			m_command_buffer->endRenderPass(frame_index);
+		}
+		else 
+		{
+			m_command_buffer->beginRenderPass(frame_index, *m_blit_pass, *m_blit_frame_buffers[frame_index], width, height);
 
-		m_command_buffer->beginRenderPass(frame_index, *m_blit_pass, *m_blit_frame_buffers[frame_index], width, height);
+			m_command_buffer->bindPipeline(frame_index, m_blit_pipeline->getHandle());
 
-		m_command_buffer->bindPipeline(frame_index, m_blit_pipeline->getHandle());
+			std::vector<VkWriteDescriptorSet> descriptor_writes(1);
+			descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptor_writes[0].dstSet = m_blit_descriptor_set->getHandle();
+			descriptor_writes[0].dstBinding = 0;
+			descriptor_writes[0].dstArrayElement = 0;
+			descriptor_writes[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descriptor_writes[0].descriptorCount = 1;
+			descriptor_writes[0].pImageInfo = &m_color_resources->m_descriptor;
+			uint32_t descriptor_write_count = static_cast<uint32_t>(descriptor_writes.size());
+			vkUpdateDescriptorSets(m_rhi_context.m_device->getLogicalDevice(), descriptor_write_count, descriptor_writes.data(), 0, nullptr);
 
-		std::vector<VkWriteDescriptorSet> descriptor_writes(1);
-		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptor_writes[0].dstSet = m_blit_descriptor_set->getHandle();
-		descriptor_writes[0].dstBinding = 0;
-		descriptor_writes[0].dstArrayElement = 0;
-		descriptor_writes[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptor_writes[0].descriptorCount = 1;
-		descriptor_writes[0].pImageInfo = &m_color_resources->m_descriptor;
-		uint32_t descriptor_write_count = static_cast<uint32_t>(descriptor_writes.size());
-		vkUpdateDescriptorSets(m_rhi_context.m_device->getLogicalDevice(), descriptor_write_count, descriptor_writes.data(), 0, nullptr);
-
-		const std::vector<VkDescriptorSet> descriptorsets = { m_blit_descriptor_set->getHandle() };
-		m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_blit_pipeline->getLayout(), descriptorsets, 0, 1);
+			const std::vector<VkDescriptorSet> descriptorsets = { m_blit_descriptor_set->getHandle() };
+			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_blit_pipeline->getLayout(), descriptorsets, 0, 1);
 
 
-		m_command_buffer->draw(frame_index, 3, 1, 0, 0);
+			m_command_buffer->draw(frame_index, 3, 1, 0, 0);
 
-		m_command_buffer->endRenderPass(frame_index);
+			m_command_buffer->endRenderPass(frame_index);
+		}
 
 		m_command_buffer->endRecord(frame_index);
 
