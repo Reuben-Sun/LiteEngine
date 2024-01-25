@@ -117,6 +117,14 @@ namespace ToolEngine
 			source_stage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 			destination_stage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 		}
+		else if (old_layout == VK_IMAGE_LAYOUT_UNDEFINED && new_layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+		{
+			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+			barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+
+			source_stage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+			destination_stage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+		}
 		else
 		{
 			LOG_ERROR("unsupported layout transition!");
