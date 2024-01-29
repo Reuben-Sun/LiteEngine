@@ -23,7 +23,7 @@ namespace ToolEngine
 		Renderer(RHIContext& rhi_context);
 		~Renderer();
 
-		bool enable_ui = true;
+		bool enable_ui = false;
 		void tick(RenderScene& scene);
 		// TODO: resize frame
 	private:
