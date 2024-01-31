@@ -28,6 +28,7 @@ namespace ToolEngine
 
 		uint32_t m_scene_width = 1920;
 		uint32_t m_scene_height = 1080;
+		bool need_resize = false;
 	private:
 		RHIContext& m_rhi_context;
 		float m_left_padding = 0.2;
