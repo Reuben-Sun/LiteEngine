@@ -5,6 +5,7 @@
 #include "RHI/Public/RHIContext.h"
 #include "RHI/Public/RHIRenderPass.h"
 #include "RHI/Public/RHICommandBuffer.h"
+#include "RHI/Public/RHIDescriptorSet.h"
 #include "imgui.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "backends/imgui_impl_glfw.h"
@@ -23,7 +24,7 @@ namespace ToolEngine
 		std::vector<float> getBrowserExtent(uint32_t width, uint32_t height);
 		std::vector<float> getDetailExtent(uint32_t width, uint32_t height);
 
-		void tick(RHICommandBuffer& cmd, uint32_t frame_index);
+		void tick(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& descriptor_set);
 	private:
 		RHIContext& m_rhi_context;
 		float m_left_padding = 0.2;

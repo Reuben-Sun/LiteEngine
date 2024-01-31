@@ -133,7 +133,7 @@ namespace ToolEngine
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
-			m_render_ui->tick(*m_command_buffer, frame_index);
+			m_render_ui->tick(*m_command_buffer, frame_index, *m_blit_descriptor_set);
 
 			m_command_buffer->endRenderPass(frame_index);
 		}

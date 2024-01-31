@@ -69,10 +69,10 @@ namespace ToolEngine
 	}
 	void RenderUI::drawScene(uint32_t width, uint32_t height)
 	{
-		ImGui::Begin("SceneView");
-		/*auto color_descriptor_set = ImGui_ImplVulkan_AddTexture(color_sampler, color_image, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		ImGui::Image((ImTextureID)color_descriptor_set, ImVec2(width, height));*/
-		ImGui::End();
+		//ImGui::Begin("SceneView");
+		///*auto color_descriptor_set = ImGui_ImplVulkan_AddTexture(color_sampler, color_image, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		//ImGui::Image((ImTextureID)color_descriptor_set, ImVec2(width, height));*/
+		//ImGui::End();
 	}
 	void RenderUI::drawBrowser(uint32_t width, uint32_t height)
 	{
@@ -84,7 +84,7 @@ namespace ToolEngine
 		ImGui::Begin("Detail");
 		ImGui::End();
 	}
-	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
+	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& descriptor_set)
 	{
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -112,7 +112,10 @@ namespace ToolEngine
 			}
 			ImGui::EndMainMenuBar();
 		}
+		ImGui::Begin("SceneView");
 		
+		ImGui::Image(descriptor_set.getHandle(), ImVec2(width, height));
+		ImGui::End();
 		ImGui::Render();
 
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
