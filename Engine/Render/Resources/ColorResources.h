@@ -15,6 +15,7 @@ namespace ToolEngine
 		~ColorResources();
 
 		VkImageView getImageView() { return m_image->getImageView(); }
+		VkSampler getSampler() { return m_sampler->getHandle(); }
 		VkDescriptorImageInfo m_descriptor;
 	protected:
 		std::unique_ptr<RHIImage> m_image;
