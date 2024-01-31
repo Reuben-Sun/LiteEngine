@@ -113,8 +113,17 @@ namespace ToolEngine
 			ImGui::EndMainMenuBar();
 		}
 		ImGui::Begin("SceneView");
+		ImVec2 window_size = ImGui::GetWindowSize();
+		if (m_scene_width != (uint32_t)window_size.x || m_scene_height != (uint32_t)window_size.y)
+		{
+			m_scene_width = window_size.x;
+			m_scene_height = window_size.y;
+			need_resize = true;
+			LOG_INFO("scene width: {0}, scene height: {1}", m_scene_width, m_scene_height);
+		}
 		
-		ImGui::Image(descriptor_set.getHandle(), ImVec2(width, height));
+		
+		ImGui::Image(descriptor_set.getHandle(), window_size);
 		ImGui::End();
 		ImGui::Render();
 

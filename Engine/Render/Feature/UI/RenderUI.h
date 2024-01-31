@@ -25,6 +25,10 @@ namespace ToolEngine
 		std::vector<float> getDetailExtent(uint32_t width, uint32_t height);
 
 		void tick(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& descriptor_set);
+
+		uint32_t m_scene_width = 1920;
+		uint32_t m_scene_height = 1080;
+		bool need_resize = false;
 	private:
 		RHIContext& m_rhi_context;
 		float m_left_padding = 0.2;

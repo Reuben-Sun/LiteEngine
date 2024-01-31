@@ -21,7 +21,7 @@ namespace ToolEngine
 		uint32_t getWidth() const { return m_width; }
 		uint32_t getHeight() const { return m_height; }
 
-		uint32_t acquireNextTexture(Semaphore& semaphore);
+		VkResult acquireNextTexture(Semaphore& semaphore, uint32_t& image_index);
 
 	private:
 		RHIInstance& m_instance;

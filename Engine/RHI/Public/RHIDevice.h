@@ -35,6 +35,7 @@ namespace ToolEngine
 		RHIDevice(RHIInstance& instance);
 		~RHIDevice();
 
+		VkResult waitIdle() const { return vkDeviceWaitIdle(m_logical_device); }
 		VkPhysicalDevice getPhysicalDevice() const { return m_physical_device; }
 		VkDevice getLogicalDevice() const { return m_logical_device; }
 		VkCommandPool getCommandPool() const { return m_command_pool->getHandle(); }

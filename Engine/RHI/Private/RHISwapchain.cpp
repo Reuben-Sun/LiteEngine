@@ -81,21 +81,11 @@ namespace ToolEngine
 		}
 	}
 
-	uint32_t RHISwapchain::acquireNextTexture(Semaphore& semaphore)
+	VkResult RHISwapchain::acquireNextTexture(Semaphore& semaphore, uint32_t& image_index)
 	{
-		uint32_t image_index;
 		VkResult result = vkAcquireNextImageKHR(m_device.getLogicalDevice(), m_swapchain, UINT64_MAX,
 			semaphore.getHandle(), VK_NULL_HANDLE, &image_index);
-		if (result == VK_ERROR_OUT_OF_DATE_KHR)
-		{
-			//resizeFrame();
-			//return;
-		}
-		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-		{
-			LOG_ERROR("failed to acquire swap chain image!");
-		}
-		return image_index;
+		return result;
 	}
 
 	VkSurfaceFormatKHR RHISwapchain::chooseSwapSurfaceFormat()

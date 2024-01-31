@@ -13,6 +13,8 @@ namespace ToolEngine
 		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
+		m_forward_pass_width = width;
+		m_forward_pass_height = height;
 
 		m_color_resources = std::make_unique<ColorResources>(*m_rhi_context.m_device, width, height, color_format);
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
@@ -25,14 +27,14 @@ namespace ToolEngine
 		m_blit_pipeline = std::make_unique<BlitPipeline>(*m_rhi_context.m_device, m_blit_pass->getHandle());
 
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
+		m_forward_frame_buffer = std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device,
+			m_forward_pass->getHandle(),
+			m_color_resources->getImageView(),
+			m_depth_resources->getImageView(),
+			width, height);
 		m_max_frames_in_flight = swapchain_image_count;
 		for (uint32_t i = 0; i < swapchain_image_count; i++)
 		{
-			m_forward_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
-				m_forward_pass->getHandle(), 
-				m_color_resources->getImageView(), 
-				m_depth_resources->getImageView(), 
-				width, height));
 			m_ui_frame_buffers.emplace_back(std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device, 
 				m_ui_pass->getHandle(),
 				m_rhi_context.m_swapchain->getImageView(i), 
@@ -70,8 +72,25 @@ namespace ToolEngine
 
 		m_in_flight_fences[frame_index]->wait();
 
-		uint32_t image_index = m_rhi_context.m_swapchain->acquireNextTexture(*m_image_available_semaphores[frame_index]);
+		if (m_enable_ui && m_render_ui->need_resize)
+		{
+			m_render_ui->need_resize = false;
+			resize();
+			return;
+		}
+
+		uint32_t image_index;
+		auto result = m_rhi_context.m_swapchain->acquireNextTexture(*m_image_available_semaphores[frame_index], image_index);
 		
+		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			return;
+		}
+		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+		{
+			LOG_ERROR("failed to acquire swap chain image!");
+		}
+
 		m_culling_result->cull(scene);
 
 		
@@ -79,12 +98,12 @@ namespace ToolEngine
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		uint32_t w_start = 0;
 		uint32_t h_start = 0;
-		uint32_t w_width = width;
-		uint32_t h_height = height;
+		uint32_t w_width = m_forward_pass_width;
+		uint32_t h_height = m_forward_pass_height;
 
 		m_command_buffer->beginRecord(frame_index);
 
-		m_command_buffer->beginRenderPass(frame_index, *m_forward_pass, *m_forward_frame_buffers[frame_index], width, height);
+		m_command_buffer->beginRenderPass(frame_index, *m_forward_pass, *m_forward_frame_buffer, w_width, h_height);
 
 		m_command_buffer->bindPipeline(frame_index, m_forward_pipeline->getHandle());
 
@@ -112,7 +131,7 @@ namespace ToolEngine
 			transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
 			ubo.model_matrix = transform.getModelMatrix();
 			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, 10.0f);
+			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_forward_pass_width / (float)m_forward_pass_height, 0.1f, 10.0f);
 			ubo.projection_matrix[1][1] *= -1;
 
 			// binding ubo
@@ -129,7 +148,7 @@ namespace ToolEngine
 
 		m_command_buffer->endRenderPass(frame_index);
 
-		if (enable_ui)
+		if (m_enable_ui)
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
@@ -167,5 +186,31 @@ namespace ToolEngine
 		m_rhi_context.m_device->present(signal_semaphores, image_index, swapchains);
 
 		m_current_frame++;
+	}
+	void Renderer::resize()
+	{
+		m_rhi_context.m_device->waitIdle();
+		VkFormat color_format = m_rhi_context.m_swapchain->getFormat();
+		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
+		uint32_t width = m_rhi_context.m_swapchain->getWidth();
+		uint32_t height = m_rhi_context.m_swapchain->getHeight();
+		if (m_enable_ui)
+		{
+			width = m_render_ui->m_scene_width;
+			height = m_render_ui->m_scene_height;
+		}
+
+		m_forward_pass_width = width;
+		m_forward_pass_height = height;
+
+		m_color_resources = std::make_unique<ColorResources>(*m_rhi_context.m_device, width, height, color_format);
+		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
+
+		m_forward_frame_buffer = std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device,
+			m_forward_pass->getHandle(),
+			m_color_resources->getImageView(),
+			m_depth_resources->getImageView(),
+			width, height);
+		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
 	}
 }
