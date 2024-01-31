@@ -25,7 +25,10 @@ namespace ToolEngine
 
 		bool enable_ui = false;
 		void tick(RenderScene& scene);
-		// TODO: resize frame
+		void resize();
+
+		uint32_t temp_width;
+		uint32_t temp_height;
 	private:
 		RHIContext& m_rhi_context;
 		uint32_t m_max_frames_in_flight{ 3 };
@@ -35,7 +38,7 @@ namespace ToolEngine
 		std::unique_ptr<ForwardPipeline> m_forward_pipeline;
 		std::unique_ptr<ColorResources> m_color_resources;
 		std::unique_ptr<DepthResources> m_depth_resources;
-		std::vector<std::unique_ptr<RHIFrameBuffer>> m_forward_frame_buffers;
+		std::unique_ptr<RHIFrameBuffer> m_forward_frame_buffer;
 		
 		std::unique_ptr<UIPass> m_ui_pass;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_ui_frame_buffers;

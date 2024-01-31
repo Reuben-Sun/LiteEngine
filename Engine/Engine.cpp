@@ -92,6 +92,7 @@ namespace ToolEngine
         if (e.getKeyCode() == 85)   // 85 is u, TODO: move this to resource
         {
             m_renderer->enable_ui = !m_renderer->enable_ui;
+            //m_renderer->resize();
         }
         
         return true;

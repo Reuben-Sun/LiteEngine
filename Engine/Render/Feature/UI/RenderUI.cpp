@@ -113,8 +113,10 @@ namespace ToolEngine
 			ImGui::EndMainMenuBar();
 		}
 		ImGui::Begin("SceneView");
-		
-		ImGui::Image(descriptor_set.getHandle(), ImVec2(width, height));
+		ImVec2 window_size = ImGui::GetWindowSize();
+		m_scene_width = window_size.x;
+		m_scene_height = window_size.y;
+		ImGui::Image(descriptor_set.getHandle(), window_size);
 		ImGui::End();
 		ImGui::Render();
 
