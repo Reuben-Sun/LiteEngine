@@ -13,8 +13,8 @@ namespace ToolEngine
 		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
-		temp_width = width;
-		temp_height = height;
+		m_forward_pass_width = width;
+		m_forward_pass_height = height;
 
 		m_color_resources = std::make_unique<ColorResources>(*m_rhi_context.m_device, width, height, color_format);
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
@@ -72,7 +72,7 @@ namespace ToolEngine
 
 		m_in_flight_fences[frame_index]->wait();
 
-		if (m_render_ui->need_resize)
+		if (m_enable_ui && m_render_ui->need_resize)
 		{
 			m_render_ui->need_resize = false;
 			resize();
@@ -98,8 +98,8 @@ namespace ToolEngine
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		uint32_t w_start = 0;
 		uint32_t h_start = 0;
-		uint32_t w_width = temp_width;
-		uint32_t h_height = temp_height;
+		uint32_t w_width = m_forward_pass_width;
+		uint32_t h_height = m_forward_pass_height;
 
 		m_command_buffer->beginRecord(frame_index);
 
@@ -131,7 +131,7 @@ namespace ToolEngine
 			transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
 			ubo.model_matrix = transform.getModelMatrix();
 			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), temp_width / (float)temp_height, 0.1f, 10.0f);
+			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_forward_pass_width / (float)m_forward_pass_height, 0.1f, 10.0f);
 			ubo.projection_matrix[1][1] *= -1;
 
 			// binding ubo
@@ -148,7 +148,7 @@ namespace ToolEngine
 
 		m_command_buffer->endRenderPass(frame_index);
 
-		if (enable_ui)
+		if (m_enable_ui)
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
@@ -194,14 +194,14 @@ namespace ToolEngine
 		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
-		if (enable_ui)
+		if (m_enable_ui)
 		{
 			width = m_render_ui->m_scene_width;
 			height = m_render_ui->m_scene_height;
 		}
 
-		temp_width = width;
-		temp_height = height;
+		m_forward_pass_width = width;
+		m_forward_pass_height = height;
 
 		m_color_resources = std::make_unique<ColorResources>(*m_rhi_context.m_device, width, height, color_format);
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);

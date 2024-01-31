@@ -23,12 +23,12 @@ namespace ToolEngine
 		Renderer(RHIContext& rhi_context);
 		~Renderer();
 
-		bool enable_ui = false;
+		bool m_enable_ui = true;
 		void tick(RenderScene& scene);
 		void resize();
 
-		uint32_t temp_width;
-		uint32_t temp_height;
+		uint32_t m_forward_pass_width;
+		uint32_t m_forward_pass_height;
 	private:
 		RHIContext& m_rhi_context;
 		uint32_t m_max_frames_in_flight{ 3 };
