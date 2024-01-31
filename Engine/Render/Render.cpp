@@ -57,17 +57,7 @@ namespace ToolEngine
 
 		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_ui_pass);
 		m_blit_descriptor_set = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device, *m_rhi_context.m_descriptor_pool, m_blit_pipeline->getDescriptorSetLayout());
-		
-		std::vector<VkWriteDescriptorSet> descriptor_writes(1);
-		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptor_writes[0].dstSet = m_blit_descriptor_set->getHandle();
-		descriptor_writes[0].dstBinding = 0;
-		descriptor_writes[0].dstArrayElement = 0;
-		descriptor_writes[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptor_writes[0].descriptorCount = 1;
-		descriptor_writes[0].pImageInfo = &m_color_resources->m_descriptor;
-		uint32_t descriptor_write_count = static_cast<uint32_t>(descriptor_writes.size());
-		vkUpdateDescriptorSets(m_rhi_context.m_device->getLogicalDevice(), descriptor_write_count, descriptor_writes.data(), 0, nullptr);
+		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
 	}
 
 	Renderer::~Renderer()

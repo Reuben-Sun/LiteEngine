@@ -53,7 +53,7 @@ namespace ToolEngine
 
 		VkDescriptorSet getHandle() const { return m_descriptor_set; }
 		void updateUniformBuffer(RHIUniformBuffer& ubo_buffer, uint32_t binding_index);
-		void updateTextureImage(RHITextureImage& texture_image, uint32_t binding_index);
+		void updateTextureImage(VkDescriptorImageInfo image_info, uint32_t binding_index);
 	private:
 		VkDescriptorSet m_descriptor_set{ VK_NULL_HANDLE };
 		RHIDevice& m_device;

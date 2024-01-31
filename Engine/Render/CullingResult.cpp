@@ -45,7 +45,7 @@ namespace ToolEngine
 				for (int j = 0; j < scene.material_list[i].texture_bindings.size(); j++)
 				{
 					std::string texture_name = scene.material_list[i].texture_bindings[j].texture_path;
-					m_model_name_to_ubo_descriptor_set[model_name]->updateTextureImage(*m_texture_name_to_image[texture_name], scene.material_list[i].texture_bindings[j].binding_index);
+					m_model_name_to_ubo_descriptor_set[model_name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, scene.material_list[i].texture_bindings[j].binding_index);
 				}
 			}
 		}
