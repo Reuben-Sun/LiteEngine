@@ -187,6 +187,7 @@ namespace ToolEngine
 
 		m_current_frame++;
 	}
+	// when imgui scene window resize, forward pass need resize
 	void Renderer::resize()
 	{
 		m_rhi_context.m_device->waitIdle();
