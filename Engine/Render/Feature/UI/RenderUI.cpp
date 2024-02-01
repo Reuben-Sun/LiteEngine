@@ -90,6 +90,7 @@ namespace ToolEngine
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.FrameRounding = 3;
 		style.GrabRounding = 3;
+		style.WindowRounding = 0.0f;
 		ImVec4* colors = style.Colors;
 		colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 		colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -146,6 +147,7 @@ namespace ToolEngine
 		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
 		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+		colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
 	{
