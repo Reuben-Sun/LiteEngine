@@ -74,7 +74,7 @@ namespace ToolEngine
 		// depth stencil
 		VkPipelineDepthStencilStateCreateInfo depth_stencil_state{};
 		depth_stencil_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depth_stencil_state.depthTestEnable = VK_FALSE;
+		depth_stencil_state.depthTestEnable = VK_TRUE;
 		depth_stencil_state.depthWriteEnable = VK_FALSE;
 		depth_stencil_state.depthCompareOp = VK_COMPARE_OP_LESS;
 		depth_stencil_state.depthBoundsTestEnable = VK_FALSE;
