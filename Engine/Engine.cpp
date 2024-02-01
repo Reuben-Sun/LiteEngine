@@ -26,8 +26,7 @@ namespace ToolEngine
         m_renderer = std::make_unique<Renderer>(*m_rhi_context);
 
        
-        Mesh mesh = Mesh::createLine(2);
-        
+        Mesh mesh = Mesh::createPlane();
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
         transform.rotation = Quaternion::Identity();

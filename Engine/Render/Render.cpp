@@ -145,8 +145,8 @@ namespace ToolEngine
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}
-		
 
+		
 		m_command_buffer->endRenderPass(frame_index);
 
 		if (m_enable_ui)

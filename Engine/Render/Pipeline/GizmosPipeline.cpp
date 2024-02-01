@@ -9,7 +9,6 @@ namespace ToolEngine
 	{
 		std::vector<RHIDescriptorType> layout_descriptor;
 		layout_descriptor.push_back(RHIDescriptorType::ConstantBuffer);
-		layout_descriptor.push_back(RHIDescriptorType::Sampler);
 		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, layout_descriptor);
 		createPipeline();
 		LOG_INFO("Create GizmosPipeline!");
@@ -20,8 +19,8 @@ namespace ToolEngine
 	void GizmosPipeline::createPipeline()
 	{
 		// shader
-		RHIShader vertex_shader_module(m_device, "Unlit_vert.spv");
-		RHIShader fragment_shader_module(m_device, "Unlit_frag.spv");
+		RHIShader vertex_shader_module(m_device, "GizmosLine_vert.spv");
+		RHIShader fragment_shader_module(m_device, "GizmosLine_frag.spv");
 		VkPipelineShaderStageCreateInfo vert_shader_stage_info{};
 		vert_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		vert_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
