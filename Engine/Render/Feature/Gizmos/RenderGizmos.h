@@ -6,5 +6,10 @@
 
 namespace ToolEngine
 {
+	class RenderGizmos
+	{
+	public:
 
+	private:
+	};
 }
