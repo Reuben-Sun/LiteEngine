@@ -9,5 +9,7 @@ namespace ToolEngine
 	{
 		std::vector<uint32_t> index_buffer;
 		std::vector<Vertex> vertex_buffer;
+
+		static Mesh createPlane();
 	};
 }
