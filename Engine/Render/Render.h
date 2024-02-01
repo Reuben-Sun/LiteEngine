@@ -10,7 +10,7 @@
 #include "Render/Resources/ColorResources.h"
 #include "Render/Resources/DepthResources.h"
 #include "Geometry/RenderScene.h"
-#include "CullingResult.h"
+#include "Render/Feature/Culling/CullingResult.h"
 #include "Render/Feature/UI/RenderUI.h"
 #include "Render/Pass/BlitPass.h"
 #include "Render/Pipeline/BlitPipeline.h"
