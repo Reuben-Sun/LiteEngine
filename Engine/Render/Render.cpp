@@ -57,9 +57,9 @@ namespace ToolEngine
 		m_culling_result = std::make_unique<CullingResult>(*m_rhi_context.m_device, 
 			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
 
-		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_ui_pass);
 		m_blit_descriptor_set = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device, *m_rhi_context.m_descriptor_pool, m_blit_pipeline->getDescriptorSetLayout());
 		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
+		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_ui_pass, *m_blit_descriptor_set);
 	}
 
 	Renderer::~Renderer()
@@ -152,7 +152,7 @@ namespace ToolEngine
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
-			m_render_ui->tick(*m_command_buffer, frame_index, *m_blit_descriptor_set);
+			m_render_ui->tick(*m_command_buffer, frame_index);
 
 			m_command_buffer->endRenderPass(frame_index);
 		}

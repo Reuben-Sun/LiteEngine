@@ -4,7 +4,8 @@
 
 namespace ToolEngine
 {
-	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass): m_rhi_context(rhi_context)
+	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass, RHIDescriptorSet& descriptor_set)
+		: m_rhi_context(rhi_context), m_descriptor_set(descriptor_set)
 	{
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
@@ -12,6 +13,9 @@ namespace ToolEngine
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		std::string ttf_path = Path::getInstance().getAssetPath() + "MiSans-Medium.ttf";
 		io.Fonts->AddFontFromFileTTF(ttf_path.c_str(), 16.0f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
+
+		setStyle();
+
 		ImGui_ImplGlfw_InitForVulkan(rhi_context.m_window.getHandle(), true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
 		init_info.Instance = rhi_context.m_instance->getHandle();
@@ -30,78 +34,9 @@ namespace ToolEngine
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
-	std::vector<float> RenderUI::getDisplayExtent(uint32_t width, uint32_t height)
-	{
-		std::vector<float> extent(4);
-		extent[0] = width * m_left_padding;
-		extent[1] = width * (1 - m_left_padding - m_right_padding);
-		extent[2] = height * m_top_padding;
-		extent[3] = height * (1 - m_top_padding - m_bottom_padding);
-		return extent;
-	}
-	std::vector<float> RenderUI::getSceneExtent(uint32_t width, uint32_t height)
-	{
-		std::vector<float> extent(4);
-		extent[0] = 0;
-		extent[1] = width * m_left_padding;
-		extent[2] = 0;
-		extent[3] = height * (1 - m_bottom_padding);
-		return extent;
-	}
-	std::vector<float> RenderUI::getBrowserExtent(uint32_t width, uint32_t height)
-	{
-		std::vector<float> extent(4);
-		extent[0] = 0;
-		extent[1] = width * (1 - m_right_padding);
-		extent[2] = height * (1 - m_bottom_padding);
-		extent[3] = height * m_bottom_padding;
-		return extent;
-	}
-	std::vector<float> RenderUI::getDetailExtent(uint32_t width, uint32_t height)
-	{
-		std::vector<float> extent(4);
-		extent[0] = width * (1 - m_right_padding);
-		extent[1] = width * m_right_padding;
-		extent[2] = 0;
-		extent[3] = height;
-		return extent;
-	}
-	void RenderUI::drawHierarchy(uint32_t width, uint32_t height)
-	{
-		ImGui::Begin("Hierarchy");
-		ImGui::End();
-	}
-	void RenderUI::drawScene(uint32_t width, uint32_t height)
-	{
-		//ImGui::Begin("SceneView");
-		///*auto color_descriptor_set = ImGui_ImplVulkan_AddTexture(color_sampler, color_image, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		//ImGui::Image((ImTextureID)color_descriptor_set, ImVec2(width, height));*/
-		//ImGui::End();
-	}
-	void RenderUI::drawBrowser(uint32_t width, uint32_t height)
-	{
-		ImGui::Begin("Browser");
-		ImGui::End();
-	}
-	void RenderUI::drawDetail(uint32_t width, uint32_t height)
-	{
-		ImGui::Begin("Detail");
-		ImGui::End();
-	}
-	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& descriptor_set)
-	{
-		ImGui_ImplVulkan_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
-		uint32_t width = m_rhi_context.m_swapchain->getWidth();
-		uint32_t height = m_rhi_context.m_swapchain->getHeight();
-
-		drawHierarchy(width, height);
-		drawScene(width, height);
-		drawBrowser(width, height);
-		drawDetail(width, height);
+	void RenderUI::drawMainMenuBar()
+	{
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 				if (ImGui::MenuItem("Create")) {
@@ -116,19 +51,116 @@ namespace ToolEngine
 			}
 			ImGui::EndMainMenuBar();
 		}
+	}
+	void RenderUI::drawHierarchy()
+	{
+		ImGui::Begin("Hierarchy");
+		ImGui::End();
+	}
+	void RenderUI::drawScene()
+	{
 		ImGui::Begin("SceneView");
 		ImVec2 window_size = ImGui::GetWindowSize();
 		if (m_scene_width != (uint32_t)window_size.x || m_scene_height != (uint32_t)window_size.y)
 		{
+			// if window size changed, need to resize
 			m_scene_width = window_size.x;
 			m_scene_height = window_size.y;
 			need_resize = true;
 			LOG_INFO("scene width: {0}, scene height: {1}", m_scene_width, m_scene_height);
 		}
-		
-		
-		ImGui::Image(descriptor_set.getHandle(), window_size);
+		// scene image
+		ImGui::Image(m_descriptor_set.getHandle(), window_size);
 		ImGui::End();
+	}
+	void RenderUI::drawBrowser()
+	{
+		ImGui::Begin("Browser");
+		ImGui::End();
+	}
+	void RenderUI::drawDetail()
+	{
+		ImGui::Begin("Detail");
+		ImGui::End();
+	}
+	
+
+	void RenderUI::setStyle()
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.FrameRounding = 3;
+		style.GrabRounding = 3;
+		ImVec4* colors = style.Colors;
+		colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+		colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+		colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 0.94f);
+		colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+		colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+		colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_FrameBg] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		colors[ImGuiCol_FrameBgActive] = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
+		colors[ImGuiCol_TitleBg] = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
+		colors[ImGuiCol_TitleBgActive] = ImVec4(0.09f, 0.09f, 0.09f, 1.00f);
+		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
+		colors[ImGuiCol_MenuBarBg] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
+		colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+		colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
+		colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
+		colors[ImGuiCol_CheckMark] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+		colors[ImGuiCol_SliderGrab] = ImVec4(0.24f, 0.52f, 0.88f, 1.00f);
+		colors[ImGuiCol_SliderGrabActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+		colors[ImGuiCol_Button] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+		colors[ImGuiCol_ButtonHovered] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		colors[ImGuiCol_ButtonActive] = ImVec4(0.36f, 0.36f, 0.36f, 1.00f);
+		colors[ImGuiCol_Header] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+		colors[ImGuiCol_HeaderHovered] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		colors[ImGuiCol_HeaderActive] = ImVec4(0.36f, 0.36f, 0.36f, 1.00f);
+		colors[ImGuiCol_Separator] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+		colors[ImGuiCol_SeparatorHovered] = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
+		colors[ImGuiCol_SeparatorActive] = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
+		colors[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.59f, 0.98f, 0.20f);
+		colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+		colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+		colors[ImGuiCol_Tab] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+		colors[ImGuiCol_TabHovered] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		colors[ImGuiCol_TabActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		colors[ImGuiCol_TabUnfocused] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+		colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		colors[ImGuiCol_DockingPreview] = ImVec4(0.29f, 0.29f, 0.29f, 0.91f);
+		colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+		colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+		colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+		colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+		colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+		colors[ImGuiCol_TableHeaderBg] = ImVec4(0.19f, 0.19f, 0.20f, 1.00f);
+		colors[ImGuiCol_TableBorderStrong] = ImVec4(0.31f, 0.31f, 0.35f, 1.00f);
+		colors[ImGuiCol_TableBorderLight] = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
+		colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+		colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+		colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+		colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+	}
+	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
+	{
+		ImGui_ImplVulkan_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+
+		drawMainMenuBar();
+		drawHierarchy();
+		drawScene();
+		drawBrowser();
+		drawDetail();
+		
+		
 		ImGui::Render();
 
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));

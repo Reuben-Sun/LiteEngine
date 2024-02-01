@@ -15,30 +15,24 @@ namespace ToolEngine
 	class RenderUI
 	{
 	public:
-		RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass);
+		RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass, RHIDescriptorSet& descriptor_set);
 		~RenderUI();
 
-		// 0 is w_start, 1 is w_width, 2 is h_start, 3 is h_height
-		std::vector<float> getDisplayExtent(uint32_t width, uint32_t height);
-		std::vector<float> getSceneExtent(uint32_t width, uint32_t height);
-		std::vector<float> getBrowserExtent(uint32_t width, uint32_t height);
-		std::vector<float> getDetailExtent(uint32_t width, uint32_t height);
-
-		void tick(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& descriptor_set);
+		void tick(RHICommandBuffer& cmd, uint32_t frame_index);
 
 		uint32_t m_scene_width = 1920;
 		uint32_t m_scene_height = 1080;
 		bool need_resize = true;
 	private:
 		RHIContext& m_rhi_context;
-		float m_left_padding = 0.2;
-		float m_right_padding = 0.2;
-		float m_top_padding = 0;
-		float m_bottom_padding = 0.4;
+		RHIDescriptorSet& m_descriptor_set;
 
-		void drawHierarchy(uint32_t width, uint32_t height);
-		void drawScene(uint32_t width, uint32_t height);
-		void drawBrowser(uint32_t width, uint32_t height);
-		void drawDetail(uint32_t width, uint32_t height);
+		void drawMainMenuBar();
+		void drawHierarchy();
+		void drawScene();
+		void drawBrowser();
+		void drawDetail();
+
+		void setStyle();
 	};
 }
