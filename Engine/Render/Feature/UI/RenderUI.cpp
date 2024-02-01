@@ -7,7 +7,11 @@ namespace ToolEngine
 	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass): m_rhi_context(rhi_context)
 	{
 		ImGui::CreateContext();
-		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		ImGuiIO& io = ImGui::GetIO();
+		(void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		std::string ttf_path = Path::getInstance().getAssetPath() + "MiSans-Medium.ttf";
+		io.Fonts->AddFontFromFileTTF(ttf_path.c_str(), 16.0f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
 		ImGui_ImplGlfw_InitForVulkan(rhi_context.m_window.getHandle(), true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
 		init_info.Instance = rhi_context.m_instance->getHandle();

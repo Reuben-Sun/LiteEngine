@@ -47,7 +47,7 @@ namespace ToolEngine
         scene.mesh_transform_list.push_back(transform);
         scene.material_list.push_back(material);
 
-        std::string model_path = Path::getInstance().getCurrentPath() + "\\Assets\\cube.gltf";
+        std::string model_path = Path::getInstance().getAssetPath() + "cube.gltf";
         std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
         Mesh mesh2;
         mesh2.index_buffer = loader->loaded_index_buffer;
