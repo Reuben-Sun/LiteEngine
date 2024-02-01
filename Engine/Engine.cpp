@@ -25,17 +25,8 @@ namespace ToolEngine
         m_rhi_context = std::make_unique<RHIContext>(*m_window);
         m_renderer = std::make_unique<Renderer>(*m_rhi_context);
 
-        std::vector<uint32_t> plane_index_buffer = { 0, 1, 2, 2, 3, 0 };
-        const std::vector<Vertex> plane_vertex_buffer =
-        {
-            {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-            {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
-        };
-        Mesh mesh;
-        mesh.index_buffer = plane_index_buffer;
-        mesh.vertex_buffer = plane_vertex_buffer;
+       
+        Mesh mesh = Mesh::createPlane();
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
         transform.rotation = Quaternion::Identity();

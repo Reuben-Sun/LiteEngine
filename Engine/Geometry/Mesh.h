@@ -9,5 +9,8 @@ namespace ToolEngine
 	{
 		std::vector<uint32_t> index_buffer;
 		std::vector<Vertex> vertex_buffer;
+
+		static Mesh createPlane();
+		static Mesh createLine(float length, glm::vec3 color);
 	};
 }
