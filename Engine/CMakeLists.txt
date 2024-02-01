@@ -1,9 +1,12 @@
 file(GLOB_RECURSE HEADERS "*.h")
 file(GLOB_RECURSE SOURCES "*.cpp")
+set(SHADER_DIR "../Shader/Source")
+file(GLOB SHADERS_GLSL "${SHADER_DIR}/*.vert" "${SHADER_DIR}/*.frag")
 set(ALL_FILES ${HEADERS} ${SOURCES})
-add_library(Engine STATIC ${ALL_FILES})
+add_library(Engine STATIC ${ALL_FILES} ${SHADERS_GLSL})
 target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_FILES})
+source_group("Shaders" FILES ${SHADERS_GLSL})
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(Engine PUBLIC ${Vulkan_LIBRARIES})  
