@@ -11,5 +11,6 @@ namespace ToolEngine
 		std::vector<Vertex> vertex_buffer;
 
 		static Mesh createPlane();
+		static Mesh createLine(float length);
 	};
 }

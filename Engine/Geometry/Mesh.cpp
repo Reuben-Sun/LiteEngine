@@ -17,4 +17,19 @@ namespace ToolEngine
 		mesh.vertex_buffer = plane_vertex_buffer;
 		return mesh;
 	}
+	Mesh Mesh::createLine(float length)
+	{
+		std::vector<uint32_t> plane_index_buffer = { 0, 1, 2, 2, 3, 0 };
+		const std::vector<Vertex> plane_vertex_buffer =
+		{
+			{{-length, -0.001f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+			{{length, -0.001f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+			{{length, 0.001f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+			{{-length, 0.001f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
+		};
+		Mesh mesh;
+		mesh.index_buffer = plane_index_buffer;
+		mesh.vertex_buffer = plane_vertex_buffer;
+		return mesh;
+	}
 }
