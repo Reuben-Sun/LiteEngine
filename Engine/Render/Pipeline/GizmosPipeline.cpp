@@ -60,7 +60,7 @@ namespace ToolEngine
 		rasterization_state.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		rasterization_state.depthClampEnable = VK_FALSE;
 		rasterization_state.rasterizerDiscardEnable = VK_FALSE;
-		rasterization_state.polygonMode = VK_POLYGON_MODE_FILL;
+		rasterization_state.polygonMode = VK_POLYGON_MODE_LINE;
 		rasterization_state.lineWidth = 1.0f;
 		rasterization_state.cullMode = VK_CULL_MODE_NONE;
 		rasterization_state.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
@@ -75,8 +75,8 @@ namespace ToolEngine
 		// depth stencil
 		VkPipelineDepthStencilStateCreateInfo depth_stencil_state{};
 		depth_stencil_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depth_stencil_state.depthTestEnable = VK_TRUE;
-		depth_stencil_state.depthWriteEnable = VK_TRUE;
+		depth_stencil_state.depthTestEnable = VK_FALSE;
+		depth_stencil_state.depthWriteEnable = VK_FALSE;
 		depth_stencil_state.depthCompareOp = VK_COMPARE_OP_LESS;
 		depth_stencil_state.depthBoundsTestEnable = VK_FALSE;
 		depth_stencil_state.minDepthBounds = 0.0f; // Optional

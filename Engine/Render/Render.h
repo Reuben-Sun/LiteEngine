@@ -14,6 +14,7 @@
 #include "Render/Feature/UI/RenderUI.h"
 #include "Render/Pass/BlitPass.h"
 #include "Render/Pipeline/BlitPipeline.h"
+#include "Render/Pipeline/GizmosPipeline.h"
 
 namespace ToolEngine
 {
@@ -39,6 +40,8 @@ namespace ToolEngine
 		std::unique_ptr<ColorResources> m_color_resources;
 		std::unique_ptr<DepthResources> m_depth_resources;
 		std::unique_ptr<RHIFrameBuffer> m_forward_frame_buffer;
+
+		std::unique_ptr<GizmosPipeline> m_gizmos_pipeline;
 		
 		std::unique_ptr<UIPass> m_ui_pass;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_ui_frame_buffers;

@@ -24,6 +24,7 @@ namespace ToolEngine
 		m_blit_pass = std::make_unique<BlitPass>(*m_rhi_context.m_device, color_format);
 
 		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, m_forward_pass->getHandle());
+		m_gizmos_pipeline = std::make_unique<GizmosPipeline>(*m_rhi_context.m_device, m_forward_pass->getHandle());
 		m_blit_pipeline = std::make_unique<BlitPipeline>(*m_rhi_context.m_device, m_blit_pass->getHandle());
 
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
