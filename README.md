@@ -9,7 +9,6 @@
 
 ### 构建
 
-1. 运行Shader文件夹下脚本`Compile.bat`
-2. 运行脚本`cmake_generate.bat`，在build文件夹中会生成VS工程
-3. 设置`Client`为目标，构建运行
+1. 运行脚本`cmake_generate.bat`，在build文件夹中会生成VS工程
+2. 用VS2022打开`.sln`工程，设置`Client`为目标，构建运行
 
