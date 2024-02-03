@@ -130,11 +130,12 @@ namespace ToolEngine
 			GlobalUBO ubo{};
 			float time = Time::getInstance().getDeltaTime();
 			Transform& transform = scene.mesh_transform_list[i];
-			transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
+			
 			ubo.model_matrix = transform.getModelMatrix();
-			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), m_forward_pass_width / (float)m_forward_pass_height, 0.1f, 10.0f);
-			ubo.projection_matrix[1][1] *= -1;
+			scene.camera.aspect = m_forward_pass_width / (float)m_forward_pass_height;
+			ubo.view_matrix = scene.camera.getViewMatrix();
+			ubo.projection_matrix = scene.camera.getProjectionMatrix();
+			//ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
 			// binding ubo
 			RHIUniformBuffer& uniform_buffer = m_culling_result->getUniformBuffer(scene.mesh_name_list[i]);
@@ -147,7 +148,7 @@ namespace ToolEngine
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}
 
-		m_render_gizmos->tick(*m_command_buffer, frame_index, m_forward_pass_width / (float)m_forward_pass_height);
+		m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
 		
 		m_command_buffer->endRenderPass(frame_index);
 
@@ -155,6 +156,8 @@ namespace ToolEngine
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
+			m_render_ui->m_ui_context.camera_pos = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
+			m_render_ui->m_ui_context.camera_quat = scene.camera.transform.rotation.toVector();
 			m_render_ui->tick(*m_command_buffer, frame_index);
 
 			m_command_buffer->endRenderPass(frame_index);

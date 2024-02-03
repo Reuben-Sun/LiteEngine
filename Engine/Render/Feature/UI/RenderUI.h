@@ -12,6 +12,11 @@
 
 namespace ToolEngine
 {
+	struct UIContext
+	{
+		std::vector<float> camera_quat;
+		std::vector<float> camera_pos;
+	};
 	class RenderUI
 	{
 	public:
@@ -23,6 +28,7 @@ namespace ToolEngine
 		uint32_t m_scene_width = 1920;
 		uint32_t m_scene_height = 1080;
 		bool need_resize = true;
+		UIContext m_ui_context;
 	private:
 		RHIContext& m_rhi_context;
 		RHIDescriptorSet& m_descriptor_set;

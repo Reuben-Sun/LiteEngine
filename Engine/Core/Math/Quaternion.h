@@ -12,18 +12,19 @@ namespace ToolEngine
 		Quaternion(const Quaternion& other);
 		explicit Quaternion(float x, float y, float z, float w);
 		explicit Quaternion(glm::vec3& v, float w);
-
-		Quaternion lerp(const Quaternion& other, float t) const;
-		Quaternion operator*(float scale) const;
-		Quaternion operator+(const Quaternion& other) const;
+		// Quaternion * mean blend rotation
+		Quaternion operator*(const Quaternion& other) const;
+		Quaternion& operator*=(const Quaternion& other);
 
 		static Quaternion Zero();
 		static Quaternion Identity();
-
+		// clockwise rotation
 		static Quaternion fromRotationX(float angleInRadians);
 		static Quaternion fromRotationY(float angleInRadians);
 		static Quaternion fromRotationZ(float angleInRadians);
 		static Quaternion fromEulerRadiansXYZ(const glm::vec3& eulerRadians);
+
+		std::vector<float> toVector() const;
 
 		float x, y, z, w;		
 	};
