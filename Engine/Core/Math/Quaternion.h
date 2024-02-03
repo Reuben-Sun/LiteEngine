@@ -12,10 +12,9 @@ namespace ToolEngine
 		Quaternion(const Quaternion& other);
 		explicit Quaternion(float x, float y, float z, float w);
 		explicit Quaternion(glm::vec3& v, float w);
-
-		Quaternion lerp(const Quaternion& other, float t) const;
-		Quaternion operator*(float scale) const;
-		Quaternion operator+(const Quaternion& other) const;
+		// Quaternion * mean blend rotation
+		Quaternion operator*(const Quaternion& other) const;
+		Quaternion& operator*=(const Quaternion& other);
 
 		static Quaternion Zero();
 		static Quaternion Identity();

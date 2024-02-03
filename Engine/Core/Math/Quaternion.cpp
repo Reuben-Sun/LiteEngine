@@ -11,18 +11,23 @@ namespace ToolEngine
 	Quaternion::Quaternion(glm::vec3& v, float w): x(v.x), y(v.y), z(v.z), w(w)
 	{
 	}
-	Quaternion Quaternion::lerp(const Quaternion& other, float t) const
+
+	Quaternion Quaternion::operator*(const Quaternion& other) const
 	{
-		return (*this) * (1.0f - t) + other * t;
+		return Quaternion(
+			(y * other.z) - (z * other.y) + (w * other.x) + (x * other.w),
+			(z * other.x) - (x * other.z) + (w * other.y) + (y * other.w),
+			(x * other.y) - (y * other.x) + (w * other.z) + (z * other.w),
+			(w * other.w) - (x * other.x) - (y * other.y) - (z * other.z)
+		);
 	}
-	Quaternion Quaternion::operator*(float scale) const
+
+	Quaternion& Quaternion::operator*=(const Quaternion& other)
 	{
-		return Quaternion(x * scale, y * scale, z * scale, w * scale);
+		*this = *this * other;
+		return *this;
 	}
-	Quaternion Quaternion::operator+(const Quaternion& other) const
-	{
-		return Quaternion(x + other.x, y + other.y, z + other.z, w + other.w);
-	}
+
 	Quaternion Quaternion::Zero()
 	{
 		return Quaternion(0, 0, 0, 0);

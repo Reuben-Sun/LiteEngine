@@ -98,7 +98,7 @@ namespace ToolEngine
 
         if(e.getKeyCode() == 87)   // 87 is w
 		{
-			scene.camera.transform.rotation = scene.camera.transform.rotation + Quaternion::fromRotationX(0.1f);
+			
 		}
         if (e.getKeyCode() == 83)   // 83 is s
         {

@@ -130,12 +130,12 @@ namespace ToolEngine
 			GlobalUBO ubo{};
 			float time = Time::getInstance().getDeltaTime();
 			Transform& transform = scene.mesh_transform_list[i];
-			transform.rotation = Quaternion::fromRotationZ(Time::getInstance().getCurrentTime());
+			
 			ubo.model_matrix = transform.getModelMatrix();
 			scene.camera.aspect = m_forward_pass_width / (float)m_forward_pass_height;
 			ubo.view_matrix = scene.camera.getViewMatrix();
 			ubo.projection_matrix = scene.camera.getProjectionMatrix();
-			//ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
 			// binding ubo
 			RHIUniformBuffer& uniform_buffer = m_culling_result->getUniformBuffer(scene.mesh_name_list[i]);
