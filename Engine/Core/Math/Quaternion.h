@@ -24,6 +24,8 @@ namespace ToolEngine
 		static Quaternion fromRotationZ(float angleInRadians);
 		static Quaternion fromEulerRadiansXYZ(const glm::vec3& eulerRadians);
 
+		std::vector<float> toVector() const;
+
 		float x, y, z, w;		
 	};
 }

@@ -81,6 +81,9 @@ namespace ToolEngine
 	void RenderUI::drawDetail()
 	{
 		ImGui::Begin("Detail");
+		ImGui::InputFloat3("Camera Position", m_ui_context.camera_pos.data());
+		ImGui::InputFloat4("Camera Rotation", m_ui_context.camera_quat.data());
+
 		ImGui::End();
 	}
 	

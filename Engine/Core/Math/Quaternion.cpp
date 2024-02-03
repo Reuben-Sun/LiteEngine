@@ -69,4 +69,8 @@ namespace ToolEngine
 			cx * cy * cz - sx * sy * sz
 		);
 	}
+	std::vector<float> Quaternion::toVector() const
+	{
+		return std::vector<float>{ x, y, z, w };
+	}
 }

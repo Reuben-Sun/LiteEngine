@@ -156,6 +156,8 @@ namespace ToolEngine
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 
+			m_render_ui->m_ui_context.camera_pos = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
+			m_render_ui->m_ui_context.camera_quat = scene.camera.transform.rotation.toVector();
 			m_render_ui->tick(*m_command_buffer, frame_index);
 
 			m_command_buffer->endRenderPass(frame_index);
