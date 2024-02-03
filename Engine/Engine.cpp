@@ -50,16 +50,16 @@ namespace ToolEngine
         transform2.rotation = Quaternion::Identity();
         transform2.scale = glm::vec3(0.5f, 0.5f, 0.5f);
         Material material2;
+        //material2.texture_bindings.push_back({ 1, "MarblesTiles.jpg" });
         material2.texture_bindings.push_back({ 1, "Cube.png" });
         scene.mesh_transform_list.push_back(transform2);
         scene.material_list.push_back(material2);
 
         Camera camera;
-        camera.transform.position = glm::vec3(5.0f, 0.0f, 0.1f);
+        camera.transform.position = glm::vec3(5.0f, 0.0f, 1.0f);
         camera.transform.rotation = Quaternion::Identity();
-        //camera.transform.rotation = Quaternion::fromRotationY(PI/2);
-        //camera.transform.rotation = Quaternion::fromRotationX(PI / 2 * 3);
-        camera.transform.rotation *= Quaternion::fromRotationZ(PI);
+        camera.transform.rotation *= Quaternion::fromRotationX(-PI/2);
+        camera.transform.rotation *= Quaternion::fromRotationZ(-PI/2);
         camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
         camera.fov = glm::radians(45.0f); 
         camera.near_plane = 0.1f;
@@ -98,7 +98,30 @@ namespace ToolEngine
             m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
             m_renderer->resize();
         }
-
+        if (e.getKeyCode() == 81)   // 81 is q
+        {
+            scene.camera.transform.rotation *= Quaternion::fromRotationZ(-0.1f);
+        }
+        if(e.getKeyCode() == 69)   // 69 is e
+		{
+            scene.camera.transform.rotation *= Quaternion::fromRotationZ(0.1f);
+		}
+        if (e.getKeyCode() == 265)   // 265 is up
+        {
+            scene.camera.transform.rotation *= Quaternion::fromRotationY(0.1f);
+        }
+        if (e.getKeyCode() == 264)   // 264 is down
+		{
+			scene.camera.transform.rotation *= Quaternion::fromRotationY(-0.1f);
+		}
+        if (e.getKeyCode() == 263)   // 263 is left
+        {
+            scene.camera.transform.rotation *= Quaternion::fromRotationX(0.1f);
+        }
+        if (e.getKeyCode() == 262)   // 262 is right
+		{
+            scene.camera.transform.rotation *= Quaternion::fromRotationX(-0.1f);
+		}
         if(e.getKeyCode() == 87)   // 87 is w
 		{
             scene.camera.transform.position.x += 1.0f;
