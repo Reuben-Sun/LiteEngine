@@ -56,10 +56,8 @@ namespace ToolEngine
         scene.material_list.push_back(material2);
 
         Camera camera;
-        camera.transform.position = glm::vec3(5.0f, 0.0f, 1.0f);
-        camera.transform.rotation = Quaternion::Identity();
-        camera.transform.rotation *= Quaternion::fromRotationX(-PI/2);
-        camera.transform.rotation *= Quaternion::fromRotationZ(-PI/2);
+        camera.transform.position = glm::vec3(3.0f, 3.0f, 3.0f);
+        camera.transform.rotation = Quaternion(-0.21f, -0.44f, -0.80f, 0.36f);
         camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
         camera.fov = glm::radians(45.0f); 
         camera.near_plane = 0.1f;
@@ -124,19 +122,19 @@ namespace ToolEngine
 		}
         if(e.getKeyCode() == 87)   // 87 is w
 		{
-            scene.camera.transform.position.x += 1.0f;
+            scene.camera.transform.position.x -= 1.0f;
 		}
         if (e.getKeyCode() == 83)   // 83 is s
         {
-            scene.camera.transform.position.x -= 1.0f;
+            scene.camera.transform.position.x += 1.0f;
         }
         if (e.getKeyCode() == 65)   // 65 is a
 		{
-			scene.camera.transform.position.y += 1.0f;
+			scene.camera.transform.position.y -= 1.0f;
 		}
 		if (e.getKeyCode() == 68)   // 68 is d
 		{
-			scene.camera.transform.position.y -= 1.0f;
+			scene.camera.transform.position.y += 1.0f;
 		}
         return true;
     }
