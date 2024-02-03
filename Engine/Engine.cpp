@@ -81,7 +81,9 @@ namespace ToolEngine
         EventDispatcher dispatcher(e);
         dispatcher.dispatch<WindowCloseEvent>(std::bind(&Engine::onWindowClose, this, std::placeholders::_1));
         dispatcher.dispatch<KeyPressedEvent>(std::bind(&Engine::onKeyPressed, this, std::placeholders::_1));
-        //LOG_INFO("{0}", e.toString());
+        dispatcher.dispatch<MouseMovedEvent>(std::bind(&Engine::OnMouseMoved, this, std::placeholders::_1));
+        dispatcher.dispatch<MouseButtonPressedEvent>(std::bind(&Engine::OnMouseButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<MouseButtonReleasedEvent>(std::bind(&Engine::OnMouseButtonReleased, this, std::placeholders::_1));
     }
     bool Engine::onWindowClose(WindowCloseEvent& e)
     {
@@ -96,37 +98,14 @@ namespace ToolEngine
             m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
             m_renderer->resize();
         }
-        if (e.getKeyCode() == 81)   // 81 is q
-        {
-            scene.camera.transform.rotation *= Quaternion::fromRotationZ(-0.1f);
-        }
-        if(e.getKeyCode() == 69)   // 69 is e
-		{
-            scene.camera.transform.rotation *= Quaternion::fromRotationZ(0.1f);
-		}
-        if (e.getKeyCode() == 265)   // 265 is up
-        {
-            scene.camera.transform.rotation *= Quaternion::fromRotationY(0.1f);
-        }
-        if (e.getKeyCode() == 264)   // 264 is down
-		{
-			scene.camera.transform.rotation *= Quaternion::fromRotationY(-0.1f);
-		}
-        if (e.getKeyCode() == 263)   // 263 is left
-        {
-            scene.camera.transform.rotation *= Quaternion::fromRotationX(0.1f);
-        }
-        if (e.getKeyCode() == 262)   // 262 is right
-		{
-            scene.camera.transform.rotation *= Quaternion::fromRotationX(-0.1f);
-		}
+        
         if(e.getKeyCode() == 87)   // 87 is w
 		{
-            scene.camera.transform.position.x -= 1.0f;
+            scene.camera.transform.position += scene.camera.transform.getForward() * 0.1f;
 		}
         if (e.getKeyCode() == 83)   // 83 is s
         {
-            scene.camera.transform.position.x += 1.0f;
+            scene.camera.transform.position -= scene.camera.transform.getForward() * 0.1f;
         }
         if (e.getKeyCode() == 65)   // 65 is a
 		{
@@ -136,6 +115,46 @@ namespace ToolEngine
 		{
 			scene.camera.transform.position.y += 1.0f;
 		}
+        return true;
+    }
+    bool Engine::OnMouseMoved(MouseMovedEvent& e)
+    {
+        if(m_mouse_button_state == 1)
+		{
+            m_mouse_button_state = 2;
+            m_last_mouse_x = e.getX();
+            m_last_mouse_y = e.getY();
+            return true;
+		}
+        if(m_mouse_button_state == 2)
+		{
+			float delta_x = e.getX() - m_last_mouse_x;
+            float delta_y = e.getY() - m_last_mouse_y;
+            m_last_mouse_x = e.getX();
+			m_last_mouse_y = e.getY();
+			
+
+			scene.camera.transform.rotation *= Quaternion::fromRotationZ(delta_x * 0.001f);
+			scene.camera.transform.rotation *= Quaternion::fromRotationX(delta_y * 0.001f);
+            scene.camera.transform.rotation *= Quaternion::fromRotationY(delta_y * 0.001f);
+
+		}
+        return true;
+    }
+    bool Engine::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+    {
+        if (e.getMouseButton() == 1)    // 1 is right mouse button
+        {
+            m_mouse_button_state = 1;
+        }
+        return true;
+    }
+    bool Engine::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+    {
+        if (e.getMouseButton() == 1)    // 1 is right mouse button
+        {
+            m_mouse_button_state = 0;
+        }
         return true;
     }
 }

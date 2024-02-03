@@ -3,6 +3,7 @@
 #include "Core/Event/Event.h"
 #include "Core/Event/ApplicationEvent.h"
 #include "Core/Event/KeyEvent.h"
+#include "Core/Event/MouseEvent.h"
 #include "Window/GlfwWindow.h"
 #include "RHI/Public/RHIContext.h"
 #include "Render/Render.h"
@@ -30,8 +31,15 @@ namespace ToolEngine
         std::unique_ptr<Renderer> m_renderer;
         RenderScene scene;
         bool m_running = true;
+
+        uint32_t m_mouse_button_state = 0;  // 0 is disable, 1 is start, 2 is running
+        float m_last_mouse_x = 0.0f;
+        float m_last_mouse_y = 0.0f;
         
         bool onWindowClose(WindowCloseEvent& e);
         bool onKeyPressed(KeyPressedEvent& e);
+        bool OnMouseMoved(MouseMovedEvent& e);
+        bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+        bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
     };
 }
