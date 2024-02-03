@@ -49,21 +49,21 @@ namespace ToolEngine
 	}
 	glm::vec3 Transform::getForward()
 	{
-		// TODO: forward
-		return glm::vec3();
+		auto v = glm::vec4(0, 0, 1, 0);
+		auto m = getModelMatrix();
+		return m * v;
 	}
 	glm::vec3 Transform::getRight()
 	{
-		// TODO: right
-		return glm::vec3();
+		auto v = glm::vec4(1, 0, 0, 0);
+		auto m = getModelMatrix();
+		return m * v;
 	}
 	glm::vec3 Transform::getUp()
 	{
-		glm::vec3 up =
-		{
-			0, 0, 1
-		};
-		return up;
+		auto v = glm::vec4(0, 1, 1, 0);
+		auto m = getModelMatrix();
+		return m * v;
 	}
 	glm::mat4x4 Transform::getModelMatrix()
 	{

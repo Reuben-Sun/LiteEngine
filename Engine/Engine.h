@@ -35,9 +35,14 @@ namespace ToolEngine
         uint32_t m_mouse_button_state = 0;  // 0 is disable, 1 is start, 2 is running
         float m_last_mouse_x = 0.0f;
         float m_last_mouse_y = 0.0f;
+
+        int m_forward_state = 0;
+        int m_right_state = 0;
+        float m_camera_speed = 2.0f;
         
         bool onWindowClose(WindowCloseEvent& e);
         bool onKeyPressed(KeyPressedEvent& e);
+        bool onKeyReleased(KeyReleasedEvent& e);
         bool OnMouseMoved(MouseMovedEvent& e);
         bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
         bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);

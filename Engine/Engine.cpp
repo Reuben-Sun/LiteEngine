@@ -71,6 +71,22 @@ namespace ToolEngine
         m_window->tick();
         m_rhi_context->tick();
         m_renderer->tick(scene);
+        if (m_forward_state == 1)
+        {
+            scene.camera.transform.position -= scene.camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
+        }
+        else if (m_forward_state == -1)
+        {
+            scene.camera.transform.position += scene.camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
+        }
+        if (m_right_state == 1)
+		{
+			scene.camera.transform.position -= scene.camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
+		}
+		else if (m_right_state == -1)
+		{
+			scene.camera.transform.position += scene.camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
+		}
     }
     void Engine::cleanup()
     {
@@ -81,9 +97,11 @@ namespace ToolEngine
         EventDispatcher dispatcher(e);
         dispatcher.dispatch<WindowCloseEvent>(std::bind(&Engine::onWindowClose, this, std::placeholders::_1));
         dispatcher.dispatch<KeyPressedEvent>(std::bind(&Engine::onKeyPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<KeyReleasedEvent>(std::bind(&Engine::onKeyReleased, this, std::placeholders::_1));
         dispatcher.dispatch<MouseMovedEvent>(std::bind(&Engine::OnMouseMoved, this, std::placeholders::_1));
         dispatcher.dispatch<MouseButtonPressedEvent>(std::bind(&Engine::OnMouseButtonPressed, this, std::placeholders::_1));
         dispatcher.dispatch<MouseButtonReleasedEvent>(std::bind(&Engine::OnMouseButtonReleased, this, std::placeholders::_1));
+        
     }
     bool Engine::onWindowClose(WindowCloseEvent& e)
     {
@@ -92,7 +110,7 @@ namespace ToolEngine
     }
     bool Engine::onKeyPressed(KeyPressedEvent& e)
     {
-        LOG_INFO("{0}", e.getKeyCode());
+        //LOG_INFO("{0}", e.getKeyCode());
         if (e.getKeyCode() == 85)   // 85 is u, TODO: move this to resource
         {
             m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
@@ -101,20 +119,77 @@ namespace ToolEngine
         
         if(e.getKeyCode() == 87)   // 87 is w
 		{
-            scene.camera.transform.position += scene.camera.transform.getForward() * 0.1f;
+            m_forward_state += 1;
+            if(m_forward_state > 1)
+			{
+				m_forward_state = 1;
+			}
 		}
         if (e.getKeyCode() == 83)   // 83 is s
         {
-            scene.camera.transform.position -= scene.camera.transform.getForward() * 0.1f;
+            m_forward_state -= 1;
+            if (m_forward_state < -1)
+			{
+				m_forward_state = -1;
+			}
         }
         if (e.getKeyCode() == 65)   // 65 is a
 		{
-			scene.camera.transform.position.y -= 1.0f;
+            m_right_state += 1;
+            if (m_right_state > 1)
+            {
+                m_right_state = 1;
+            }
 		}
 		if (e.getKeyCode() == 68)   // 68 is d
 		{
-			scene.camera.transform.position.y += 1.0f;
+			m_right_state -= 1;
+			if (m_right_state < -1)
+			{
+				m_right_state = -1;
+			}
 		}
+        return true;
+    }
+    bool Engine::onKeyReleased(KeyReleasedEvent& e)
+    {
+        
+
+        if (e.getKeyCode() == 87)   // 87 is w
+        {
+            m_forward_state -= 1;
+            if (m_forward_state < -1)
+            {
+                m_forward_state = -1;
+            }
+            
+        }
+        if (e.getKeyCode() == 83)   // 83 is s
+        {
+            m_forward_state += 1;
+            if (m_forward_state > 1)
+            {
+                m_forward_state = 1;
+            }
+        }
+
+        if (e.getKeyCode() == 65)   // 65 is a
+		{
+			m_right_state -= 1;
+			if (m_right_state < -1)
+			{
+				m_right_state = -1;
+			}
+		}
+
+		if (e.getKeyCode() == 68)   // 68 is d
+        {
+            m_right_state += 1;
+            if (m_right_state > 1)
+            {
+                m_right_state = 1;
+            }
+        }
         return true;
     }
     bool Engine::OnMouseMoved(MouseMovedEvent& e)
