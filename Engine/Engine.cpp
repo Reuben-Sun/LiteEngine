@@ -53,6 +53,16 @@ namespace ToolEngine
         material2.texture_bindings.push_back({ 1, "MarblesTiles.jpg" });
         scene.mesh_transform_list.push_back(transform2);
         scene.material_list.push_back(material2);
+
+        Camera camera;
+        camera.transform.position = glm::vec3(0.0f, 0.0f, 5.0f);
+        camera.transform.rotation = Quaternion::Identity();
+        camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+        camera.fov = glm::radians(45.0f); 
+        camera.near_plane = 0.1f;
+        camera.far_plane = 10.0f;
+        camera.view_size = 10;
+        scene.camera = camera;
     }
     void Engine::tick()
     {
@@ -85,7 +95,23 @@ namespace ToolEngine
             m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
             m_renderer->resize();
         }
-        
+
+        if(e.getKeyCode() == 87)   // 87 is w
+		{
+			scene.camera.transform.rotation = scene.camera.transform.rotation + Quaternion::fromRotationX(0.1f);
+		}
+        if (e.getKeyCode() == 83)   // 83 is s
+        {
+            scene.camera.transform.position.x -= 1.0f;
+        }
+        if (e.getKeyCode() == 65)   // 65 is a
+		{
+			scene.camera.transform.position.y += 1.0f;
+		}
+		if (e.getKeyCode() == 68)   // 68 is d
+		{
+			scene.camera.transform.position.y -= 1.0f;
+		}
         return true;
     }
 }
