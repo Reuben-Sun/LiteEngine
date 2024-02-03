@@ -29,7 +29,7 @@ namespace ToolEngine
         Mesh mesh = Mesh::createPlane();
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
-        transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+        transform.rotation = Quaternion::Identity();
         transform.scale = glm::vec3(2.0f, 2.0f, 2.0f);
         Material material;
         material.texture_bindings.push_back({ 1, "Calibration.png" });
@@ -47,7 +47,7 @@ namespace ToolEngine
 		scene.mesh_list.push_back(mesh2);
         Transform transform2;
         transform2.position = glm::vec3(0.0f, 0.0f, 0.5f);
-        transform2.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+        transform2.rotation = Quaternion::Identity();
         transform2.scale = glm::vec3(0.5f, 0.5f, 0.5f);
         Material material2;
         //material2.texture_bindings.push_back({ 1, "MarblesTiles.jpg" });
@@ -57,7 +57,9 @@ namespace ToolEngine
 
         Camera camera;
         camera.transform.position = glm::vec3(5.0f, 0.0f, 1.0f);
-        camera.transform.rotation = glm::vec3(-PI/2, 0.0f, -PI/2);
+        camera.transform.rotation = Quaternion::Identity();
+        camera.transform.rotation *= Quaternion::fromRotationX(-PI/2);
+        camera.transform.rotation *= Quaternion::fromRotationZ(-PI/2);
         camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
         camera.fov = glm::radians(45.0f); 
         camera.near_plane = 0.1f;
@@ -98,27 +100,27 @@ namespace ToolEngine
         }
         if (e.getKeyCode() == 81)   // 81 is q
         {
-            scene.camera.transform.rotation.z -= 0.1f;
+            scene.camera.transform.rotation *= Quaternion::fromRotationZ(-0.1f);
         }
         if(e.getKeyCode() == 69)   // 69 is e
 		{
-            scene.camera.transform.rotation.z += 0.1f;
+            scene.camera.transform.rotation *= Quaternion::fromRotationZ(0.1f);
 		}
         if (e.getKeyCode() == 265)   // 265 is up
         {
-            scene.camera.transform.rotation.y += 0.1f;
+            scene.camera.transform.rotation *= Quaternion::fromRotationY(0.1f);
         }
         if (e.getKeyCode() == 264)   // 264 is down
 		{
-			scene.camera.transform.rotation.y -= 0.1f;
+			scene.camera.transform.rotation *= Quaternion::fromRotationY(-0.1f);
 		}
         if (e.getKeyCode() == 263)   // 263 is left
         {
-            scene.camera.transform.rotation.x += 0.1f;
+            scene.camera.transform.rotation *= Quaternion::fromRotationX(0.1f);
         }
         if (e.getKeyCode() == 262)   // 262 is right
 		{
-            scene.camera.transform.rotation.x -= 0.1f;
+            scene.camera.transform.rotation *= Quaternion::fromRotationX(-0.1f);
 		}
         if(e.getKeyCode() == 87)   // 87 is w
 		{

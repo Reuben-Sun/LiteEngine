@@ -53,10 +53,20 @@ namespace ToolEngine
 	}
 	Quaternion Quaternion::fromEulerRadiansXYZ(const glm::vec3& eulerRadians)
 	{
-		auto q = Identity();
-		q *= fromRotationX(eulerRadians.x);
-		q *= fromRotationY(eulerRadians.y);
-		q *= fromRotationZ(eulerRadians.z);
-		return q;
+		const float halfX = 0.5f * eulerRadians.x;
+		const float halfY = 0.5f * eulerRadians.y;
+		const float halfZ = 0.5f * eulerRadians.z;
+		const float sx = sin(halfX);
+		const float cx = cos(halfX);
+		const float sy = sin(halfY);
+		const float cy = cos(halfY);
+		const float sz = sin(halfZ);
+		const float cz = cos(halfZ);
+		return Quaternion(
+			cx * sy * sz + sx * cy * cz,
+			cx * sy * cz - sx * cy * sz,
+			cx * cy * sz + sx * sy * cz,
+			cx * cy * cz - sx * sy * sz
+		);
 	}
 }
