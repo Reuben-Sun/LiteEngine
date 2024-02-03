@@ -208,10 +208,9 @@ namespace ToolEngine
             m_last_mouse_x = e.getX();
 			m_last_mouse_y = e.getY();
 			
-
 			scene.camera.transform.rotation *= Quaternion::fromRotationZ(delta_x * 0.001f);
+            // TODO: y is error
 			scene.camera.transform.rotation *= Quaternion::fromRotationX(delta_y * 0.001f);
-            scene.camera.transform.rotation *= Quaternion::fromRotationY(delta_y * 0.001f);
 
 		}
         return true;
