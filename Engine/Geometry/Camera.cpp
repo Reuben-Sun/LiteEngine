@@ -14,7 +14,8 @@ namespace ToolEngine
 	{
 		glm::mat4x4 translation_matrix = transform.getTranslationMatrix();
 		glm::mat4x4 rotation_matrix = transform.getRotationMatrix();
-		glm::mat4x4 view_matrix = glm::inverse(translation_matrix * rotation_matrix);
+		//glm::mat4x4 view_matrix = glm::inverse(translation_matrix * rotation_matrix);
+		glm::mat4x4 view_matrix = rotation_matrix * translation_matrix;
 		return view_matrix;
 		//return glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	}

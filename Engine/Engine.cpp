@@ -56,8 +56,9 @@ namespace ToolEngine
         scene.material_list.push_back(material2);
 
         Camera camera;
-        camera.transform.position = glm::vec3(5.0f, 0.0f, 1.0f);
-        camera.transform.rotation = glm::vec3(-PI/2, 0.0f, -PI/2);
+        camera.transform.position = glm::vec3(-5.0f, 0.0f, -1.0f);
+        camera.transform.rotation = glm::vec3(PI/2, PI/2, 0);
+        //camera.transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
         camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
         camera.fov = glm::radians(45.0f); 
         camera.near_plane = 0.1f;
