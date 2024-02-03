@@ -55,6 +55,8 @@ namespace ToolEngine
 	void RenderUI::drawHierarchy()
 	{
 		ImGui::Begin("Hierarchy");
+		// TODO: scene is manager by a json, parse it and show it in the hierarchy
+		// each item is a button, click it to select the object
 		ImGui::End();
 	}
 	void RenderUI::drawScene()

@@ -12,6 +12,7 @@
 
 namespace ToolEngine
 {
+	// TODO: multi-thread swap context
 	struct UIContext
 	{
 		std::vector<float> camera_quat;
