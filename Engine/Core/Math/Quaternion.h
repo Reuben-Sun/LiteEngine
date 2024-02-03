@@ -18,7 +18,7 @@ namespace ToolEngine
 
 		static Quaternion Zero();
 		static Quaternion Identity();
-
+		// clockwise rotation
 		static Quaternion fromRotationX(float angleInRadians);
 		static Quaternion fromRotationY(float angleInRadians);
 		static Quaternion fromRotationZ(float angleInRadians);

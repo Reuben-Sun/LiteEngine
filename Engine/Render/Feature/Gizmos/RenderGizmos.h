@@ -23,7 +23,7 @@ namespace ToolEngine
 		RenderGizmos(RHIDevice& device, RHIRenderPass& render_pass, RHIDescriptorPool& pool);
 		~RenderGizmos();
 
-		void tick(RHICommandBuffer& cmd, uint32_t frame_index, float aspect);	// TODO: replace aspect with camera
+		void tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera);	// TODO: replace aspect with camera
 	private:
 		RHIDevice& m_device;
 		RHIDescriptorPool& m_ubo_descriptor_pool;

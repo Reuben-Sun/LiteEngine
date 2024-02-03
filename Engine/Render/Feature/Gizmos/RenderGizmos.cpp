@@ -41,7 +41,7 @@ namespace ToolEngine
         m_ubo_descriptor_set_list.clear();
         m_transform_list.clear();
     }
-    void RenderGizmos::tick(RHICommandBuffer& cmd, uint32_t frame_index, float aspect)
+    void RenderGizmos::tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera)
     {
         cmd.bindPipeline(frame_index, m_gizmos_pipeline->getHandle());
 		for (int i = 0; i < m_index_count_list.size(); i++)
@@ -53,11 +53,9 @@ namespace ToolEngine
 
 			GlobalUBO ubo{};			
 			Transform& transform = m_transform_list[i];
-			ubo.model_matrix = transform.getModelMatrix();
-			ubo.view_matrix = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			ubo.projection_matrix = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10.0f);
-			ubo.projection_matrix[1][1] *= -1;
-
+            ubo.model_matrix = transform.getModelMatrix();
+            ubo.view_matrix = camera.getViewMatrix();
+            ubo.projection_matrix = camera.getProjectionMatrix();
 			RHIUniformBuffer& uniform_buffer = *m_uniform_buffer_list[i];
 			uniform_buffer.updateBuffer(ubo);
 			const std::vector<VkDescriptorSet> descriptorsets = { m_ubo_descriptor_set_list[i]->getHandle() };
