@@ -15,18 +15,19 @@ namespace ToolEngine
 	}
 	glm::mat4x4 Transform::getRotationMatrix()
 	{
-		float tx = rotation.x * 2.0f;
-		float ty = rotation.y * 2.0f;
-		float tz = rotation.z * 2.0f;
-		float twx = rotation.w * tx;
-		float twy = rotation.w * ty;
-		float twz = rotation.w * tz;
-		float txx = rotation.x * tx;
-		float txy = rotation.x * ty;
-		float txz = rotation.x * tz;
-		float tyy = rotation.y * ty;
-		float tyz = rotation.y * tz;
-		float tzz = rotation.z * tz;
+		Quaternion q = Quaternion::fromEulerRadiansXYZ(rotation);
+		float tx = q.x * 2.0f;
+		float ty = q.y * 2.0f;
+		float tz = q.z * 2.0f;
+		float twx = q.w * tx;
+		float twy = q.w * ty;
+		float twz = q.w * tz;
+		float txx = q.x * tx;
+		float txy = q.x * ty;
+		float txz = q.x * tz;
+		float tyy = q.y * ty;
+		float tyz = q.y * tz;
+		float tzz = q.z * tz;
 		glm::mat4x4 matrix =
 		{
 			1 - (tyy + tzz), txy - twz, txz + twy, 0,

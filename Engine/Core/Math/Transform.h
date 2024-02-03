@@ -13,7 +13,7 @@ namespace ToolEngine
 	{
 	public:
 		glm::vec3 position;
-		Quaternion rotation;
+		glm::vec3 rotation;		// euler angle
 		glm::vec3 scale;
 
 		glm::mat4x4 getTranslationMatrix();

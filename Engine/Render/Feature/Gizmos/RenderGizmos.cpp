@@ -14,7 +14,7 @@ namespace ToolEngine
         Mesh mesh1 = Mesh::createLine(5, { 0, 0.3f, 0 });
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
-        transform.rotation = Quaternion::Identity();
+        transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
         transform.scale = glm::vec3(2.0f, 2.0f, 2.0f);
         for (int i = -4; i <= 4; i++)
         {
@@ -24,7 +24,7 @@ namespace ToolEngine
         
         Transform transform2;
         transform2.position = glm::vec3(0.0f, 0.0f, 0.0f);
-        transform2.rotation = Quaternion::fromRotationZ(PI * 0.5);
+        transform2.rotation = glm::vec3(0.0f, 0.0f, PI/2);
         transform2.scale = glm::vec3(2.0f, 2.0f, 2.0f);
         for (int i = -4; i <= 4; i++)
         {
