@@ -16,6 +16,10 @@ namespace ToolEngine
 	{
 		std::vector<float> camera_quat;
 		std::vector<float> camera_pos;
+		uint32_t m_scene_width = 1920;
+		uint32_t m_scene_height = 1080;
+		bool need_resize = true;
+		bool enable_gizmos = true;
 	};
 	class RenderUI
 	{
@@ -25,9 +29,6 @@ namespace ToolEngine
 
 		void tick(RHICommandBuffer& cmd, uint32_t frame_index);
 
-		uint32_t m_scene_width = 1920;
-		uint32_t m_scene_height = 1080;
-		bool need_resize = true;
 		UIContext m_ui_context;
 	private:
 		RHIContext& m_rhi_context;

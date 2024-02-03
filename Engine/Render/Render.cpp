@@ -74,9 +74,9 @@ namespace ToolEngine
 
 		m_in_flight_fences[frame_index]->wait();
 
-		if (m_enable_ui && m_render_ui->need_resize)
+		if (m_enable_ui && m_render_ui->m_ui_context.need_resize)
 		{
-			m_render_ui->need_resize = false;
+			m_render_ui->m_ui_context.need_resize = false;
 			resize();
 			return;
 		}
@@ -147,8 +147,11 @@ namespace ToolEngine
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}
-
-		m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
+		if (m_enable_ui && m_render_ui->m_ui_context.enable_gizmos)
+		{
+			m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
+		}
+		
 		
 		m_command_buffer->endRenderPass(frame_index);
 
@@ -203,8 +206,8 @@ namespace ToolEngine
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		if (m_enable_ui)
 		{
-			width = m_render_ui->m_scene_width;
-			height = m_render_ui->m_scene_height;
+			width = m_render_ui->m_ui_context.m_scene_width;
+			height = m_render_ui->m_ui_context.m_scene_height;
 		}
 
 		m_forward_pass_width = width;

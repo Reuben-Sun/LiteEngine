@@ -50,8 +50,8 @@ namespace ToolEngine
         transform2.rotation = Quaternion::Identity();
         transform2.scale = glm::vec3(0.5f, 0.5f, 0.5f);
         Material material2;
-        //material2.texture_bindings.push_back({ 1, "MarblesTiles.jpg" });
-        material2.texture_bindings.push_back({ 1, "Cube.png" });
+        material2.texture_bindings.push_back({ 1, "MarblesTiles.jpg" });
+        //material2.texture_bindings.push_back({ 1, "Cube.png" });
         scene.mesh_transform_list.push_back(transform2);
         scene.material_list.push_back(material2);
 

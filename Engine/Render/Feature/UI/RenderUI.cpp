@@ -61,13 +61,13 @@ namespace ToolEngine
 	{
 		ImGui::Begin("SceneView");
 		ImVec2 window_size = ImGui::GetWindowSize();
-		if (m_scene_width != (uint32_t)window_size.x || m_scene_height != (uint32_t)window_size.y)
+		if (m_ui_context.m_scene_width != (uint32_t)window_size.x || m_ui_context.m_scene_height != (uint32_t)window_size.y)
 		{
 			// if window size changed, need to resize
-			m_scene_width = window_size.x;
-			m_scene_height = window_size.y;
-			need_resize = true;
-			LOG_INFO("scene width: {0}, scene height: {1}", m_scene_width, m_scene_height);
+			m_ui_context.m_scene_width = window_size.x;
+			m_ui_context.m_scene_height = window_size.y;
+			m_ui_context.need_resize = true;
+			LOG_INFO("scene width: {0}, scene height: {1}", m_ui_context.m_scene_width, m_ui_context.m_scene_height);
 		}
 		// scene image
 		ImGui::Image(m_descriptor_set.getHandle(), window_size);
@@ -81,9 +81,16 @@ namespace ToolEngine
 	void RenderUI::drawDetail()
 	{
 		ImGui::Begin("Detail");
+		ImGui::Text("Camera Info");
 		ImGui::InputFloat3("Camera Position", m_ui_context.camera_pos.data());
 		ImGui::InputFloat4("Camera Rotation", m_ui_context.camera_quat.data());
-
+		ImGui::Separator();
+		ImGui::Text("Debug Tools");
+		std::string button_name = m_ui_context.enable_gizmos ? "Gizmos ON" : "Gizmos OFF";
+		if (ImGui::Button(button_name.c_str()))
+		{
+			m_ui_context.enable_gizmos = !m_ui_context.enable_gizmos;
+		}
 		ImGui::End();
 	}
 	
