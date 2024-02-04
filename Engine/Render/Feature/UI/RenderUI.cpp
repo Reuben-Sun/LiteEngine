@@ -86,6 +86,7 @@ namespace ToolEngine
 		ImGui::Text("Camera Info");
 		ImGui::InputFloat3("Camera Position", m_ui_context.camera_pos.data());
 		ImGui::InputFloat3("Camera Rotation", m_ui_context.camera_rotation.data());
+		ImGui::InputFloat("Camera Speed", &m_ui_context.camera_speed);
 		ImGui::Separator();
 		ImGui::Text("Cube Info");
 		ImGui::InputFloat3("Cube Position", m_ui_context.cube_pos.data());

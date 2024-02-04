@@ -1,0 +1,44 @@
+{
+    "game_objects": [
+        {
+            "material_path": "Material/cube.material",
+            "mesh_path": "cube.gltf",
+            "name": "Cube",
+            "position": [
+                0.0,
+                0.0,
+                0.5
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.5,
+                0.5,
+                0.5
+            ]
+        },
+        {
+            "material_path": "Material/plane.material",
+            "mesh_path": "plane",
+            "name": "Plane",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        }
+    ]
+}
