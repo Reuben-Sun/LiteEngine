@@ -47,10 +47,15 @@ if(NOT TARGET spdlog)
   set_property(TARGET spdlog PROPERTY FOLDER "ThirdParty")
 endif()
 
-add_compile_options(spdlog /wd4996)
-
 # vma
 if(NOT TARGET VulkanMemoryAllocator)
   add_subdirectory(vma)
+endif()
+
+# JoltPhysics
+if(NOT TARGET JoltPhysics)
+  set(BUILD_SHARED_LIBS ON)
+  add_subdirectory(JoltPhysics/Build)
+  set_property(TARGET Jolt PROPERTY FOLDER "ThirdParty")
 endif()
 

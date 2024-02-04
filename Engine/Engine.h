@@ -8,6 +8,7 @@
 #include "RHI/Public/RHIContext.h"
 #include "Render/Render.h"
 #include "Geometry/RenderScene.h"
+#include <Jolt/Jolt.h>
 
 
 namespace ToolEngine
