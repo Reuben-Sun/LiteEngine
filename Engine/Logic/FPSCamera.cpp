@@ -50,6 +50,10 @@ namespace ToolEngine
 		euler.z += delta_x * 0.001f;
 		m_camera.transform.rotation = Quaternion::fromEulerRadiansXYZ(euler);
 	}
+	void FPSCamera::updateCameraSpeed(float delta_speed)
+	{
+		m_camera_speed = std::clamp(m_camera_speed + delta_speed, 0.0f, 100.0f);
+	}
 	void FPSCamera::tick(RenderScene& scene)
 	{
 		if (m_forward_state.value() == 1)

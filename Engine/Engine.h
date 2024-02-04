@@ -38,15 +38,12 @@ namespace ToolEngine
         float m_last_mouse_x = 0.0f;
         float m_last_mouse_y = 0.0f;
 
-        
-
-        
-        
         bool onWindowClose(WindowCloseEvent& e);
         bool onKeyPressed(KeyPressedEvent& e);
         bool onKeyReleased(KeyReleasedEvent& e);
         bool OnMouseMoved(MouseMovedEvent& e);
         bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
         bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
+        bool OnMouseScrolled(MouseScrolledEvent& e);
     };
 }

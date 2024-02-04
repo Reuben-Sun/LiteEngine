@@ -48,7 +48,7 @@ namespace ToolEngine
         dispatcher.dispatch<MouseMovedEvent>(std::bind(&Engine::OnMouseMoved, this, std::placeholders::_1));
         dispatcher.dispatch<MouseButtonPressedEvent>(std::bind(&Engine::OnMouseButtonPressed, this, std::placeholders::_1));
         dispatcher.dispatch<MouseButtonReleasedEvent>(std::bind(&Engine::OnMouseButtonReleased, this, std::placeholders::_1));
-        
+        dispatcher.dispatch<MouseScrolledEvent>(std::bind(&Engine::OnMouseScrolled, this, std::placeholders::_1));
     }
     bool Engine::onWindowClose(WindowCloseEvent& e)
     {
@@ -57,7 +57,7 @@ namespace ToolEngine
     }
     bool Engine::onKeyPressed(KeyPressedEvent& e)
     {
-        LOG_INFO("{0}", e.getKeyCode());
+        //LOG_INFO("{0}", e.getKeyCode());
 
         if (e.getKeyCode() == 85)   // 85 is u, TODO: move this to resource
         {
@@ -106,6 +106,15 @@ namespace ToolEngine
         {
             m_mouse_button_state = 0;
         }
+        return true;
+    }
+    bool Engine::OnMouseScrolled(MouseScrolledEvent& e)
+    {
+        if (m_mouse_button_state == 2)  // scroll when press right mouse button can change camera speed
+        {
+            m_gp_context->m_fps_camera->updateCameraSpeed(e.getYOffset());
+        }
+        
         return true;
     }
 }

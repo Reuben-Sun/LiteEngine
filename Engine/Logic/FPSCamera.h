@@ -30,6 +30,7 @@ namespace ToolEngine
 
 		void updateMoveState(uint32_t keycode, bool pressed);
 		void updateRotation(float delta_x, float delta_y);
+		void updateCameraSpeed(float delta_speed);
 
 		void tick(RenderScene& scene);
 
