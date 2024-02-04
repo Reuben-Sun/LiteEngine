@@ -6,15 +6,7 @@ namespace ToolEngine
 	SceneManager::SceneManager(const std::string& scene_json)
 	{
 		loadScene(scene_json);
-		Camera camera;
-		camera.transform.position = glm::vec3(3.0f, 3.0f, 3.0f);
-		camera.transform.rotation = Quaternion::fromEulerDegreesXYZ(glm::vec3(-63.8f, 0.0f, -133.4f));
-		camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-		camera.fov = glm::radians(45.0f);
-		camera.near_plane = 0.1f;
-		camera.far_plane = 10.0f;
-		camera.view_size = 10;
-		m_render_scene.camera = camera;
+		
 		for (uint32_t i = 0; i < m_game_objects.size(); i++)
 		{
 			GameObject& go = m_game_objects[i];
@@ -38,10 +30,10 @@ namespace ToolEngine
 			auto mat_json = Path::getInstance().readJson(Path::getInstance().getAssetPath() + go.material_path);
 			Material material = Material::deserialize(mat_json);
 
-			m_render_scene.mesh_name_list.push_back(go.name);
-			m_render_scene.mesh_list.push_back(mesh);
-			m_render_scene.mesh_transform_list.push_back(transform);
-			m_render_scene.material_list.push_back(material);
+			mesh_name_list.push_back(go.name);
+			mesh_list.push_back(mesh);
+			mesh_transform_list.push_back(transform);
+			material_list.push_back(material);
 		}
 	}
 	SceneManager::~SceneManager()
@@ -64,9 +56,12 @@ namespace ToolEngine
 		auto j = serialize();
 		Path::getInstance().saveJson(file_path, j);
 	}
-	void SceneManager::tick()
+	void SceneManager::tick(RenderScene& scene)
 	{
-		
+		scene.mesh_name_list = mesh_name_list;
+		scene.mesh_list = mesh_list;
+		scene.mesh_transform_list = mesh_transform_list;
+		scene.material_list = material_list;
 	}
 	nlohmann::json SceneManager::serialize() const
 	{

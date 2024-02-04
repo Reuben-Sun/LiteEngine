@@ -16,14 +16,15 @@ namespace ToolEngine
 		void loadScene(const std::string& scene_json);
 		void saveScene(const std::string& scene_json);
 		
-		RenderScene& getScene() { return m_render_scene; }
-
-		void tick();
+		void tick(RenderScene& scene);
 	private:
 		std::string m_current_scene = "";
 		std::vector<GameObject> m_game_objects;
 
-		RenderScene m_render_scene;
+		std::vector<std::string> mesh_name_list;
+		std::vector<Mesh> mesh_list;
+		std::vector<Transform> mesh_transform_list;
+		std::vector<Material> material_list;
 
 		nlohmann::json serialize() const;
 		void deserialize(const nlohmann::json& j);

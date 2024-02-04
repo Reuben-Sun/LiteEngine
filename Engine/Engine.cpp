@@ -32,7 +32,7 @@ namespace ToolEngine
         m_window->tick();
         m_rhi_context->tick();
         m_gp_context->tick();
-        RenderScene& scene = m_gp_context->m_scene_manager->getScene();
+        RenderScene& scene = m_gp_context->getScene();
         m_renderer->tick(scene);
         if (m_forward_state.value() == 1)
         {
@@ -163,7 +163,7 @@ namespace ToolEngine
             float delta_y = e.getY() - m_last_mouse_y;
             m_last_mouse_x = e.getX();
 			m_last_mouse_y = e.getY();
-            RenderScene& scene = m_gp_context->m_scene_manager->getScene();
+            RenderScene& scene = m_gp_context->getScene();
             auto euler = scene.camera.transform.rotation.getEulerRandians();
             euler.x += delta_y * 0.001f;
             euler.z += delta_x * 0.001f;

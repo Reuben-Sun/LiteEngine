@@ -12,10 +12,11 @@ namespace ToolEngine
 		GPContext();
 		~GPContext();
 
+		RenderScene& getScene() { return m_scene; }
 		std::unique_ptr<SceneManager> m_scene_manager;
 
 		void tick();
 	private:
-		
+		RenderScene m_scene;
 	};
 }
