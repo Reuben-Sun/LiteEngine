@@ -71,27 +71,27 @@ namespace ToolEngine
         m_window->tick();
         m_rhi_context->tick();
         m_renderer->tick(scene);
-        if (m_forward_state == 1)
+        if (m_forward_state.value() == 1)
         {
             scene.camera.transform.position -= scene.camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
         }
-        else if (m_forward_state == -1)
+        else if (m_forward_state.value() == -1)
         {
             scene.camera.transform.position += scene.camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
         }
-        if (m_right_state == 1)
+        if (m_right_state.value() == 1)
 		{
 			scene.camera.transform.position -= scene.camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
 		}
-		else if (m_right_state == -1)
+		else if (m_right_state.value() == -1)
 		{
 			scene.camera.transform.position += scene.camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
 		}
-        if (m_up_state == 1)
+        if (m_up_state.value() == 1)
         {
 			scene.camera.transform.position += scene.camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
 		}
-        else if (m_up_state == -1)
+        else if (m_up_state.value() == -1)
         {
 			scene.camera.transform.position -= scene.camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
 		}
@@ -128,51 +128,27 @@ namespace ToolEngine
         
         if(e.getKeyCode() == 87)   // 87 is w
 		{
-            m_forward_state += 1;
-            if(m_forward_state > 1)
-			{
-				m_forward_state = 1;
-			}
+            m_forward_state.add();
 		}
         if (e.getKeyCode() == 83)   // 83 is s
         {
-            m_forward_state -= 1;
-            if (m_forward_state < -1)
-			{
-				m_forward_state = -1;
-			}
+            m_forward_state.del();
         }
         if (e.getKeyCode() == 65)   // 65 is a
 		{
-            m_right_state += 1;
-            if (m_right_state > 1)
-            {
-                m_right_state = 1;
-            }
+            m_right_state.add();
 		}
 		if (e.getKeyCode() == 68)   // 68 is d
 		{
-			m_right_state -= 1;
-			if (m_right_state < -1)
-			{
-				m_right_state = -1;
-			}
+            m_right_state.del();
 		}
         if (e.getKeyCode() == 32)   // 32 is space
         {
-            m_up_state += 1;
-            if (m_up_state > 1)
-            {
-				m_up_state = 1;
-			}
+            m_up_state.add();
         }
         if (e.getKeyCode() == 340)   // 340 is left shift
         {
-            m_up_state -= 1;
-            if (m_up_state < -1)
-            {
-				m_up_state = -1;
-			}
+            m_up_state.del();
         }
         return true;
     }
@@ -182,54 +158,30 @@ namespace ToolEngine
 
         if (e.getKeyCode() == 87)   // 87 is w
         {
-            m_forward_state -= 1;
-            if (m_forward_state < -1)
-            {
-                m_forward_state = -1;
-            }
+            m_forward_state.del();
             
         }
         if (e.getKeyCode() == 83)   // 83 is s
         {
-            m_forward_state += 1;
-            if (m_forward_state > 1)
-            {
-                m_forward_state = 1;
-            }
+            m_forward_state.add();
         }
 
         if (e.getKeyCode() == 65)   // 65 is a
 		{
-			m_right_state -= 1;
-			if (m_right_state < -1)
-			{
-				m_right_state = -1;
-			}
+            m_right_state.del();
 		}
 
 		if (e.getKeyCode() == 68)   // 68 is d
         {
-            m_right_state += 1;
-            if (m_right_state > 1)
-            {
-                m_right_state = 1;
-            }
+            m_right_state.add();
         }
         if (e.getKeyCode() == 32)   // 32 is space
         {
-			m_up_state -= 1;
-            if (m_up_state < -1)
-            {
-				m_up_state = -1;
-			}
+            m_up_state.del();
 		}
         if (e.getKeyCode() == 340)   // 340 is left shift
         {
-            m_up_state += 1;
-            if (m_up_state > 1)
-            {
-                m_up_state = 1;
-            }
+            m_up_state.add();
         }
         return true;
     }
