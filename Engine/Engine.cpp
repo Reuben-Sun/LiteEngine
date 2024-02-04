@@ -87,6 +87,14 @@ namespace ToolEngine
 		{
 			scene.camera.transform.position += scene.camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
 		}
+        if (m_up_state == 1)
+        {
+			scene.camera.transform.position += scene.camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
+		}
+        else if (m_up_state == -1)
+        {
+			scene.camera.transform.position -= scene.camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
+		}
     }
     void Engine::cleanup()
     {
@@ -110,7 +118,8 @@ namespace ToolEngine
     }
     bool Engine::onKeyPressed(KeyPressedEvent& e)
     {
-        //LOG_INFO("{0}", e.getKeyCode());
+        LOG_INFO("{0}", e.getKeyCode());
+
         if (e.getKeyCode() == 85)   // 85 is u, TODO: move this to resource
         {
             m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
@@ -149,6 +158,22 @@ namespace ToolEngine
 				m_right_state = -1;
 			}
 		}
+        if (e.getKeyCode() == 32)   // 32 is space
+        {
+            m_up_state += 1;
+            if (m_up_state > 1)
+            {
+				m_up_state = 1;
+			}
+        }
+        if (e.getKeyCode() == 340)   // 340 is left shift
+        {
+            m_up_state -= 1;
+            if (m_up_state < -1)
+            {
+				m_up_state = -1;
+			}
+        }
         return true;
     }
     bool Engine::onKeyReleased(KeyReleasedEvent& e)
@@ -188,6 +213,22 @@ namespace ToolEngine
             if (m_right_state > 1)
             {
                 m_right_state = 1;
+            }
+        }
+        if (e.getKeyCode() == 32)   // 32 is space
+        {
+			m_up_state -= 1;
+            if (m_up_state < -1)
+            {
+				m_up_state = -1;
+			}
+		}
+        if (e.getKeyCode() == 340)   // 340 is left shift
+        {
+            m_up_state += 1;
+            if (m_up_state > 1)
+            {
+                m_up_state = 1;
             }
         }
         return true;

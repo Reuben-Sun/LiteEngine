@@ -38,6 +38,7 @@ namespace ToolEngine
 
         int m_forward_state = 0;
         int m_right_state = 0;
+        int m_up_state = 0;
         float m_camera_speed = 2.0f;
         
         bool onWindowClose(WindowCloseEvent& e);

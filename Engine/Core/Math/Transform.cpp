@@ -61,7 +61,7 @@ namespace ToolEngine
 	}
 	glm::vec3 Transform::getUp()
 	{
-		auto v = glm::vec4(0, 1, 1, 0);
+		auto v = glm::vec4(0, 1, 0, 0);
 		auto m = getModelMatrix();
 		return m * v;
 	}
