@@ -38,35 +38,9 @@ namespace ToolEngine
         float m_last_mouse_x = 0.0f;
         float m_last_mouse_y = 0.0f;
 
-        struct MoveState
-        {
-            int state = 0;
-            void add()
-            {
-                state++;
-                if (state > 1)
-                {
-					state = 1;
-				}
-            }
-            void del()
-            {
-				state--;
-				if (state < -1)
-				{
-                    state = -1;
-                }
-            }
-            int value() const
-            {
-				return state;
-			}
-        };
+        
 
-        MoveState m_forward_state;
-        MoveState m_right_state;
-        MoveState m_up_state;
-        float m_camera_speed = 2.0f;
+        
         
         bool onWindowClose(WindowCloseEvent& e);
         bool onKeyPressed(KeyPressedEvent& e);

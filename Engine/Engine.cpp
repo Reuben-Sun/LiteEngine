@@ -34,30 +34,6 @@ namespace ToolEngine
         m_gp_context->tick();
         RenderScene& scene = m_gp_context->getScene();
         m_renderer->tick(scene);
-        if (m_forward_state.value() == 1)
-        {
-            scene.camera.transform.position -= scene.camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
-        }
-        else if (m_forward_state.value() == -1)
-        {
-            scene.camera.transform.position += scene.camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
-        }
-        if (m_right_state.value() == 1)
-		{
-			scene.camera.transform.position -= scene.camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
-		}
-		else if (m_right_state.value() == -1)
-		{
-			scene.camera.transform.position += scene.camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
-		}
-        if (m_up_state.value() == 1)
-        {
-			scene.camera.transform.position += scene.camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
-		}
-        else if (m_up_state.value() == -1)
-        {
-			scene.camera.transform.position -= scene.camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
-		}
     }
     void Engine::cleanup()
     {
@@ -89,63 +65,12 @@ namespace ToolEngine
             m_renderer->resize();
         }
         
-        if(e.getKeyCode() == 87)   // 87 is w
-		{
-            m_forward_state.add();
-		}
-        if (e.getKeyCode() == 83)   // 83 is s
-        {
-            m_forward_state.del();
-        }
-        if (e.getKeyCode() == 65)   // 65 is a
-		{
-            m_right_state.add();
-		}
-		if (e.getKeyCode() == 68)   // 68 is d
-		{
-            m_right_state.del();
-		}
-        if (e.getKeyCode() == 32)   // 32 is space
-        {
-            m_up_state.add();
-        }
-        if (e.getKeyCode() == 340)   // 340 is left shift
-        {
-            m_up_state.del();
-        }
+        m_gp_context->m_fps_camera->updateMoveState(e.getKeyCode(), true);
         return true;
     }
     bool Engine::onKeyReleased(KeyReleasedEvent& e)
     {
-        
-
-        if (e.getKeyCode() == 87)   // 87 is w
-        {
-            m_forward_state.del();
-            
-        }
-        if (e.getKeyCode() == 83)   // 83 is s
-        {
-            m_forward_state.add();
-        }
-
-        if (e.getKeyCode() == 65)   // 65 is a
-		{
-            m_right_state.del();
-		}
-
-		if (e.getKeyCode() == 68)   // 68 is d
-        {
-            m_right_state.add();
-        }
-        if (e.getKeyCode() == 32)   // 32 is space
-        {
-            m_up_state.del();
-		}
-        if (e.getKeyCode() == 340)   // 340 is left shift
-        {
-            m_up_state.add();
-        }
+        m_gp_context->m_fps_camera->updateMoveState(e.getKeyCode(), false);
         return true;
     }
     bool Engine::OnMouseMoved(MouseMovedEvent& e)
@@ -163,11 +88,7 @@ namespace ToolEngine
             float delta_y = e.getY() - m_last_mouse_y;
             m_last_mouse_x = e.getX();
 			m_last_mouse_y = e.getY();
-            RenderScene& scene = m_gp_context->getScene();
-            auto euler = scene.camera.transform.rotation.getEulerRandians();
-            euler.x += delta_y * 0.001f;
-            euler.z += delta_x * 0.001f;
-            scene.camera.transform.rotation = Quaternion::fromEulerRadiansXYZ(euler);
+            m_gp_context->m_fps_camera->updateRotation(delta_x, delta_y);
 		}
         return true;
     }
