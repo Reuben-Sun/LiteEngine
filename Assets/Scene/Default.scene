@@ -19,6 +19,26 @@
                 0.5,
                 0.5
             ]
+        },
+        {
+            "material_path": "Material/plane.material",
+            "mesh_path": "plane",
+            "name": "Plane",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
         }
     ]
 }

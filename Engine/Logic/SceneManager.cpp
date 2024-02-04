@@ -18,11 +18,19 @@ namespace ToolEngine
 		for (uint32_t i = 0; i < m_game_objects.size(); i++)
 		{
 			GameObject& go = m_game_objects[i];
-			std::string model_path = Path::getInstance().getAssetPath() + go.mesh_path;
-			std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
 			Mesh mesh;
-			mesh.index_buffer = loader->loaded_index_buffer;
-			mesh.vertex_buffer = loader->loaded_vertex_buffer;
+			if (go.mesh_path == "plane")
+			{
+				mesh = Mesh::createPlane();
+			}
+			else 
+			{
+				std::string model_path = Path::getInstance().getAssetPath() + go.mesh_path;
+				std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
+				mesh.index_buffer = loader->loaded_index_buffer;
+				mesh.vertex_buffer = loader->loaded_vertex_buffer;
+			}
+			
 			Transform transform;
 			transform.position = glm::vec3(go.position[0], go.position[1], go.position[2]);
 			transform.rotation = Quaternion::fromEulerDegreesXYZ(glm::vec3(go.rotation[0], go.rotation[1], go.rotation[2]));

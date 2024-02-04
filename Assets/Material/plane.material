@@ -1,0 +1,10 @@
+{
+    "frag_shader_path": "",
+    "texture_bindings": [
+        {
+            "binding_index": 1,
+            "texture_path": "Calibration.png"
+        }
+    ],
+    "vertex_shader_path": ""
+}
