@@ -28,6 +28,56 @@ namespace ToolEngine
 		return *this;
 	}
 
+	glm::vec3 Quaternion::getEulerRandians() const
+	{
+		const float sinp = 2.0f * (w * y + z * x);
+
+		if (sinp* sinp < 0.5f)
+		{
+			// roll (x-axis rotation)
+			const float roll = glm::atan(2.0f * (w * x - z * y), 1.0f - 2.0f * (x * x + y * y));
+
+			// pitch (y-axis rotation)
+			const float pitch = asinf(sinp);
+
+			// yaw (z-axis rotation)
+			const float yaw = glm::atan(2.0f * (w * z - x * y), 1.0f - 2.0f * (y * y + z * z));
+
+			return glm::vec3(roll, pitch, yaw);
+		}
+
+		// find the pitch from its cosine instead, to avoid issues with sensitivity of asin when the sine value is close to 1
+		else
+		{
+			const float sign = sinp > 0.0f ? 1.0f : -1.0f;
+			const float m12 = 2.0f * (z * y - w * x);
+			const float m22 = 1.0f - 2.0f * (x * x + y * y);
+			const float cospSq = m12 * m12 + m22 * m22;
+			const float cosp = glm::sqrt(cospSq);
+			const float pitch = sign * acosf(cosp);
+			if (cospSq > 0.0001f)
+			{
+				const float roll = glm::atan(-m12, m22);
+				const float yaw = glm::atan(2.0f * (w * z - x * y), 1.0f - 2.0f * (y * y + z * z));
+				return glm::vec3(roll, pitch, yaw);
+			}
+			// if the pitch is close enough to +-pi/2, use a different approach because the terms used above lose roll and yaw information
+			else
+			{
+				const float m21 = 2.0f * (y * z + x * w);
+				const float m11 = 1.0f - 2.0f * (x * x + z * z);
+				const float roll = glm::atan(m21, m11);
+				return glm::vec3(roll, pitch, 0.0f);
+			}
+		}
+	}
+
+	glm::vec3 Quaternion::getEulerDegrees() const
+	{
+		auto euler = getEulerRandians();
+		return glm::vec3(glm::degrees(euler[0]), glm::degrees(euler[1]), glm::degrees(euler[2]));
+	}
+
 	Quaternion Quaternion::Zero()
 	{
 		return Quaternion(0, 0, 0, 0);
@@ -68,9 +118,5 @@ namespace ToolEngine
 			cx * cy * sz + sx * sy * cz,
 			cx * cy * cz - sx * sy * sz
 		);
-	}
-	std::vector<float> Quaternion::toVector() const
-	{
-		return std::vector<float>{ x, y, z, w };
 	}
 }

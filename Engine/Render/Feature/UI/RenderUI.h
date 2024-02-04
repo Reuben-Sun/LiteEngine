@@ -15,8 +15,10 @@ namespace ToolEngine
 	// TODO: multi-thread swap context
 	struct UIContext
 	{
-		std::vector<float> camera_quat;
+		std::vector<float> camera_rotation;
 		std::vector<float> camera_pos;
+		std::vector<float> cube_pos;
+		std::vector<float> cube_rotation;
 		uint32_t m_scene_width = 1920;
 		uint32_t m_scene_height = 1080;
 		bool need_resize = true;

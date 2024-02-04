@@ -16,6 +16,9 @@ namespace ToolEngine
 		Quaternion operator*(const Quaternion& other) const;
 		Quaternion& operator*=(const Quaternion& other);
 
+		glm::vec3 getEulerRandians() const;
+		glm::vec3 getEulerDegrees() const;
+
 		static Quaternion Zero();
 		static Quaternion Identity();
 		// clockwise rotation
@@ -23,8 +26,6 @@ namespace ToolEngine
 		static Quaternion fromRotationY(float angleInRadians);
 		static Quaternion fromRotationZ(float angleInRadians);
 		static Quaternion fromEulerRadiansXYZ(const glm::vec3& eulerRadians);
-
-		std::vector<float> toVector() const;
 
 		float x, y, z, w;		
 	};
