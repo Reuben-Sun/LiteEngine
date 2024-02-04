@@ -1,0 +1,24 @@
+{
+    "game_objects": [
+        {
+            "material_path": "res/material/cube.mtl",
+            "mesh_path": "cube.gltf",
+            "name": "Cube",
+            "position": [
+                0.0,
+                0.0,
+                0.5
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.5,
+                0.5,
+                0.5
+            ]
+        }
+    ]
+}
