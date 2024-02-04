@@ -40,6 +40,5 @@ namespace ToolEngine
 		
 	private:
 		Camera m_camera;
-		float m_camera_speed = 2.0f;
 	};
 }

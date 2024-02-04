@@ -14,6 +14,8 @@ namespace ToolEngine
 		float fov;
 		Transform transform;
 
+		float camera_speed;
+
 		glm::mat4 getProjectionMatrix();
 		glm::mat4x4 getViewMatrix();
 	};

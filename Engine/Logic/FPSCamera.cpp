@@ -10,8 +10,10 @@ namespace ToolEngine
 		m_camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 		m_camera.fov = glm::radians(45.0f);
 		m_camera.near_plane = 0.1f;
-		m_camera.far_plane = 10.0f;
+		m_camera.far_plane = 50.0f;
 		m_camera.view_size = 10;
+
+		m_camera.camera_speed = 2.0f;
 	}
 	FPSCamera::~FPSCamera()
 	{
@@ -52,33 +54,33 @@ namespace ToolEngine
 	}
 	void FPSCamera::updateCameraSpeed(float delta_speed)
 	{
-		m_camera_speed = std::clamp(m_camera_speed + delta_speed, 0.0f, 100.0f);
+		m_camera.camera_speed = std::clamp(m_camera.camera_speed + delta_speed, 0.0f, 100.0f);
 	}
 	void FPSCamera::tick(RenderScene& scene)
 	{
 		if (m_forward_state.value() == 1)
 		{
-			m_camera.transform.position -= m_camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
+			m_camera.transform.position -= m_camera.transform.getForward() * m_camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		else if (m_forward_state.value() == -1)
 		{
-			m_camera.transform.position += m_camera.transform.getForward() * m_camera_speed * Time::getInstance().getDeltaTime();
+			m_camera.transform.position += m_camera.transform.getForward() * m_camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		if (m_right_state.value() == 1)
 		{
-			m_camera.transform.position -= m_camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
+			m_camera.transform.position -= m_camera.transform.getRight() * m_camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		else if (m_right_state.value() == -1)
 		{
-			m_camera.transform.position += m_camera.transform.getRight() * m_camera_speed * Time::getInstance().getDeltaTime();
+			m_camera.transform.position += m_camera.transform.getRight() * m_camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		if (m_up_state.value() == 1)
 		{
-			m_camera.transform.position += m_camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
+			m_camera.transform.position += m_camera.transform.getUp() * m_camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		else if (m_up_state.value() == -1)
 		{
-			m_camera.transform.position -= m_camera.transform.getUp() * m_camera_speed * Time::getInstance().getDeltaTime();
+			m_camera.transform.position -= m_camera.transform.getUp() * m_camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		scene.camera = m_camera;
 	}

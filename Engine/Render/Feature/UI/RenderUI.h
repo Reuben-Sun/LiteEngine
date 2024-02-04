@@ -17,6 +17,7 @@ namespace ToolEngine
 	{
 		std::vector<float> camera_rotation;
 		std::vector<float> camera_pos;
+		float camera_speed;
 		std::vector<float> cube_pos;
 		std::vector<float> cube_rotation;
 		uint32_t m_scene_width = 1920;
