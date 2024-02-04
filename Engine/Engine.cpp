@@ -57,7 +57,7 @@ namespace ToolEngine
 
         Camera camera;
         camera.transform.position = glm::vec3(3.0f, 3.0f, 3.0f);
-        camera.transform.rotation = Quaternion(-0.21f, -0.44f, -0.80f, 0.36f);
+        camera.transform.rotation = Quaternion::fromEulerDegreesXYZ(glm::vec3(-63.8f, 0.0f, -133.4f));
         camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
         camera.fov = glm::radians(45.0f); 
         camera.near_plane = 0.1f;

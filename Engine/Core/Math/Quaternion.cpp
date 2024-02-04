@@ -75,7 +75,7 @@ namespace ToolEngine
 	glm::vec3 Quaternion::getEulerDegrees() const
 	{
 		auto euler = getEulerRandians();
-		return glm::vec3(glm::degrees(euler[0]), glm::degrees(euler[1]), glm::degrees(euler[2]));
+		return glm::vec3(glm::degrees(euler));
 	}
 
 	Quaternion Quaternion::Zero()
@@ -118,5 +118,9 @@ namespace ToolEngine
 			cx * cy * sz + sx * sy * cz,
 			cx * cy * cz - sx * sy * sz
 		);
+	}
+	Quaternion Quaternion::fromEulerDegreesXYZ(const glm::vec3& eulerDegrees)
+	{
+		return fromEulerRadiansXYZ(glm::radians(eulerDegrees));
 	}
 }
