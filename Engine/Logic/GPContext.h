@@ -2,7 +2,7 @@
 
 #include "Marco.h"
 #include "SceneManager.h"
-#include "Geometry/RenderScene.h"
+#include "FPSCamera.h"
 
 namespace ToolEngine
 {
@@ -14,6 +14,7 @@ namespace ToolEngine
 
 		RenderScene& getScene() { return m_scene; }
 		std::unique_ptr<SceneManager> m_scene_manager;
+		std::unique_ptr<FPSCamera> m_fps_camera;
 
 		void tick();
 	private:
