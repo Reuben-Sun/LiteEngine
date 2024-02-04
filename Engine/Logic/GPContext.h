@@ -4,5 +4,11 @@
 
 namespace ToolEngine
 {
-
+	class GPContext
+	{
+	public:
+		GPContext();
+		~GPContext();
+	private:
+	};
 }

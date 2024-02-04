@@ -2,5 +2,10 @@
 
 namespace ToolEngine
 {
-    
+    GPContext::GPContext()
+    {
+    }
+    GPContext::~GPContext()
+    {
+    }
 }

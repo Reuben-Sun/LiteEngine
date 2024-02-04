@@ -8,6 +8,7 @@
 #include "RHI/Public/RHIContext.h"
 #include "Render/Render.h"
 #include "Geometry/RenderScene.h"
+#include "Logic/GPContext.h"
 #include <Jolt/Jolt.h>
 
 
@@ -30,6 +31,7 @@ namespace ToolEngine
         std::unique_ptr<GlfwWindow> m_window;
         std::unique_ptr<RHIContext> m_rhi_context;
         std::unique_ptr<Renderer> m_renderer;
+        std::unique_ptr<GPContext> m_gp_context;
         RenderScene scene;
         bool m_running = true;
 
