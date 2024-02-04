@@ -10,4 +10,8 @@ namespace ToolEngine
     GPContext::~GPContext()
     {
     }
+    void GPContext::tick()
+    {
+        
+    }
 }

@@ -162,8 +162,8 @@ namespace ToolEngine
 			m_render_ui->m_ui_context.camera_pos = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
 			auto camera_euler = scene.camera.transform.rotation.getEulerDegrees();
 			m_render_ui->m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
-			m_render_ui->m_ui_context.cube_pos = { scene.mesh_transform_list[1].position.x, scene.mesh_transform_list[1].position.y, scene.mesh_transform_list[1].position.z };
-			auto cube_euler = scene.mesh_transform_list[1].rotation.getEulerDegrees();
+			m_render_ui->m_ui_context.cube_pos = { scene.mesh_transform_list[0].position.x, scene.mesh_transform_list[0].position.y, scene.mesh_transform_list[0].position.z };
+			auto cube_euler = scene.mesh_transform_list[0].rotation.getEulerDegrees();
 			m_render_ui->m_ui_context.cube_rotation = { cube_euler[0], cube_euler[1], cube_euler[2]};
 			
 			m_render_ui->tick(*m_command_buffer, frame_index);

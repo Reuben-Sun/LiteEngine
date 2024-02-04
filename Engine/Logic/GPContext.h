@@ -2,6 +2,7 @@
 
 #include "Marco.h"
 #include "SceneManager.h"
+#include "Geometry/RenderScene.h"
 
 namespace ToolEngine
 {
@@ -12,6 +13,8 @@ namespace ToolEngine
 		~GPContext();
 
 		std::unique_ptr<SceneManager> m_scene_manager;
+
+		void tick();
 	private:
 		
 	};

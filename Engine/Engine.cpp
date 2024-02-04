@@ -25,51 +25,14 @@ namespace ToolEngine
         m_rhi_context = std::make_unique<RHIContext>(*m_window);
         m_renderer = std::make_unique<Renderer>(*m_rhi_context);
         m_gp_context = std::make_unique<GPContext>();
-       
-        Mesh mesh = Mesh::createPlane();
-        Transform transform;
-        transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
-        transform.rotation = Quaternion::Identity();
-        transform.scale = glm::vec3(2.0f, 2.0f, 2.0f);
-        Material material;
-        material.texture_bindings.push_back({ 1, "Calibration.png" });
-        scene.mesh_name_list.push_back("Plane");
-        scene.mesh_list.push_back(mesh);
-        scene.mesh_transform_list.push_back(transform);
-        scene.material_list.push_back(material);
-
-        std::string model_path = Path::getInstance().getAssetPath() + "cube.gltf";
-        std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
-        Mesh mesh2;
-        mesh2.index_buffer = loader->loaded_index_buffer;
-        mesh2.vertex_buffer = loader->loaded_vertex_buffer;
-        scene.mesh_name_list.push_back("Cube");
-		scene.mesh_list.push_back(mesh2);
-        Transform transform2;
-        transform2.position = glm::vec3(0.0f, 0.0f, 0.5f);
-        transform2.rotation = Quaternion::Identity();
-        transform2.scale = glm::vec3(0.5f, 0.5f, 0.5f);
-        Material material2;
-        material2.texture_bindings.push_back({ 1, "MarblesTiles.jpg" });
-        //material2.texture_bindings.push_back({ 1, "Cube.png" });
-        scene.mesh_transform_list.push_back(transform2);
-        scene.material_list.push_back(material2);
-
-        Camera camera;
-        camera.transform.position = glm::vec3(3.0f, 3.0f, 3.0f);
-        camera.transform.rotation = Quaternion::fromEulerDegreesXYZ(glm::vec3(-63.8f, 0.0f, -133.4f));
-        camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-        camera.fov = glm::radians(45.0f); 
-        camera.near_plane = 0.1f;
-        camera.far_plane = 10.0f;
-        camera.view_size = 10;
-        scene.camera = camera;
     }
     void Engine::tick()
     {
         Time::getInstance().tick();
         m_window->tick();
         m_rhi_context->tick();
+        m_gp_context->tick();
+        RenderScene& scene = m_gp_context->m_scene_manager->getScene();
         m_renderer->tick(scene);
         if (m_forward_state.value() == 1)
         {
@@ -200,7 +163,7 @@ namespace ToolEngine
             float delta_y = e.getY() - m_last_mouse_y;
             m_last_mouse_x = e.getX();
 			m_last_mouse_y = e.getY();
-			
+            RenderScene& scene = m_gp_context->m_scene_manager->getScene();
             auto euler = scene.camera.transform.rotation.getEulerRandians();
             euler.x += delta_y * 0.001f;
             euler.z += delta_x * 0.001f;
