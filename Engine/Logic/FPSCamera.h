@@ -25,20 +25,20 @@ namespace ToolEngine
 	class FPSCamera
 	{
 	public:
-		FPSCamera();
+		FPSCamera(RenderScene& scene);
 		~FPSCamera();
 
 		void updateMoveState(uint32_t keycode, bool pressed);
 		void updateRotation(float delta_x, float delta_y);
 		void updateCameraSpeed(float delta_speed);
 
-		void tick(RenderScene& scene);
+		void tick();
 
 		MoveState m_forward_state;
 		MoveState m_right_state;
 		MoveState m_up_state;
 		
 	private:
-		Camera m_camera;
+		RenderScene& m_scene;
 	};
 }

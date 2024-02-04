@@ -3,7 +3,7 @@
 
 namespace ToolEngine
 {
-	SceneManager::SceneManager(const std::string& scene_json)
+	SceneManager::SceneManager(RenderScene& scene, const std::string& scene_json): m_scene(scene)
 	{
 		loadScene(scene_json);
 		
@@ -30,10 +30,10 @@ namespace ToolEngine
 			auto mat_json = Path::getInstance().readJson(Path::getInstance().getAssetPath() + go.material_path);
 			Material material = Material::deserialize(mat_json);
 
-			mesh_name_list.push_back(go.name);
-			mesh_list.push_back(mesh);
-			mesh_transform_list.push_back(transform);
-			material_list.push_back(material);
+			m_scene.mesh_name_list.push_back(go.name);
+			m_scene.mesh_list.push_back(mesh);
+			m_scene.mesh_transform_list.push_back(transform);
+			m_scene.material_list.push_back(material);
 		}
 	}
 	SceneManager::~SceneManager()
@@ -56,12 +56,8 @@ namespace ToolEngine
 		auto j = serialize();
 		Path::getInstance().saveJson(file_path, j);
 	}
-	void SceneManager::tick(RenderScene& scene)
+	void SceneManager::tick()
 	{
-		scene.mesh_name_list = mesh_name_list;
-		scene.mesh_list = mesh_list;
-		scene.mesh_transform_list = mesh_transform_list;
-		scene.material_list = material_list;
 	}
 	nlohmann::json SceneManager::serialize() const
 	{

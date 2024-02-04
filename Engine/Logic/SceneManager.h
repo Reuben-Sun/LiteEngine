@@ -10,21 +10,18 @@ namespace ToolEngine
 	class SceneManager final
 	{
 	public:
-		SceneManager(const std::string& scene_json = "Scene\\Default.scene");
+		SceneManager(RenderScene& scene, const std::string& scene_json = "Scene\\Default.scene");
 		~SceneManager();
 
 		void loadScene(const std::string& scene_json);
 		void saveScene(const std::string& scene_json);
 		
-		void tick(RenderScene& scene);
+		void tick();
 	private:
 		std::string m_current_scene = "";
 		std::vector<GameObject> m_game_objects;
 
-		std::vector<std::string> mesh_name_list;
-		std::vector<Mesh> mesh_list;
-		std::vector<Transform> mesh_transform_list;
-		std::vector<Material> material_list;
+		RenderScene& m_scene;
 
 		nlohmann::json serialize() const;
 		void deserialize(const nlohmann::json& j);
