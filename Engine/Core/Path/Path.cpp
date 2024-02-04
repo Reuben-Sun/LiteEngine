@@ -78,6 +78,13 @@ namespace ToolEngine
         file.close();
         return true;
     }
+    bool Path::saveJson(const std::string& path, const nlohmann::json& data)
+    {
+        std::ofstream file(path);
+        file << std::setw(4) << data << std::endl;
+        file.close();
+        return true;
+    }
     std::vector<char> Path::read(const std::string& path)
     {
         std::ifstream file(path, std::ios::ate | std::ios::binary);
@@ -91,6 +98,18 @@ namespace ToolEngine
         file.read(buffer.data(), file_size);
         file.close();
         return buffer;
+    }
+    nlohmann::json Path::readJson(const std::string& path)
+    {
+        std::ifstream file(path);
+        nlohmann::json j;
+        if (file.is_open())
+        {
+			file >> j;
+			file.close();
+			return j;
+		}
+        return nlohmann::json();
     }
     std::string Path::getFileName(const std::string& path)
     {

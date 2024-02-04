@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Marco.h"
+#include <json.hpp>
 
 namespace ToolEngine
 {
@@ -23,7 +24,9 @@ namespace ToolEngine
         bool deletePath(const std::string& path);
         bool copy(const std::string& src, const std::string& dst);
         bool save(const std::string& path, const std::vector<char>& data);
+        bool saveJson(const std::string& path, const nlohmann::json& data);
         std::vector<char> read(const std::string& path);
+        nlohmann::json readJson(const std::string& path);
         std::string getFileName(const std::string& path);
         std::string getFileNameWithoutExtension(const std::string& path);
         std::string getExtension(const std::string& path);

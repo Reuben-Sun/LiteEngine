@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Marco.h"
+#include "SceneManager.h"
 
 namespace ToolEngine
 {
@@ -9,6 +10,9 @@ namespace ToolEngine
 	public:
 		GPContext();
 		~GPContext();
+
+		std::unique_ptr<SceneManager> m_scene_manager;
 	private:
+		
 	};
 }
