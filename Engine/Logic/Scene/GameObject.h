@@ -8,12 +8,14 @@ namespace ToolEngine
 	struct GameObject
 	{
 		std::string name;
-		//uint32_t id;
+		uint32_t id;
 		std::string mesh_path;
 		std::string material_path;
 		std::vector<float> position;
 		std::vector<float> rotation;	// euler angles
 		std::vector<float> scale;
+
+		static uint32_t global_id;
 
 		nlohmann::json serialize() const
 		{
@@ -36,6 +38,7 @@ namespace ToolEngine
 			go.position = j.at("position").get<std::vector<float>>();
 			go.rotation = j.at("rotation").get<std::vector<float>>();
 			go.scale = j.at("scale").get<std::vector<float>>();
+			go.id = global_id++;
 			return go;
 		}
 	};

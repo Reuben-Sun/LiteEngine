@@ -30,6 +30,7 @@ namespace ToolEngine
 			auto mat_json = Path::getInstance().readJson(Path::getInstance().getAssetPath() + go.material_path);
 			Material material = Material::deserialize(mat_json);
 
+			m_scene.go_id_list.push_back(go.id);
 			m_scene.mesh_name_list.push_back(go.name);
 			m_scene.mesh_list.push_back(mesh);
 			m_scene.mesh_transform_list.push_back(transform);
