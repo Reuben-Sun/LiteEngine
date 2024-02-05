@@ -14,6 +14,7 @@
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include "Geometry/RenderScene.h"
 #include "JoltUtils.h"
+#include "Listener.h"
 
 namespace ToolEngine
 {
@@ -31,10 +32,12 @@ namespace ToolEngine
 		ObjectVsBroadPhaseLayerFilterImpl ob_layer_filter;
 		ObjectLayerPairFilterImpl oo_layer_filter;
 
+		MyBodyActivationListener* body_activation_listener;
+		MyContactListener* contact_listener;
+
 		JPH::PhysicsSystem* m_physics_system{nullptr};
 		JPH::JobSystem* m_job_system{ nullptr };
 		JPH::TempAllocator* m_temp_allocator{ nullptr };
-		JPH::BroadPhaseLayerInterface* m_jolt_broad_phase_layer_interface{ nullptr };
 
 		// scene setting
 		const uint32_t m_max_body_count{ 1024 };
