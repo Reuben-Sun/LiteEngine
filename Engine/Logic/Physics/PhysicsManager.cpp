@@ -23,6 +23,13 @@ namespace ToolEngine
 		m_physics_system->SetContactListener(contact_listener);
 		m_physics_system->SetGravity(m_gravity);
 		
+		// create physical scene
+		/*for (uint32_t i = 0; i < scene.go_id_list.size(); i++)
+		{
+			uint32_t go_id = scene.go_id_list[i];
+
+		}*/
+
 		// add something
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
 		JPH::BoxShapeSettings floor_shape_settings(JPH::Vec3(100.0f, 100.0f, 1.0f));

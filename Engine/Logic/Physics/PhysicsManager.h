@@ -28,6 +28,8 @@ namespace ToolEngine
 	private:
 		RenderScene& m_scene;
 
+		std::unordered_map<uint32_t, JPH::BodyID*> m_go_id_to_body_id;
+
 		BPLayerInterfaceImpl layer_interface;
 		ObjectVsBroadPhaseLayerFilterImpl ob_layer_filter;
 		ObjectLayerPairFilterImpl oo_layer_filter;
