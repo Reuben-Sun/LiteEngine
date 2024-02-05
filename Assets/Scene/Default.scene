@@ -18,6 +18,17 @@
                 0.5,
                 0.5,
                 0.5
+            ],
+            "bounding_type": 0,
+            "bounding_position":[
+                0.0,
+                0.0,
+                0.5
+            ],
+            "bounding_data":[
+                1.0,
+                1.0,
+                1.0
             ]
         },
         {
@@ -25,9 +36,9 @@
             "mesh_path": "Sphere.gltf",
             "name": "Sphere",
             "position": [
-                3.0,
-                0.0,
-                1.0
+                -2.0,
+                -2.0,
+                20.0
             ],
             "rotation": [
                 0.0,
@@ -35,6 +46,17 @@
                 0.0
             ],
             "scale": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "bounding_type": 1,
+            "bounding_position":[
+                -2.0,
+                -2.0,
+                20.0
+            ],
+            "bounding_data":[
                 0.5,
                 0.5,
                 0.5
@@ -58,6 +80,17 @@
                 10.0,
                 10.0,
                 10.0
+            ],
+            "bounding_type": 0,
+            "bounding_position":[
+                0.0,
+                0.0,
+                -1.0
+            ],
+            "bounding_data":[
+                100.0,
+                100.0,
+                1.0
             ]
         }
     ]

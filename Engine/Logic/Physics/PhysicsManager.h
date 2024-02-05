@@ -28,7 +28,7 @@ namespace ToolEngine
 	private:
 		RenderScene& m_scene;
 
-		std::unordered_map<uint32_t, JPH::BodyID*> m_go_id_to_body_id;
+		std::unordered_map<uint32_t, JPH::BodyID> m_go_id_to_body_id;
 
 		BPLayerInterfaceImpl layer_interface;
 		ObjectVsBroadPhaseLayerFilterImpl ob_layer_filter;
@@ -53,8 +53,6 @@ namespace ToolEngine
 		const uint32_t m_max_concurrent_job_count{ 4 };
 
 		JPH::Vec3 m_gravity{ 0.f, 0.f, -9.8f };
-
-		JPH::BodyID sphere_id;
 
 		static void TraceImpl(const char* inFMT, ...);
 		static bool AssertFailedImpl(const char* inExpression, const char* inMessage, const char* inFile, unsigned int inLine);

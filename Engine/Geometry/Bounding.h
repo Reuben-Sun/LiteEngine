@@ -15,27 +15,19 @@ namespace ToolEngine
 	struct Bounding
 	{
 		glm::vec3 position;
-
-		virtual float getVolume() = 0;
-	};
-
-	struct BoundingBox : public Bounding
-	{
-		glm::vec3 half_length;
-
-		virtual float getVolume() override
+		glm::vec3 data;
+		BoundingType type;
+		float getVolume()
 		{
-			return half_length.x * half_length.y * half_length.z * 8;
-		}
-	};
-
-	struct BoundingSphere : public Bounding
-	{
-		float radius;
-
-		virtual float getVolume() override
-		{
-			return 4.0f / 3.0f * PI * radius * radius * radius;
+			if (type == BoundingType::Box)
+			{
+				return data.x * data.y * data.z * 8;
+			}
+			else if(type == BoundingType::Sphere)
+			{
+				return 4.0f / 3.0f * PI * data.x * data.y * data.z;
+			}
+			return 0;
 		}
 	};
 }

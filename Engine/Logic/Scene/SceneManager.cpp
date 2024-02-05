@@ -30,11 +30,24 @@ namespace ToolEngine
 			auto mat_json = Path::getInstance().readJson(Path::getInstance().getAssetPath() + go.material_path);
 			Material material = Material::deserialize(mat_json);
 
+			Bounding bounding;
+			bounding.position = glm::vec3(go.bounding_position[0], go.bounding_position[1], go.bounding_position[2]);
+			bounding.data = glm::vec3(go.bounding_data[0], go.bounding_data[1], go.bounding_data[2]);
+			if (go.bounding_type == 0)
+			{
+				bounding.type = BoundingType::Box;
+			}
+			else if (go.bounding_type == 1)
+			{
+				bounding.type = BoundingType::Sphere;
+			}
+
 			m_scene.go_id_list.push_back(go.id);
 			m_scene.mesh_name_list.push_back(go.name);
 			m_scene.mesh_list.push_back(mesh);
 			m_scene.mesh_transform_list.push_back(transform);
 			m_scene.material_list.push_back(material);
+			m_scene.bounding_list.push_back(bounding);
 		}
 	}
 	SceneManager::~SceneManager()
