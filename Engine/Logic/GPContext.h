@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Marco.h"
-#include "SceneManager.h"
-#include "FPSCamera.h"
-#include "PhysicsManager.h"
+#include "Scene/SceneManager.h"
+#include "Camera/FPSCamera.h"
+#include "Physics/PhysicsManager.h"
 
 namespace ToolEngine
 {
