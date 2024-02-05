@@ -16,6 +16,30 @@
 
 namespace ToolEngine
 {
+	namespace Layers
+	{
+		static constexpr JPH::ObjectLayer NON_MOVING = 0;
+		static constexpr JPH::ObjectLayer MOVING = 1;
+		static constexpr JPH::ObjectLayer NUM_LAYERS = 2;
+	};
+	namespace BroadPhaseLayers
+	{
+		static constexpr JPH::BroadPhaseLayer NON_MOVING(0);
+		static constexpr JPH::BroadPhaseLayer MOVING(1);
+		static constexpr unsigned int NUM_LAYERS(2);
+	};
+
+	class BPLayerInterfaceImpl final : public JPH::BroadPhaseLayerInterface
+	{
+	public:
+		BPLayerInterfaceImpl();
+		virtual unsigned int GetNumBroadPhaseLayers() const override;
+		virtual JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override;
+		virtual const char* GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override;
+	private:
+		JPH::BroadPhaseLayer m_object_to_broad_phase[Layers::NUM_LAYERS];
+	};
+
 	class PhysicsManager
 	{
 	public:
@@ -26,16 +50,18 @@ namespace ToolEngine
 	private:
 		RenderScene& m_scene;
 
+		BPLayerInterfaceImpl layer_interface;
+
 		JPH::PhysicsSystem* m_physics_system{ nullptr };
 		JPH::JobSystem* m_job_system{ nullptr };
 		JPH::TempAllocator* m_temp_allocator{ nullptr };
 		JPH::BroadPhaseLayerInterface* m_jolt_broad_phase_layer_interface{ nullptr };
 
 		// scene setting
-		uint32_t m_max_body_count{ 10240 };
+		uint32_t m_max_body_count{ 1024 };
 		uint32_t m_body_mutex_count{ 0 };
-		uint32_t m_max_body_pairs{ 65536 };
-		uint32_t m_max_contact_constraints{ 10240 };
+		uint32_t m_max_body_pairs{ 1024 };
+		uint32_t m_max_contact_constraints{ 1024 };
 
 		// job setting
 		uint32_t m_max_job_count{ 1024 };
@@ -43,6 +69,9 @@ namespace ToolEngine
 		uint32_t m_max_concurrent_job_count{ 4 };
 
 		glm::vec3 m_gravity{ 0.f, 0.f, -9.8f };
+
+		static void TraceImpl(const char* inFMT, ...);
+		static bool AssertFailedImpl(const char* inExpression, const char* inMessage, const char* inFile, unsigned int inLine);
 
 	};
 }
