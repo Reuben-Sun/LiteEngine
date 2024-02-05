@@ -12,9 +12,11 @@ namespace ToolEngine
 		JPH::RegisterTypes();
 
 		JPH::TempAllocatorImpl temp_allocator(10 * 1024 * 1024);
-		JPH::JobSystemThreadPool job_system(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, JPH::thread::hardware_concurrency() - 1);
+		JPH::JobSystemThreadPool job_system(m_max_job_count, m_max_barrier_count, m_max_concurrent_job_count);
 		
-
+		m_physics_system = new JPH::PhysicsSystem();
+		m_physics_system->Init(m_max_body_count, m_max_body_count, m_max_body_pairs, m_max_contact_constraints,
+			layer_interface, ob_layer_filter, oo_layer_filter);
 
 	}
 	PhysicsManager::~PhysicsManager()
@@ -59,6 +61,32 @@ namespace ToolEngine
 		case (JPH::BroadPhaseLayer::Type)BroadPhaseLayers::NON_MOVING:	return "NON_MOVING";
 		case (JPH::BroadPhaseLayer::Type)BroadPhaseLayers::MOVING:		return "MOVING";
 		default: JPH_ASSERT(false); return "INVALID";
+		}
+	}
+	bool ObjectVsBroadPhaseLayerFilterImpl::ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const
+	{
+		switch (inLayer1)
+		{
+		case Layers::NON_MOVING:
+			return inLayer2 == BroadPhaseLayers::MOVING;
+		case Layers::MOVING:
+			return true;
+		default:
+			JPH_ASSERT(false);
+			return false;
+		}
+	}
+	bool ObjectLayerPairFilterImpl::ShouldCollide(JPH::ObjectLayer inObject1, JPH::ObjectLayer inObject2) const
+	{
+		switch (inObject1)
+		{
+		case Layers::NON_MOVING:
+			return inObject2 == Layers::MOVING; // Non moving only collides with moving
+		case Layers::MOVING:
+			return true; // Moving collides with everything
+		default:
+			JPH_ASSERT(false);
+			return false;
 		}
 	}
 }

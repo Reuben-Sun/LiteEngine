@@ -40,6 +40,18 @@ namespace ToolEngine
 		JPH::BroadPhaseLayer m_object_to_broad_phase[Layers::NUM_LAYERS];
 	};
 
+	class ObjectVsBroadPhaseLayerFilterImpl : public JPH::ObjectVsBroadPhaseLayerFilter
+	{
+	public:
+		virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override;
+	};
+
+	class ObjectLayerPairFilterImpl : public JPH::ObjectLayerPairFilter
+	{
+	public:
+		virtual bool ShouldCollide(JPH::ObjectLayer inObject1, JPH::ObjectLayer inObject2) const override;
+	};
+
 	class PhysicsManager
 	{
 	public:
@@ -51,8 +63,10 @@ namespace ToolEngine
 		RenderScene& m_scene;
 
 		BPLayerInterfaceImpl layer_interface;
+		ObjectVsBroadPhaseLayerFilterImpl ob_layer_filter;
+		ObjectLayerPairFilterImpl oo_layer_filter;
 
-		JPH::PhysicsSystem* m_physics_system{ nullptr };
+		JPH::PhysicsSystem* m_physics_system{nullptr};
 		JPH::JobSystem* m_job_system{ nullptr };
 		JPH::TempAllocator* m_temp_allocator{ nullptr };
 		JPH::BroadPhaseLayerInterface* m_jolt_broad_phase_layer_interface{ nullptr };
