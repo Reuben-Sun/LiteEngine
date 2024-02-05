@@ -1,5 +1,6 @@
 #include "PhysicsManager.h"
 #include <cstdarg>
+#include "Core/Time/Time.h"
 
 namespace ToolEngine
 {
@@ -20,13 +21,27 @@ namespace ToolEngine
 		m_physics_system->SetBodyActivationListener(body_activation_listener);
 		contact_listener = new MyContactListener();
 		m_physics_system->SetContactListener(contact_listener);
+		
 		// add something
+		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
+		JPH::BoxShapeSettings floor_shape_settings(JPH::Vec3(100.0f, 1.0f, 100.0f));
+		JPH::ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
+		JPH::ShapeRefC floor_shape = floor_shape_result.Get();
+		JPH::BodyCreationSettings floor_settings(floor_shape, JPH::RVec3(0.0f, -1.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Static, Layers::NON_MOVING);
+		JPH::Body* floor = body_interface.CreateBody(floor_settings);
+		body_interface.AddBody(floor->GetID(), JPH::EActivation::DontActivate);
+
+
+		m_physics_system->OptimizeBroadPhase();
+
 	}
 	PhysicsManager::~PhysicsManager()
 	{
 	}
 	void PhysicsManager::tick()
 	{
+		float dt = Time::getInstance().getDeltaTime();
+		m_physics_system->Update(dt, 1, m_temp_allocator, m_job_system);
 	}
 	void PhysicsManager::TraceImpl(const char* inFMT, ...)
 	{
