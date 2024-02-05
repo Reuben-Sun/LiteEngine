@@ -5,6 +5,7 @@
 #include "Material.h"
 #include "Core/Math/Transform.h"
 #include "Geometry/Camera.h"
+#include "Bounding.h"
 
 namespace ToolEngine
 {
@@ -15,6 +16,7 @@ namespace ToolEngine
 		std::vector<Mesh> mesh_list;
 		std::vector<Transform> mesh_transform_list;
 		std::vector<Material> material_list;
+		std::vector<Bounding> bounding_list;
 		Camera camera;
 	};
 }
