@@ -37,15 +37,15 @@ namespace ToolEngine
 		JPH::BroadPhaseLayerInterface* m_jolt_broad_phase_layer_interface{ nullptr };
 
 		// scene setting
-		uint32_t m_max_body_count{ 1024 };
-		uint32_t m_body_mutex_count{ 0 };
-		uint32_t m_max_body_pairs{ 1024 };
-		uint32_t m_max_contact_constraints{ 1024 };
+		const uint32_t m_max_body_count{ 1024 };
+		const uint32_t m_body_mutex_count{ 0 };
+		const uint32_t m_max_body_pairs{ 1024 };
+		const uint32_t m_max_contact_constraints{ 1024 };
 
 		// job setting
-		uint32_t m_max_job_count{ 1024 };
-		uint32_t m_max_barrier_count{ 8 };
-		uint32_t m_max_concurrent_job_count{ 4 };
+		const uint32_t m_max_job_count{ 1024 };
+		const uint32_t m_max_barrier_count{ 8 };
+		const uint32_t m_max_concurrent_job_count{ 4 };
 
 		glm::vec3 m_gravity{ 0.f, 0.f, -9.8f };
 
