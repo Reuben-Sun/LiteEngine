@@ -52,6 +52,8 @@ namespace ToolEngine
 
 		glm::vec3 m_gravity{ 0.f, 0.f, -9.8f };
 
+		JPH::BodyID sphere_id;
+
 		static void TraceImpl(const char* inFMT, ...);
 		static bool AssertFailedImpl(const char* inExpression, const char* inMessage, const char* inFile, unsigned int inLine);
 

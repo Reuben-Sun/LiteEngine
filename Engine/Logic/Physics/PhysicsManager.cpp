@@ -24,14 +24,16 @@ namespace ToolEngine
 		
 		// add something
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
-		JPH::BoxShapeSettings floor_shape_settings(JPH::Vec3(100.0f, 1.0f, 100.0f));
+		JPH::BoxShapeSettings floor_shape_settings(JPH::Vec3(100.0f, 100.0f, 1.0f));
 		JPH::ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
 		JPH::ShapeRefC floor_shape = floor_shape_result.Get();
-		JPH::BodyCreationSettings floor_settings(floor_shape, JPH::RVec3(0.0f, -1.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Static, Layers::NON_MOVING);
+		JPH::BodyCreationSettings floor_settings(floor_shape, JPH::RVec3(0.0f, 0.0f, -1.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Static, Layers::NON_MOVING);
 		JPH::Body* floor = body_interface.CreateBody(floor_settings);
 		body_interface.AddBody(floor->GetID(), JPH::EActivation::DontActivate);
 
-
+		JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 2.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
+		sphere_id = body_interface.CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
+		//body_interface.SetLinearVelocity(sphere_id, JPH::Vec3(0.0f, -5.0f, 0.0f));
 		m_physics_system->OptimizeBroadPhase();
 
 	}
@@ -42,6 +44,9 @@ namespace ToolEngine
 	{
 		float dt = Time::getInstance().getDeltaTime();
 		m_physics_system->Update(dt, 1, m_temp_allocator, m_job_system);
+		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
+		JPH::RVec3 position = body_interface.GetCenterOfMassPosition(sphere_id);
+		m_scene.mesh_transform_list[1].position = { position.GetX(), position.GetY(), position.GetZ() };
 	}
 	void PhysicsManager::TraceImpl(const char* inFMT, ...)
 	{
