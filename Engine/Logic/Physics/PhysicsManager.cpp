@@ -21,6 +21,7 @@ namespace ToolEngine
 		m_physics_system->SetBodyActivationListener(body_activation_listener);
 		contact_listener = new MyContactListener();
 		m_physics_system->SetContactListener(contact_listener);
+		m_physics_system->SetGravity(m_gravity);
 		
 		// add something
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
@@ -31,7 +32,7 @@ namespace ToolEngine
 		JPH::Body* floor = body_interface.CreateBody(floor_settings);
 		body_interface.AddBody(floor->GetID(), JPH::EActivation::DontActivate);
 
-		JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 2.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
+		JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(1.0f, 1.0f, 20.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
 		sphere_id = body_interface.CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
 		//body_interface.SetLinearVelocity(sphere_id, JPH::Vec3(0.0f, -5.0f, 0.0f));
 		m_physics_system->OptimizeBroadPhase();

@@ -50,7 +50,7 @@ namespace ToolEngine
 		const uint32_t m_max_barrier_count{ 8 };
 		const uint32_t m_max_concurrent_job_count{ 4 };
 
-		glm::vec3 m_gravity{ 0.f, 0.f, -9.8f };
+		JPH::Vec3 m_gravity{ 0.f, 0.f, -9.8f };
 
 		JPH::BodyID sphere_id;
 
