@@ -29,6 +29,7 @@ namespace ToolEngine
 		static constexpr unsigned int NUM_LAYERS(2);
 	};
 
+	// Broadphase means Coarse scale collision
 	class BPLayerInterfaceImpl final : public JPH::BroadPhaseLayerInterface
 	{
 	public:
