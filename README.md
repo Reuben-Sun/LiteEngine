@@ -7,6 +7,17 @@
 - Visual Studio 2022
 - Vulkan
 
+### 拉取
+
+```bash
+git clone https://github.com/Reuben-Sun/LiteEngine.git
+cd LiteEngine
+git submodule init
+git submodule update
+```
+
+
+
 ### 构建
 
 1. 运行脚本`cmake_generate.bat`，在build文件夹中会生成VS工程
