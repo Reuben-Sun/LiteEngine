@@ -15,7 +15,8 @@ namespace ToolEngine
         }
         void setCurrentPath(std::string path);
         std::string getCurrentPath() const { return m_exe_path.parent_path().string(); }
-        std::string getAssetPath() const { return getCurrentPath() + "\\Assets\\"; }
+        std::string getAssetPath();
+        std::string getShaderPath();
 
         bool isExist(const std::string& path);
         bool isFile(const std::string& path);

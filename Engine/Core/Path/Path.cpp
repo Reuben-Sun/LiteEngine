@@ -14,6 +14,17 @@ namespace ToolEngine
     {
         m_exe_path = path;
     }
+    std::string Path::getAssetPath()
+    {
+        // TODO: load asset path from config file
+        auto path = m_exe_path.parent_path().parent_path().parent_path().parent_path().string();
+        return path + "\\Assets\\";
+    }
+    std::string Path::getShaderPath()
+    {
+        auto path = m_exe_path.parent_path().parent_path().parent_path().parent_path().string();
+        return path + "\\Shader\\SPV\\";
+    }
     bool Path::isExist(const std::string& path)
     {
         return std::filesystem::exists(path);
