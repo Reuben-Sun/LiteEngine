@@ -142,11 +142,11 @@ namespace ToolEngine
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 			ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set[icon_name]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
 			ImGui::PopStyleColor();
-			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
 				LOG_INFO("Click!");
 			}
-			std::string name = Path::getInstance().getFileNameWithoutExtension(items[i]);
+			std::string name = Path::getInstance().getFileName(items[i]);
 			ImGui::TextWrapped(name.c_str());
 			ImGui::NextColumn();
 		}
