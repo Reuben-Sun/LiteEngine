@@ -41,6 +41,7 @@ namespace ToolEngine
 
 		std::unique_ptr<RHIDescriptorSetLayout> m_texture_descriptor_set_layout;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
+		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_texture_name_to_ubo_descriptor_set;
 
 		void drawMainMenuBar();
 		void drawHierarchy();

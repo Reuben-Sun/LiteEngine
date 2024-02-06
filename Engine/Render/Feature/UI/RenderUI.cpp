@@ -7,6 +7,7 @@ namespace ToolEngine
 	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass, RHIDescriptorSet& descriptor_set)
 		: m_rhi_context(rhi_context), m_descriptor_set(descriptor_set)
 	{
+		// imgui init
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		(void)io;
@@ -28,6 +29,7 @@ namespace ToolEngine
 		init_info.ImageCount = rhi_context.m_swapchain->getImageCount();	// 3;
 		ImGui_ImplVulkan_Init(&init_info, render_pass.getHandle());
 
+		// editor icon init
 		std::vector<RHIDescriptorType> layout_descriptor;
 		layout_descriptor.push_back(RHIDescriptorType::Sampler);
 		m_texture_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(*rhi_context.m_device, layout_descriptor);
@@ -37,6 +39,9 @@ namespace ToolEngine
 		{
 			auto name = Path::getInstance().getFileNameWithoutExtension(icon);
 			m_texture_name_to_image[name] = std::make_unique<RHITextureImage>(*rhi_context.m_device, icon);
+			m_texture_name_to_ubo_descriptor_set[name] = std::make_unique<RHIDescriptorSet>(*rhi_context.m_device, 
+				*rhi_context.m_descriptor_pool, *m_texture_descriptor_set_layout);
+			m_texture_name_to_ubo_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[name]->m_descriptor, 0);
 		}
 	}
 	RenderUI::~RenderUI()
@@ -89,6 +94,9 @@ namespace ToolEngine
 	void RenderUI::drawBrowser()
 	{
 		ImGui::Begin("Browser");
+
+		ImGui::Image(m_texture_name_to_ubo_descriptor_set["code"]->getHandle(), ImVec2(100, 100));
+
 		ImGui::End();
 	}
 	void RenderUI::drawDetail()
