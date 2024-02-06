@@ -95,8 +95,12 @@ namespace ToolEngine
 	{
 		ImGui::Begin("Browser");
 
-		ImGui::Image(m_texture_name_to_ubo_descriptor_set["code"]->getHandle(), ImVec2(100, 100));
-
+		ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set["code"]->getHandle(), ImVec2(100, 100), {0, 1}, {1, 0});
+		if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+		{
+			LOG_INFO("Click!");
+		}
+		ImGui::TextWrapped("Code");
 		ImGui::End();
 	}
 	void RenderUI::drawDetail()
