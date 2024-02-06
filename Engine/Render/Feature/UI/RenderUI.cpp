@@ -122,8 +122,9 @@ namespace ToolEngine
 		auto items = Path::getInstance().getAllFilesInDirectory(m_current_path);
 		for (uint32_t i = 0; i < items.size(); i++)
 		{
+			auto icon_name = selectIcon(items[i]);
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-			ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set["code"]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
+			ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set[icon_name]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
 			ImGui::PopStyleColor();
 			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
@@ -221,6 +222,37 @@ namespace ToolEngine
 		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 		colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+	std::string RenderUI::selectIcon(const std::string& file_name)
+	{
+		std::string extension = Path::getInstance().getExtension(file_name);
+		std::string icon_name = "file";
+		if (extension == ".png" || extension == ".jpg")
+		{
+			icon_name = "image";
+		}
+		else if (extension == ".material")
+		{
+			icon_name = "eye";
+		}
+		else if (extension == ".scene")
+		{
+			icon_name = "location";
+		}
+		else if (extension == ".bin")
+		{
+			icon_name = "Field-Binary";
+		}
+		else if (extension == ".gltf")
+		{
+			icon_name = "CodeSandbox";
+		}
+		else if (extension == ".ttf")
+		{
+			icon_name = "font-size";
+		}
+		
+		return icon_name;
 	}
 	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
 	{

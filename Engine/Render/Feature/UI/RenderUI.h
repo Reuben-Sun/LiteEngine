@@ -54,5 +54,7 @@ namespace ToolEngine
 		void drawDetail();
 
 		void setStyle();
+
+		std::string selectIcon(const std::string& file_name);
 	};
 }
