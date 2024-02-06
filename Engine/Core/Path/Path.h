@@ -5,6 +5,10 @@
 
 namespace ToolEngine
 {
+    /// <summary>
+    /// A path utils by filesytem
+    /// All path is end with '\\' and is absolute path
+    /// </summary>
     class Path final
     {
     public:
@@ -30,8 +34,9 @@ namespace ToolEngine
         nlohmann::json readJson(const std::string& path);
         std::string getFileName(const std::string& path);
         std::string getFileNameWithoutExtension(const std::string& path);
-        std::string getExtension(const std::string& path);
-        std::string getParentPath(const std::string& path);
+        std::string getFileExtension(const std::string& path);
+        std::string getFileDirectory(const std::string& path);
+        std::string getDirectoryParentDirectory(const std::string& path);
         std::vector<std::string> getAllFilesInDirectory(const std::string& path);
         std::vector<std::string> getAllDirectoriesInDirectory(const std::string& path);
     private:

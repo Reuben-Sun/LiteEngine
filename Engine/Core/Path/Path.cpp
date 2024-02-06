@@ -65,9 +65,9 @@ namespace ToolEngine
         {
             return true;
         }
-        if (!isExist(getParentPath(dst)))
+        if (!isExist(getFileDirectory(dst)))
         {
-            createPath(getParentPath(dst));
+            createPath(getFileDirectory(dst));
         }
         if (std::filesystem::copy_file(src, dst, std::filesystem::copy_options::overwrite_existing))
         {
@@ -136,14 +136,20 @@ namespace ToolEngine
         }
         return filename;
     }
-    std::string Path::getExtension(const std::string& path)
+    std::string Path::getFileExtension(const std::string& path)
     {
         return std::filesystem::u8path(path).extension().generic_string();
     }
-    std::string Path::getParentPath(const std::string& path)
+    std::string Path::getFileDirectory(const std::string& path)
     {
         std::filesystem::path file_path = std::filesystem::u8path(path);
         return file_path.parent_path().string();
+    }
+    std::string Path::getDirectoryParentDirectory(const std::string& path)
+    {
+        std::filesystem::path directory_path(path);
+        std::string parent_path = directory_path.parent_path().parent_path().string();
+        return parent_path + "\\";
     }
     std::vector<std::string> Path::getAllFilesInDirectory(const std::string& path)
     {

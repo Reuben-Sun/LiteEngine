@@ -103,6 +103,18 @@ namespace ToolEngine
 			column_count = 1;
 		}
 		ImGui::Columns(column_count, 0, false);
+		// if not root, show back button
+		if (m_current_path != Path::getInstance().getAssetPath())
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set["rollback"]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
+			ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				m_current_path = Path::getInstance().getDirectoryParentDirectory(m_current_path);
+			}
+			ImGui::NextColumn();
+		}
 		// show all directory
 		auto dirs = Path::getInstance().getAllDirectoriesInDirectory(m_current_path);
 		for (uint32_t i = 0; i < dirs.size(); i++)
@@ -225,7 +237,7 @@ namespace ToolEngine
 	}
 	std::string RenderUI::selectIcon(const std::string& file_name)
 	{
-		std::string extension = Path::getInstance().getExtension(file_name);
+		std::string extension = Path::getInstance().getFileExtension(file_name);
 		std::string icon_name = "file";
 		if (extension == ".png" || extension == ".jpg")
 		{
