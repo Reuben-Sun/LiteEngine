@@ -17,9 +17,9 @@ namespace ToolEngine
 	}
 	RHICommandPool::~RHICommandPool()
 	{
-		if (m_command_pool != VK_NULL_HANDLE)
+		/*if (m_command_pool != VK_NULL_HANDLE)
 		{
 			vkDestroyCommandPool(m_device, m_command_pool, nullptr);
-		}
+		}*/
 	}
 }
