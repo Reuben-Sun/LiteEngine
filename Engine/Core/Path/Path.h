@@ -33,6 +33,7 @@ namespace ToolEngine
         std::string getExtension(const std::string& path);
         std::string getParentPath(const std::string& path);
         std::vector<std::string> getAllFilesInDirectory(const std::string& path);
+        std::vector<std::string> getAllDirectoriesInDirectory(const std::string& path);
     private:
         Path();
         ~Path();

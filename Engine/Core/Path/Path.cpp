@@ -161,4 +161,20 @@ namespace ToolEngine
 		}
         return file_names;
     }
+    std::vector<std::string> Path::getAllDirectoriesInDirectory(const std::string& path)
+    {
+        if (!isExist(path) || !isDirectory(path))
+        {
+            return {};
+        }
+        std::vector<std::string> directory_names;
+        for (const auto& entry : std::filesystem::directory_iterator(path))
+        {
+            if (entry.is_directory())
+            {
+                directory_names.push_back(entry.path().string());
+            }
+        }
+        return directory_names;
+    }
 }

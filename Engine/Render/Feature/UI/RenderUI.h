@@ -39,6 +39,10 @@ namespace ToolEngine
 		RHIContext& m_rhi_context;
 		RHIDescriptorSet& m_descriptor_set;
 
+		std::string m_current_path;
+		float m_browser_button_size = 100.0f;
+		float m_browser_button_spacing = 10.0f;
+
 		std::unique_ptr<RHIDescriptorSetLayout> m_texture_descriptor_set_layout;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_texture_name_to_ubo_descriptor_set;
