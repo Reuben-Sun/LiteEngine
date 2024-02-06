@@ -7,9 +7,8 @@ namespace ToolEngine
 {
 	RHITextureImage::RHITextureImage(RHIDevice& device, const std::string& path): m_device(device)
 	{
-		std::string texture_local_path = Path::getInstance().getAssetPath() + path;
 		int texture_width, texture_height, texture_channels;
-		stbi_uc* pixels = stbi_load(texture_local_path.c_str(), &texture_width, &texture_height, &texture_channels, STBI_rgb_alpha);
+		stbi_uc* pixels = stbi_load(path.c_str(), &texture_width, &texture_height, &texture_channels, STBI_rgb_alpha);
 		if (!pixels)
 		{
 			LOG_ERROR("failed to load texture image!");

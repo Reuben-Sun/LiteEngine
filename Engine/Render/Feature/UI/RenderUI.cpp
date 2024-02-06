@@ -7,6 +7,7 @@ namespace ToolEngine
 	RenderUI::RenderUI(RHIContext& rhi_context, RHIRenderPass& render_pass, RHIDescriptorSet& descriptor_set)
 		: m_rhi_context(rhi_context), m_descriptor_set(descriptor_set)
 	{
+		// imgui init
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		(void)io;
@@ -27,6 +28,22 @@ namespace ToolEngine
 		init_info.MinImageCount = rhi_context.m_swapchain->getImageCount();	// 3
 		init_info.ImageCount = rhi_context.m_swapchain->getImageCount();	// 3;
 		ImGui_ImplVulkan_Init(&init_info, render_pass.getHandle());
+
+		// editor icon init
+		std::vector<RHIDescriptorType> layout_descriptor;
+		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+		m_texture_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(*rhi_context.m_device, layout_descriptor);
+		std::string icon_path = Path::getInstance().getAssetPath() + "Icon\\";
+		auto icons = Path::getInstance().getAllFilesInDirectory(icon_path);
+		for(auto& icon : icons)
+		{
+			auto name = Path::getInstance().getFileNameWithoutExtension(icon);
+			m_texture_name_to_image[name] = std::make_unique<RHITextureImage>(*rhi_context.m_device, icon);
+			m_texture_name_to_ubo_descriptor_set[name] = std::make_unique<RHIDescriptorSet>(*rhi_context.m_device, 
+				*rhi_context.m_descriptor_pool, *m_texture_descriptor_set_layout);
+			m_texture_name_to_ubo_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[name]->m_descriptor, 0);
+		}
+		m_current_path = Path::getInstance().getAssetPath();
 	}
 	RenderUI::~RenderUI()
 	{
@@ -62,7 +79,7 @@ namespace ToolEngine
 	void RenderUI::drawScene()
 	{
 		ImGui::Begin("SceneView");
-		ImVec2 window_size = ImGui::GetWindowSize();
+		ImVec2 window_size = ImGui::GetContentRegionAvail();
 		if (m_ui_context.m_scene_width != (uint32_t)window_size.x || m_ui_context.m_scene_height != (uint32_t)window_size.y)
 		{
 			// if window size changed, need to resize
@@ -78,6 +95,58 @@ namespace ToolEngine
 	void RenderUI::drawBrowser()
 	{
 		ImGui::Begin("Browser");
+		float panel_width = ImGui::GetContentRegionAvail().x;
+		float cell_size = m_browser_button_size + m_browser_button_spacing;
+		uint32_t column_count = (uint32_t)(panel_width / cell_size);
+		if (column_count < 1)
+		{
+			column_count = 1;
+		}
+		ImGui::Columns(column_count, 0, false);
+		// if not root, show back button
+		if (m_current_path != Path::getInstance().getAssetPath())
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set["rollback"]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
+			ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				m_current_path = Path::getInstance().getDirectoryParentDirectory(m_current_path);
+			}
+			ImGui::NextColumn();
+		}
+		// show all directory
+		auto dirs = Path::getInstance().getAllDirectoriesInDirectory(m_current_path);
+		for (uint32_t i = 0; i < dirs.size(); i++)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set["folder-open-fill"]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
+			ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				m_current_path = dirs[i] + "\\";
+			}
+			std::string name = Path::getInstance().getFileNameWithoutExtension(dirs[i]);
+			ImGui::TextWrapped(name.c_str());
+			ImGui::NextColumn();
+		}
+		// show all files
+		auto items = Path::getInstance().getAllFilesInDirectory(m_current_path);
+		for (uint32_t i = 0; i < items.size(); i++)
+		{
+			auto icon_name = selectIcon(items[i]);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::ImageButton(m_texture_name_to_ubo_descriptor_set[icon_name]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
+			ImGui::PopStyleColor();
+			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				LOG_INFO("Click!");
+			}
+			std::string name = Path::getInstance().getFileNameWithoutExtension(items[i]);
+			ImGui::TextWrapped(name.c_str());
+			ImGui::NextColumn();
+		}
+		
 		ImGui::End();
 	}
 	void RenderUI::drawDetail()
@@ -165,6 +234,37 @@ namespace ToolEngine
 		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 		colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+	std::string RenderUI::selectIcon(const std::string& file_name)
+	{
+		std::string extension = Path::getInstance().getFileExtension(file_name);
+		std::string icon_name = "file";
+		if (extension == ".png" || extension == ".jpg")
+		{
+			icon_name = "image";
+		}
+		else if (extension == ".material")
+		{
+			icon_name = "eye";
+		}
+		else if (extension == ".scene")
+		{
+			icon_name = "location";
+		}
+		else if (extension == ".bin")
+		{
+			icon_name = "Field-Binary";
+		}
+		else if (extension == ".gltf")
+		{
+			icon_name = "CodeSandbox";
+		}
+		else if (extension == ".ttf")
+		{
+			icon_name = "font-size";
+		}
+		
+		return icon_name;
 	}
 	void RenderUI::tick(RHICommandBuffer& cmd, uint32_t frame_index)
 	{

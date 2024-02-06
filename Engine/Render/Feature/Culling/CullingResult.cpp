@@ -1,4 +1,5 @@
 #include "CullingResult.h"
+#include "Core/Path/Path.h"
 
 namespace ToolEngine
 {
@@ -25,7 +26,8 @@ namespace ToolEngine
 				std::string texture_name = material.texture_bindings[j].texture_path;
 				if (m_texture_name_to_image.find(texture_name) == m_texture_name_to_image.end())
 				{
-					m_texture_name_to_image.emplace(texture_name, std::make_unique<RHITextureImage>(m_device, texture_name));
+					std::string texture_path = Path::getInstance().getAssetPath() + texture_name;
+					m_texture_name_to_image.emplace(texture_name, std::make_unique<RHITextureImage>(m_device, texture_path));
 				}
 			}
 		}
