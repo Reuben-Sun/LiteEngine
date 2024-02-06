@@ -145,4 +145,20 @@ namespace ToolEngine
         std::filesystem::path file_path = std::filesystem::u8path(path);
         return file_path.parent_path().string();
     }
+    std::vector<std::string> Path::getAllFilesInDirectory(const std::string& path)
+    {
+        if (!isExist(path) || !isDirectory(path))
+        {
+            return {};
+        }
+        std::vector<std::string> file_names;
+        for (const auto& entry : std::filesystem::directory_iterator(path))
+		{
+			if (entry.is_regular_file())
+			{
+				file_names.push_back(entry.path().string());
+			}
+		}
+        return file_names;
+    }
 }

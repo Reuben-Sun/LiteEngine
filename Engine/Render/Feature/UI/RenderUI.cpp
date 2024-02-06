@@ -27,6 +27,17 @@ namespace ToolEngine
 		init_info.MinImageCount = rhi_context.m_swapchain->getImageCount();	// 3
 		init_info.ImageCount = rhi_context.m_swapchain->getImageCount();	// 3;
 		ImGui_ImplVulkan_Init(&init_info, render_pass.getHandle());
+
+		std::vector<RHIDescriptorType> layout_descriptor;
+		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+		m_texture_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(*rhi_context.m_device, layout_descriptor);
+		std::string icon_path = Path::getInstance().getAssetPath() + "Icon\\";
+		auto icons = Path::getInstance().getAllFilesInDirectory(icon_path);
+		for(auto& icon : icons)
+		{
+			auto name = Path::getInstance().getFileNameWithoutExtension(icon);
+			m_texture_name_to_image[name] = std::make_unique<RHITextureImage>(*rhi_context.m_device, icon);
+		}
 	}
 	RenderUI::~RenderUI()
 	{
