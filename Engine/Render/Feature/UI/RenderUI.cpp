@@ -14,7 +14,8 @@ namespace ToolEngine
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		std::string ttf_path = Path::getInstance().getAssetPath() + "MiSans-Medium.ttf";
 		io.Fonts->AddFontFromFileTTF(ttf_path.c_str(), 16.0f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
-
+		std::string ini_path = Path::getInstance().getAssetPath() + "imgui.ini";
+		ImGui::LoadIniSettingsFromDisk(ini_path.c_str());
 		setStyle();
 
 		ImGui_ImplGlfw_InitForVulkan(rhi_context.m_window.getHandle(), true);
@@ -47,6 +48,9 @@ namespace ToolEngine
 	}
 	RenderUI::~RenderUI()
 	{
+		std::string ini_path = Path::getInstance().getAssetPath() + "imgui.ini";
+		ImGui::SaveIniSettingsToDisk(ini_path.c_str());
+
 		ImGui_ImplVulkan_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -263,6 +267,10 @@ namespace ToolEngine
 		{
 			icon_name = "font-size";
 		}
+		else if (extension == ".ini")
+		{
+			icon_name = "setting";
+		}
 		
 		return icon_name;
 	}
@@ -278,7 +286,6 @@ namespace ToolEngine
 		drawScene();
 		drawBrowser();
 		drawDetail();
-		
 		
 		ImGui::Render();
 
