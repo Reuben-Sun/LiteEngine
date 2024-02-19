@@ -2,19 +2,22 @@ file(GLOB_RECURSE HEADERS "*.h")
 file(GLOB_RECURSE SOURCES "*.cpp")
 
 set(SHADER_DIR "../Shader/Source")
-file(GLOB VERT_SHADERS "${SHADER_DIR}/*.vert")
-file(GLOB FRAG_SHADERS "${SHADER_DIR}/*.frag")
+file(GLOB HLSL_SOURCES "${SHADER_DIR}/*.hlsl")
 set(ALL_FILES ${HEADERS} ${SOURCES})
 
-add_library(Engine STATIC ${ALL_FILES} ${VERT_SHADERS} ${FRAG_SHADERS})
+add_library(Engine STATIC ${ALL_FILES} ${HLSL_SOURCES})
 target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_FILES})
-source_group("Shaders" FILES ${VERT_SHADERS} ${FRAG_SHADERS})
 
+# Add shader in folder
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_FILES})
+source_group("Shaders" FILES ${HLSL_SOURCES})
+# HLSL only need to be included in the project, but not compiled
+set_source_files_properties(${HLSL_SOURCES} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+# Link libraries
 find_package(Vulkan REQUIRED)
 target_link_libraries(Engine PUBLIC ${Vulkan_LIBRARIES})  
 target_include_directories(Engine PUBLIC ${Vulkan_INCLUDE_DIR})
-
 target_link_libraries(Engine PUBLIC glfw)
 target_link_libraries(Engine PUBLIC glm)
 target_link_libraries(Engine PUBLIC spdlog)
@@ -25,22 +28,18 @@ target_link_libraries(Engine PUBLIC Jolt)
 target_compile_options(Engine PRIVATE /wd4996)
 
 # Compile shaders
+add_custom_target(CompileShader ALL)
 set(SPV_TARGET_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Shader/SPV")
+set(DXC_DIR "$ENV{VULKAN_SDK}/bin/dxc.exe")
 
-foreach(SHADER_FILE ${VERT_SHADERS})
-    get_filename_component(FILE_NAME ${SHADER_FILE} NAME)
-    string(REPLACE "." "_" OUTPUT_STRING ${FILE_NAME})
-    message("Compile vert shader: ${FILE_NAME} => ${OUTPUT_STRING}.spv")
-    add_custom_command(TARGET Engine POST_BUILD
-        COMMAND glslangValidator -V -S vert ${SHADER_FILE} -o ${SPV_TARGET_DIR}/${OUTPUT_STRING}.spv
+foreach(SHADER_FILE ${HLSL_SOURCES})
+    get_filename_component(FILE_NAME ${SHADER_FILE} NAME_WE)
+    message("Compile shader: ${SHADER_FILE}")
+    add_custom_command(TARGET CompileShader POST_BUILD
+        COMMAND ${DXC_DIR} -E MainVS -spirv -Zi -Qembed_debug -O0 -T vs_6_0 -Fo ${SPV_TARGET_DIR}/${FILE_NAME}.vert.spv ${SHADER_FILE}
+        COMMAND ${DXC_DIR} -E MainPS -spirv -Zi -Qembed_debug -O0 -T ps_6_0 -Fo ${SPV_TARGET_DIR}/${FILE_NAME}.frag.spv ${SHADER_FILE}
         )
 endforeach()
 
-foreach(SHADER_FILE ${FRAG_SHADERS})
-    get_filename_component(FILE_NAME ${SHADER_FILE} NAME)
-    string(REPLACE "." "_" OUTPUT_STRING ${FILE_NAME})
-    message("Compile frag shader: ${FILE_NAME} => ${OUTPUT_STRING}.spv")
-    add_custom_command(TARGET Engine POST_BUILD
-        COMMAND glslangValidator -V -S frag ${SHADER_FILE} -o ${SPV_TARGET_DIR}/${OUTPUT_STRING}.spv
-        )
-endforeach()
+add_dependencies(Engine CompileShader)
+
