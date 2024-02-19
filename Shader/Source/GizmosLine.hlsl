@@ -1,13 +1,13 @@
-struct VSInput
+struct Attributes
 {
-    [[vk::location(0)]] float3 Pos : POSITION0;
+    [[vk::location(0)]] float3 positionOS : POSITION0;
     [[vk::location(1)]] float3 inColor : COLOR0;
 };
 
-struct VSOutput
+struct Varyings
 {
-	float4 Pos : SV_POSITION;
-    [[vk::location(0)]] float3 Color : COLOR0;
+    float4 positionCS : SV_POSITION;
+    [[vk::location(0)]] float3 color : COLOR0;
 };
 
 struct UBO
@@ -19,15 +19,15 @@ struct UBO
 
 cbuffer ubo : register(b0) { UBO ubo; }
 
-VSOutput MainVS(VSInput input)
+Varyings MainVS(Attributes input)
 {
-	VSOutput output = (VSOutput)0;
-	output.Pos = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.Pos, 1.0f))));
-    output.Color = input.inColor;
+    Varyings output = (Varyings) 0;
+    output.positionCS = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.positionOS, 1.0f))));
+    output.color = input.inColor;
 	return output;
 }
 
-float4 MainPS(VSOutput input) : SV_TARGET
+float4 MainPS(Varyings input) : SV_TARGET
 {
-    return float4(input.Color, 1.0f);
+    return float4(input.color, 1.0f);
 }
