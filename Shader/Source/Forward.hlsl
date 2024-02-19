@@ -28,10 +28,10 @@ Varyings MainVS(Attributes input)
 	return output;
 }
 
-Texture2D textureColor : register(t1);
-SamplerState samplerColor : register(s1);
+Texture2D _BaseMap : register(t1);
+SamplerState _BaseMap_ST : register(s1);
 
 float4 MainPS(Varyings input) : SV_TARGET
 {
-    return textureColor.Sample(samplerColor, input.uv);
+    return _BaseMap.Sample(_BaseMap_ST, input.uv);
 }
