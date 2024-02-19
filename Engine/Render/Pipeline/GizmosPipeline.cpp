@@ -19,18 +19,18 @@ namespace ToolEngine
 	void GizmosPipeline::createPipeline()
 	{
 		// shader
-		RHIShader vertex_shader_module(m_device, "GizmosLine_vert.spv");
-		RHIShader fragment_shader_module(m_device, "GizmosLine_frag.spv");
+		RHIShader vertex_shader_module(m_device, "GizmosLine.vert.spv");
+		RHIShader fragment_shader_module(m_device, "GizmosLine.frag.spv");
 		VkPipelineShaderStageCreateInfo vert_shader_stage_info{};
 		vert_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		vert_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
 		vert_shader_stage_info.module = vertex_shader_module.getHandle();
-		vert_shader_stage_info.pName = "main";
+		vert_shader_stage_info.pName = "MainVS";
 		VkPipelineShaderStageCreateInfo frag_shader_stage_info{};
 		frag_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 		frag_shader_stage_info.module = fragment_shader_module.getHandle();
-		frag_shader_stage_info.pName = "main";
+		frag_shader_stage_info.pName = "MainPS";
 
 		// vertex input
 		auto vertex_binding_description = Vertex::getBindingDescription();
