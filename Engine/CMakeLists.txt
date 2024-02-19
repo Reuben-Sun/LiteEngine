@@ -28,15 +28,18 @@ target_link_libraries(Engine PUBLIC Jolt)
 target_compile_options(Engine PRIVATE /wd4996)
 
 # Compile shaders
+add_custom_target(CompileShader ALL)
 set(SPV_TARGET_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Shader/SPV")
 set(DXC_DIR "$ENV{VULKAN_SDK}/bin/dxc.exe")
 
 foreach(SHADER_FILE ${HLSL_SOURCES})
     get_filename_component(FILE_NAME ${SHADER_FILE} NAME_WE)
     message("Compile shader: ${SHADER_FILE}")
-    add_custom_command(TARGET Engine POST_BUILD
+    add_custom_command(TARGET CompileShader POST_BUILD
         COMMAND ${DXC_DIR} -E MainVS -spirv -Zi -Qembed_debug -O0 -T vs_6_0 -Fo ${SPV_TARGET_DIR}/${FILE_NAME}.vert.spv ${SHADER_FILE}
         COMMAND ${DXC_DIR} -E MainPS -spirv -Zi -Qembed_debug -O0 -T ps_6_0 -Fo ${SPV_TARGET_DIR}/${FILE_NAME}.frag.spv ${SHADER_FILE}
         )
 endforeach()
+
+add_dependencies(Engine CompileShader)
 
