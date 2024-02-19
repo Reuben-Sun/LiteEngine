@@ -2,17 +2,19 @@ file(GLOB_RECURSE HEADERS "*.h")
 file(GLOB_RECURSE SOURCES "*.cpp")
 
 set(SHADER_DIR "../Shader/Source")
+file(GLOB HLSL_HEADERS "${SHADER_DIR}/ShaderLibrary/*.hlsl")
 file(GLOB HLSL_SOURCES "${SHADER_DIR}/*.hlsl")
 set(ALL_FILES ${HEADERS} ${SOURCES})
 
-add_library(Engine STATIC ${ALL_FILES} ${HLSL_SOURCES})
+add_library(Engine STATIC ${ALL_FILES} ${HLSL_SOURCES} ${HLSL_HEADERS})
 target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add shader in folder
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_FILES})
 source_group("Shaders" FILES ${HLSL_SOURCES})
+source_group("Shaders/ShaderLibrary" FILES ${HLSL_HEADERS})
 # HLSL only need to be included in the project, but not compiled
-set_source_files_properties(${HLSL_SOURCES} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties(${HLSL_SOURCES} ${HLSL_HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # Link libraries
 find_package(Vulkan REQUIRED)

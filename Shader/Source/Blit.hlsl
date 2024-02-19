@@ -1,7 +1,7 @@
 struct Varyings
 {
     float4 positionCS : SV_POSITION;
-    [[vk::location(0)]] float2 uv : TEXCOORD0;
+    float2 uv : TEXCOORD0;
 };
 
 Varyings MainVS(uint VertexIndex : SV_VertexID)
