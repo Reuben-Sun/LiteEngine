@@ -2,18 +2,18 @@
 
 struct Attributes
 {
-    [[vk::location(0)]] float3 positionOS : POSITION0;
-    [[vk::location(1)]] float3 inColor : COLOR0;
-    [[vk::location(2)]] float2 texcoord : TEXCOORD0;
-    [[vk::location(3)]] float3 normalOS : NORMAL0;
+    float3 positionOS : POSITION0;
+    float3 inColor : COLOR0;
+    float2 texcoord : TEXCOORD0;
+    float3 normalOS : NORMAL0;
 };
 
 struct Varyings
 {
 	float4 positionCS : SV_POSITION;
-    [[vk::location(0)]] float2 uv : TEXCOORD0;
-    [[vk::location(1)]] float3 normalWS : NORMAL0;
-    [[vk::location(2)]] float3 positionWS : TEXCOORD1;
+    float2 uv : TEXCOORD0;
+    float3 normalWS : NORMAL0;
+    float3 positionWS : TEXCOORD1;
 };
 
 cbuffer ubo : register(b0) { UBO ubo; }

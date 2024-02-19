@@ -2,14 +2,14 @@
 
 struct Attributes
 {
-    [[vk::location(0)]] float3 positionOS : POSITION0;
-    [[vk::location(1)]] float3 inColor : COLOR0;
+    float3 positionOS : POSITION0;
+    float3 inColor : COLOR0;
 };
 
 struct Varyings
 {
     float4 positionCS : SV_POSITION;
-    [[vk::location(0)]] float3 color : COLOR0;
+    float3 color : COLOR0;
 };
 
 cbuffer ubo : register(b0) { UBO ubo; }
