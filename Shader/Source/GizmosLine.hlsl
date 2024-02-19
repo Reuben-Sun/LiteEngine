@@ -1,3 +1,5 @@
+#include "ShaderLibrary/LitInput.hlsl"
+
 struct Attributes
 {
     [[vk::location(0)]] float3 positionOS : POSITION0;
@@ -8,14 +10,6 @@ struct Varyings
 {
     float4 positionCS : SV_POSITION;
     [[vk::location(0)]] float3 color : COLOR0;
-};
-
-struct UBO
-{
-    float4x4 modelMatrix;
-    float4x4 viewMatrix;
-    float4x4 projectionMatrix;
-    float3 cameraPosition;
 };
 
 cbuffer ubo : register(b0) { UBO ubo; }

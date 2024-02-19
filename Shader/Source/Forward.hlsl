@@ -1,3 +1,5 @@
+#include "ShaderLibrary/LitInput.hlsl"
+
 struct Attributes
 {
     [[vk::location(0)]] float3 positionOS : POSITION0;
@@ -12,14 +14,6 @@ struct Varyings
     [[vk::location(0)]] float2 uv : TEXCOORD0;
     [[vk::location(1)]] float3 normalWS : NORMAL0;
     [[vk::location(2)]] float3 positionWS : TEXCOORD1;
-};
-
-struct UBO
-{
-    float4x4 modelMatrix;
-    float4x4 viewMatrix;
-    float4x4 projectionMatrix;
-    float3 cameraPosition;
 };
 
 cbuffer ubo : register(b0) { UBO ubo; }
