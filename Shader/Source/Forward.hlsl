@@ -14,6 +14,7 @@ struct Varyings
     float2 uv : TEXCOORD0;
     float3 normalWS : NORMAL0;
     float3 positionWS : TEXCOORD1;
+    float3 cameraPosition : TEXCOORD2;
 };
 
 cbuffer ubo : register(b0) { UBO ubo; }
@@ -25,6 +26,7 @@ Varyings MainVS(Attributes input)
     output.uv = input.texcoord;
     output.normalWS = normalize(mul(ubo.modelMatrix, float4(input.normalOS, 0.0f)).xyz);
     output.positionWS = mul(ubo.modelMatrix, float4(input.positionOS, 1.0f)).xyz;
+    output.cameraPosition = ubo.cameraPosition;
 	return output;
 }
 
@@ -39,9 +41,8 @@ float4 MainPS(Varyings input) : SV_TARGET
     float3 albedo = _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     float3 diffuse = max(dot(input.normalWS, lightDir), 0.0f) * lightColor * albedo;
     float3 reflectDir = reflect(-lightDir, input.normalWS);
-    float3 viewDir = normalize(ubo.cameraPosition - input.positionWS);
+    float3 viewDir = normalize(input.cameraPosition - input.positionWS);
     float3 halfDir = normalize(lightDir + viewDir);
-    float3 specular = pow(max(dot(reflectDir, viewDir), 0.0f), 0.1f) * lightColor;
-    //return float4(ambientColor + diffuse + specular, 1.0);
-    return float4(ubo.cameraPosition, 1.0f);
+    float3 specular = pow(max(dot(reflectDir, viewDir), 0.0f), 1.0f) * lightColor;
+    return float4(ambientColor + diffuse + specular, 1.0);
 }
