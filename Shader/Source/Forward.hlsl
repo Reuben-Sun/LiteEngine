@@ -3,12 +3,14 @@ struct Attributes
     [[vk::location(0)]] float3 positionOS : POSITION0;
     [[vk::location(1)]] float3 inColor : COLOR0;
     [[vk::location(2)]] float2 texcoord : TEXCOORD0;
+    [[vk::location(3)]] float3 normalOS : NORMAL0;
 };
 
 struct Varyings
 {
 	float4 positionCS : SV_POSITION;
     [[vk::location(0)]] float2 uv : TEXCOORD0;
+    [[vk::location(1)]] float3 normalWS : NORMAL0;
 };
 
 struct UBO
@@ -25,6 +27,7 @@ Varyings MainVS(Attributes input)
     Varyings output = (Varyings) 0;
     output.positionCS = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.positionOS, 1.0f))));
     output.uv = input.texcoord;
+    output.normalWS = normalize(mul(ubo.modelMatrix, float4(input.normalOS, 0.0f)).xyz);
 	return output;
 }
 

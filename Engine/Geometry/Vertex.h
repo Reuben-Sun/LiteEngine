@@ -11,6 +11,7 @@ namespace ToolEngine
 		glm::vec3 pos;
 		glm::vec3 color;
 		glm::vec2 texture_coord;
+		glm::vec3 normal;
 
 		static VkVertexInputBindingDescription getBindingDescription()
 		{
@@ -24,7 +25,7 @@ namespace ToolEngine
 
 		static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions()
 		{
-			std::vector<VkVertexInputAttributeDescription> attribute_descriptions(3);
+			std::vector<VkVertexInputAttributeDescription> attribute_descriptions(4);
 			// vertex object position
 			attribute_descriptions[0].binding = 0;
 			attribute_descriptions[0].location = 0;
@@ -40,6 +41,11 @@ namespace ToolEngine
 			attribute_descriptions[2].location = 2;
 			attribute_descriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
 			attribute_descriptions[2].offset = offsetof(Vertex, texture_coord);
+			// normal
+			attribute_descriptions[3].binding = 0;
+			attribute_descriptions[3].location = 3;
+			attribute_descriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attribute_descriptions[3].offset = offsetof(Vertex, normal);
 
 			return attribute_descriptions;
 		}
