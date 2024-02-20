@@ -57,7 +57,7 @@ namespace ToolEngine
             ubo.view_matrix = camera.getViewMatrix();
             ubo.projection_matrix = camera.getProjectionMatrix();
 			RHIUniformBuffer& uniform_buffer = *m_uniform_buffer_list[i];
-			uniform_buffer.updateBuffer(ubo);
+			uniform_buffer.updateBuffer(&ubo);
 			const std::vector<VkDescriptorSet> descriptorsets = { m_ubo_descriptor_set_list[i]->getHandle() };
 			cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
 
@@ -71,7 +71,7 @@ namespace ToolEngine
         int current_index = m_index_count_list.size() - 1;
         m_vertex_buffer_list.push_back(std::make_unique<RHIVertexBuffer>(m_device, mesh.vertex_buffer));
         m_index_buffer_list.push_back(std::make_unique<RHIIndexBuffer>(m_device, mesh.index_buffer));
-        m_uniform_buffer_list.push_back(std::make_unique<RHIUniformBuffer>(m_device));
+        m_uniform_buffer_list.push_back(std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO)));
         m_ubo_descriptor_set_list.push_back(std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout()));
         m_ubo_descriptor_set_list[current_index]->updateUniformBuffer(*m_uniform_buffer_list[current_index], 0);
         m_transform_list.push_back(transform);

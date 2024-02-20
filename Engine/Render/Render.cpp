@@ -195,7 +195,7 @@ namespace ToolEngine
 			// binding ubo
 			RHIUniformBuffer& uniform_buffer = m_culling_result->getUniformBuffer(scene.mesh_name_list[i]);
 			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(scene.mesh_name_list[i]);
-			uniform_buffer.updateBuffer(ubo);
+			uniform_buffer.updateBuffer(&ubo);
 			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 
