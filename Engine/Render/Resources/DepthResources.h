@@ -7,6 +7,9 @@
 
 namespace ToolEngine
 {
+	/// <summary>
+	/// Depth attachment resources
+	/// </summary>
 	class DepthResources
 	{
 	public:

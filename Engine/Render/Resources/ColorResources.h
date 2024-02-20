@@ -8,6 +8,9 @@
 
 namespace ToolEngine
 {
+	/// <summary>
+	/// Color attachment resources
+	/// </summary>
 	class ColorResources
 	{
 	public:
