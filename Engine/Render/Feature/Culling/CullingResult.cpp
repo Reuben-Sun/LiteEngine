@@ -6,6 +6,10 @@ namespace ToolEngine
 	CullingResult::CullingResult(RHIDevice& device, RHIDescriptorSetLayout& layout, RHIDescriptorPool& pool)
 		: m_device(device), m_ubo_descriptor_set_layout(layout), m_ubo_descriptor_pool(pool)
 	{
+		m_dir_light.color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+		m_dir_light.direction = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+		m_dir_light.intensity = 1.0f;
+		m_dir_light.position = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	CullingResult::~CullingResult()
 	{

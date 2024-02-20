@@ -33,14 +33,15 @@ SamplerState _BaseMap_ST : register(s1);
 
 float4 MainPS(Varyings input) : SV_TARGET
 {
-    float3 lightDir = normalize(float3(1.0f, 1.0f, 1.0f));
-    float3 lightColor = float3(1.0f, 1.0f, 1.0f);
+    float3 lightDir = ubo.dirLight.direction.xyz;
+    float3 lightColor = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
     float3 ambientColor = float3(0.1f, 0.1f, 0.1f);
     float3 albedo = _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     float3 diffuse = max(dot(input.normalWS, lightDir), 0.0f) * lightColor * albedo;
     float3 reflectDir = reflect(-lightDir, input.normalWS);
-    float3 viewDir = normalize(ubo.cameraPosition - input.positionWS);
+    float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
     float3 halfDir = normalize(lightDir + viewDir);
     float3 specular = pow(max(dot(reflectDir, viewDir), 0.0f), 1.0f) * lightColor;
+    //return float4(lightDir, 1.0);
     return float4(ambientColor + diffuse + specular, 1.0);
 }
