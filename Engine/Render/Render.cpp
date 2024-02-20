@@ -62,35 +62,25 @@ namespace ToolEngine
 		m_blit_descriptor_set = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device, *m_rhi_context.m_descriptor_pool, m_blit_pipeline->getDescriptorSetLayout());
 		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
 		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_ui_pass, *m_blit_descriptor_set);
+
+		record();
 	}
 
 	Renderer::~Renderer()
 	{
 	}
 
+	void Renderer::record()
+	{
+	}
+
 	void Renderer::tick(RenderScene& scene)
 	{
 		uint32_t frame_index = getFrameIndex();
-
-		m_in_flight_fences[frame_index]->wait();
-
-		if (m_enable_ui && m_render_ui->m_ui_context.need_resize)
-		{
-			m_render_ui->m_ui_context.need_resize = false;
-			resize();
-			return;
-		}
-
 		uint32_t image_index;
-		auto result = m_rhi_context.m_swapchain->acquireNextTexture(*m_image_available_semaphores[frame_index], image_index);
-		
-		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		if (!prepareFrame(image_index))
 		{
 			return;
-		}
-		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-		{
-			LOG_ERROR("failed to acquire swap chain image!");
 		}
 
 		m_culling_result->cull(scene);
@@ -187,19 +177,7 @@ namespace ToolEngine
 
 		m_command_buffer->endRecord(frame_index);
 
-		m_in_flight_fences[frame_index]->resetFence();
-
-		//m_command_buffer->resetCommandBuffer(frame_index);
-
-		std::vector<VkSemaphore> wait_semaphores { m_image_available_semaphores[frame_index]->getHandle() };
-		std::vector<VkSemaphore> signal_semaphores { m_render_finished_semaphores[frame_index]->getHandle() };
-		m_command_buffer->submitCommandBuffer(frame_index, wait_semaphores, 
-			signal_semaphores, m_in_flight_fences[frame_index]->getHandle());
-
-		std::vector<VkSwapchainKHR> swapchains{ m_rhi_context.m_swapchain->getHandle() };
-		m_rhi_context.m_device->present(signal_semaphores, image_index, swapchains);
-
-		m_current_frame++;
+		submitFrame(image_index);
 	}
 	// when imgui scene window resize, forward pass need resize
 	void Renderer::resize()
@@ -227,5 +205,45 @@ namespace ToolEngine
 			m_depth_resources->getImageView(),
 			width, height);
 		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
+	}
+	bool Renderer::prepareFrame(uint32_t& image_index)
+	{
+		uint32_t frame_index = getFrameIndex();
+		m_in_flight_fences[frame_index]->wait();
+
+		if (m_enable_ui && m_render_ui->m_ui_context.need_resize)
+		{
+			m_render_ui->m_ui_context.need_resize = false;
+			resize();
+			return false;
+		}
+
+		auto result = m_rhi_context.m_swapchain->acquireNextTexture(*m_image_available_semaphores[frame_index], image_index);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			return false;
+		}
+		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+		{
+			LOG_ERROR("failed to acquire swap chain image!");
+		}
+
+		return true;
+	}
+	void Renderer::submitFrame(uint32_t image_index)
+	{
+		uint32_t frame_index = getFrameIndex();
+		m_in_flight_fences[frame_index]->resetFence();
+
+		std::vector<VkSemaphore> wait_semaphores { m_image_available_semaphores[frame_index]->getHandle() };
+		std::vector<VkSemaphore> signal_semaphores { m_render_finished_semaphores[frame_index]->getHandle() };
+		m_command_buffer->submitCommandBuffer(frame_index, wait_semaphores,
+			signal_semaphores, m_in_flight_fences[frame_index]->getHandle());
+
+		std::vector<VkSwapchainKHR> swapchains{ m_rhi_context.m_swapchain->getHandle() };
+		m_rhi_context.m_device->present(signal_semaphores, image_index, swapchains);
+
+		m_current_frame++;
 	}
 }

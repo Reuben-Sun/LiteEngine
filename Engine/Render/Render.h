@@ -25,6 +25,7 @@ namespace ToolEngine
 		~Renderer();
 
 		bool m_enable_ui = true;
+		void record();
 		void tick(RenderScene& scene);
 		void resize();
 
@@ -59,5 +60,8 @@ namespace ToolEngine
 		
 		uint32_t m_current_frame{ 0 };
 		uint32_t getFrameIndex() const { return m_current_frame % m_max_frames_in_flight; }
+
+		bool prepareFrame(uint32_t& image_index);
+		void submitFrame(uint32_t image_index);
 	};
 }
