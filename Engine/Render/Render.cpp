@@ -82,9 +82,6 @@ namespace ToolEngine
 		{
 			return;
 		}
-
-		m_culling_result->cull(scene);
-
 		
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
