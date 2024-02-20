@@ -25,7 +25,6 @@ namespace ToolEngine
 		~Renderer();
 
 		bool m_enable_ui = true;
-		void record();
 		void tick(RenderScene& scene);
 		void resize();
 
@@ -63,5 +62,6 @@ namespace ToolEngine
 
 		bool prepareFrame(uint32_t& image_index);
 		void submitFrame(uint32_t image_index);
+		void record(RenderScene& scene);
 	};
 }
