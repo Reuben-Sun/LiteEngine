@@ -19,8 +19,8 @@ namespace ToolEngine
 			{
 				std::string model_path = Path::getInstance().getAssetPath() + go.mesh_path;
 				std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
-				mesh.index_buffer = loader->loaded_index_buffer;
-				mesh.vertex_buffer = loader->loaded_vertex_buffer;
+				mesh.index_buffer = loader->loaded_index_buffer[0];
+				mesh.vertex_buffer = loader->loaded_vertex_buffer[0];
 			}
 			
 			Transform transform;
