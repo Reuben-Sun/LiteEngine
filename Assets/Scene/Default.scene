@@ -92,6 +92,37 @@
                 100.0,
                 1.0
             ]
+        },
+        {
+            "material_path": "Material/cube.material",
+            "mesh_path": "ShaderSphere.gltf",
+            "name": "ShaderSphere",
+            "position": [
+                5.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -90.0,
+                0.0,
+                -90.0
+            ],
+            "scale": [
+                0.01,
+                0.01,
+                0.01
+            ],
+            "bounding_type": 0,
+            "bounding_position":[
+                0.0,
+                0.0,
+                0.0
+            ],
+            "bounding_data":[
+                1.0,
+                1.0,
+                1.0
+            ]
         }
     ]
 }
