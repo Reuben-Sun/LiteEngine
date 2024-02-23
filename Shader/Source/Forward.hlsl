@@ -41,7 +41,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     float3 reflectDir = reflect(-lightDir, input.normalWS);
     float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
     float3 halfDir = normalize(lightDir + viewDir);
-    float3 specular = pow(max(dot(reflectDir, viewDir), 0.0f), 1.0f) * lightColor;
+    float3 specular = pow(max(dot(reflectDir, viewDir), 0.0f), 32.0f) * lightColor;
     //return float4(lightDir, 1.0);
     return float4(ambientColor + diffuse + specular, 1.0);
 }
