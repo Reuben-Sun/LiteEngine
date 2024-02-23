@@ -124,8 +124,6 @@ namespace ToolEngine
 							return;
 						}
 					}
-
-					break;
 				}
 			}
 		}
