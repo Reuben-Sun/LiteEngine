@@ -10,6 +10,7 @@
 #include "RHI/Public/RHIUniformBuffer.h"
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHITextureImage.h"
+#include "Geometry/Light.h"
 
 namespace ToolEngine
 {
@@ -27,7 +28,7 @@ namespace ToolEngine
 		RHIUniformBuffer& getUniformBuffer(const std::string& model_name);
 		RHIDescriptorSet& getDescriptorSet(const std::string& model_name);
 		RHITextureImage& getTextureImage(const std::string& texture_name);
-
+		Light& getDirLight() { return m_dir_light; }
 	private:
 		RHIDevice& m_device;
 		RHIDescriptorSetLayout& m_ubo_descriptor_set_layout;
@@ -39,5 +40,6 @@ namespace ToolEngine
 		std::unordered_map<std::string, std::unique_ptr<RHIUniformBuffer>> m_model_name_to_uniform_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_model_name_to_ubo_descriptor_set;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
+		Light m_dir_light;
 	};
 }

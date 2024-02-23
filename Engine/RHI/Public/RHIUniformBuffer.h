@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include "RHIDevice.h"
 #include "Geometry/Vertex.h"
+#include "Geometry/Light.h"
 
 namespace ToolEngine
 {
@@ -13,20 +14,23 @@ namespace ToolEngine
 		glm::mat4 model_matrix;		
 		glm::mat4 view_matrix;
 		glm::mat4 projection_matrix;
-		glm::vec3 camera_position;
+		glm::vec4 camera_position;
+		Light directional_light;
 	};
 
 	class RHIUniformBuffer
 	{
 	public:
-		RHIUniformBuffer(RHIDevice& device);
+		RHIUniformBuffer(RHIDevice& device, size_t buffer_size);
 		~RHIUniformBuffer();
 
-		void updateBuffer(GlobalUBO& ubo);
+		void updateBuffer(void* ubo);
 		VkBuffer getHandle() const { return m_buffer; }
 		VkDescriptorBufferInfo m_descriptor;
 	private:
 		RHIDevice& m_device;
+
+		size_t m_buffer_size;
 		VkBuffer m_buffer;
 		VkDeviceMemory m_memory;
 		void* m_buffer_mapped;

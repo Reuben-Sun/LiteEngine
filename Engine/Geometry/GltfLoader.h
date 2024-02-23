@@ -12,8 +12,8 @@ namespace ToolEngine
 		GltfLoader(std::string file_path);
 		~GltfLoader();
 
-		std::vector<uint32_t> loaded_index_buffer;
-		std::vector<Vertex> loaded_vertex_buffer;
+		std::vector<std::vector<uint32_t>> loaded_index_buffer;
+		std::vector<std::vector<Vertex>> loaded_vertex_buffer;
 	private:
 		tinygltf::Model m_model;
 		tinygltf::TinyGLTF m_context;

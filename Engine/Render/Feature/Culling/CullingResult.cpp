@@ -6,6 +6,10 @@ namespace ToolEngine
 	CullingResult::CullingResult(RHIDevice& device, RHIDescriptorSetLayout& layout, RHIDescriptorPool& pool)
 		: m_device(device), m_ubo_descriptor_set_layout(layout), m_ubo_descriptor_pool(pool)
 	{
+		m_dir_light.color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+		m_dir_light.direction = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+		m_dir_light.intensity = 1.0f;
+		m_dir_light.position = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	CullingResult::~CullingResult()
 	{
@@ -40,7 +44,7 @@ namespace ToolEngine
 				m_model_name_to_index_buffer.emplace(model_name, std::make_unique<RHIIndexBuffer>(m_device, scene.mesh_list[i].index_buffer));
 				m_model_name_to_vertex_buffer.emplace(model_name, std::make_unique<RHIVertexBuffer>(m_device, scene.mesh_list[i].vertex_buffer));
 				// ubo
-				m_model_name_to_uniform_buffer.emplace(model_name, std::make_unique<RHIUniformBuffer>(m_device));
+				m_model_name_to_uniform_buffer.emplace(model_name, std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO)));
 				m_model_name_to_ubo_descriptor_set.emplace(model_name,
 					std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
 				m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_model_name_to_uniform_buffer[model_name], 0);
