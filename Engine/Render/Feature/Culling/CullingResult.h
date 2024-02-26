@@ -11,6 +11,7 @@
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHITextureImage.h"
 #include "Geometry/Light.h"
+#include "Geometry/UBO.h"
 
 namespace ToolEngine
 {

@@ -13,6 +13,7 @@
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHITextureImage.h"
 #include "Render/Pipeline/GizmosPipeline.h"
+#include "Geometry/UBO.h"
 
 
 namespace ToolEngine
