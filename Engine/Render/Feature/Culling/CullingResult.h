@@ -40,7 +40,8 @@ namespace ToolEngine
 		// TODO: unload useless buffer
 		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_model_name_to_vertex_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_model_name_to_index_buffer;
-		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_model_name_to_ubo_descriptor_set;
+		// TODO: not mesh but each material instance has its own descriptor set
+		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_model_name_to_descriptor_set;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
 		std::unique_ptr<RHIUniformBuffer> m_global_ubo;
 		Light m_dir_light;

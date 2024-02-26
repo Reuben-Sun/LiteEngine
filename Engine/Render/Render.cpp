@@ -192,7 +192,7 @@ namespace ToolEngine
 			m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
 			// binding texture
 			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(scene.mesh_name_list[i]);
-			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle()};
+			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 			// push constant
 			m_push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
