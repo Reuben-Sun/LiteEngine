@@ -47,7 +47,7 @@ namespace ToolEngine
 				m_model_name_to_uniform_buffer.emplace(model_name, std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO)));
 				m_model_name_to_ubo_descriptor_set.emplace(model_name,
 					std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
-				m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_model_name_to_uniform_buffer[model_name], 0);
+				//m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_model_name_to_uniform_buffer[model_name], 0);
 				for (int j = 0; j < scene.material_list[i].texture_bindings.size(); j++)
 				{
 					std::string texture_name = scene.material_list[i].texture_bindings[j].texture_path;
