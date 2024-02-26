@@ -10,6 +10,7 @@
 #include "RHI/Public/RHIFrameBuffer.h"
 #include "Render/Pass/ForwardPass.h"
 #include "Geometry/RenderScene.h"
+#include "Geometry/PushConstant.h"
 #include "RHI/Public/RHIVertexBuffer.h"
 #include "RHI/Public/RHIIndexBuffer.h"
 #include "RHI/Public/RHIUniformBuffer.h"

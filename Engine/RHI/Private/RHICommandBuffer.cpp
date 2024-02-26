@@ -130,4 +130,8 @@ namespace ToolEngine
 	{
 		vkCmdBindDescriptorSets(m_command_buffers[current_frame], bind_point, layout, first_set_index, descriptor_set_count, descriptor_sets.data(), 0, nullptr);
 	}
+	void RHICommandBuffer::pushConstants(uint32_t current_frame, VkPipelineLayout layout, VkShaderStageFlags stage_flags, uint32_t offset, uint32_t size, const void* data)
+	{
+		vkCmdPushConstants(m_command_buffers[current_frame], layout, stage_flags, offset, size, data);
+	}
 }

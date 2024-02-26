@@ -110,10 +110,13 @@ namespace ToolEngine
 		dynamicState.pDynamicStates = dynamicStates.data();
 
 		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle() };
+		const std::vector<VkPushConstantRange> push_constant_ranges = { { VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant) } };
 		VkPipelineLayoutCreateInfo pipeline_layout_info{};
 		pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();
 		pipeline_layout_info.pSetLayouts = descriptor_set_layouts.data();
+		pipeline_layout_info.pushConstantRangeCount = push_constant_ranges.size();
+		pipeline_layout_info.pPushConstantRanges = push_constant_ranges.data();
 		m_pipeline_layout = std::make_unique<RHIPipelineLayout>(m_device, pipeline_layout_info);
 
 		RHIPipelineState m_state;

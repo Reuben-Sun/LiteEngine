@@ -14,10 +14,12 @@ struct Varyings
 
 cbuffer ubo : register(b0) { UBO ubo; }
 
+[[vk::push_constant]]PushConstant pushConstant;
+
 Varyings MainVS(Attributes input)
 {
     Varyings output = (Varyings) 0;
-    output.positionCS = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(ubo.modelMatrix, float4(input.positionOS, 1.0f))));
+    output.positionCS = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(pushConstant.modelMatrix, float4(input.positionOS, 1.0f))));
     output.color = input.inColor;
 	return output;
 }

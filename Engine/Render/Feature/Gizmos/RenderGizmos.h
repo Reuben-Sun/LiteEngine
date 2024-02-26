@@ -37,6 +37,7 @@ namespace ToolEngine
 		std::vector<Transform> m_transform_list;
 
 		std::unique_ptr<GizmosPipeline> m_gizmos_pipeline;
+		PushConstant m_push_constant;
 
 		void addMesh(Mesh& mesh, Transform& transform);
 	};

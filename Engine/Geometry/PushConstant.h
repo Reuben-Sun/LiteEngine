@@ -7,5 +7,8 @@
 
 namespace ToolEngine
 {
-	
+	struct PushConstant
+	{
+		glm::mat4 model_matrix;
+	};
 }

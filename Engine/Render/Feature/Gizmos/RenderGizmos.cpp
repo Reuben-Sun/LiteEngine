@@ -53,11 +53,12 @@ namespace ToolEngine
 
 			GlobalUBO ubo{};			
 			Transform& transform = m_transform_list[i];
-            ubo.model_matrix = transform.getModelMatrix();
             ubo.view_matrix = camera.getViewMatrix();
             ubo.projection_matrix = camera.getProjectionMatrix();
 			RHIUniformBuffer& uniform_buffer = *m_uniform_buffer_list[i];
 			uniform_buffer.updateBuffer(&ubo);
+            m_push_constant.model_matrix = transform.getModelMatrix();
+            cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
 			const std::vector<VkDescriptorSet> descriptorsets = { m_ubo_descriptor_set_list[i]->getHandle() };
 			cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
 

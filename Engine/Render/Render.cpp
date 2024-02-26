@@ -187,7 +187,6 @@ namespace ToolEngine
 			GlobalUBO ubo{};
 			float time = Time::getInstance().getDeltaTime();
 			Transform& transform = scene.mesh_transform_list[i];
-			ubo.model_matrix = transform.getModelMatrix();
 			scene.camera.aspect = m_forward_pass_width / (float)m_forward_pass_height;
 			ubo.view_matrix = scene.camera.getViewMatrix();
 			ubo.projection_matrix = scene.camera.getProjectionMatrix();
@@ -200,7 +199,9 @@ namespace ToolEngine
 			uniform_buffer.updateBuffer(&ubo);
 			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
-
+			
+			m_push_constant.model_matrix = transform.getModelMatrix();
+			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}

@@ -8,9 +8,13 @@ struct Light
 
 struct UBO
 {
-    float4x4 modelMatrix;
     float4x4 viewMatrix;
     float4x4 projectionMatrix;
     float4 cameraPosition;
     Light dirLight;
+};
+
+struct PushConstant
+{
+    float4x4 modelMatrix;
 };
