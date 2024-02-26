@@ -64,13 +64,6 @@ namespace ToolEngine
 		m_blit_descriptor_set = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device, *m_rhi_context.m_descriptor_pool, m_blit_pipeline->getDescriptorSetLayout());
 		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
 		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_ui_pass, *m_blit_descriptor_set);
-
-		m_global_ubo = std::make_unique<RHIUniformBuffer>(*m_rhi_context.m_device, sizeof(GlobalUBO));
-		std::string texture_path = Path::getInstance().getAssetPath() + "MarblesTiles.jpg";
-		m_global_texture = std::make_unique<RHITextureImage>(*m_rhi_context.m_device, texture_path);
-		m_global_descriptor_set = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device, *m_rhi_context.m_descriptor_pool, m_forward_pipeline->getDescriptorSetLayout());
-		m_global_descriptor_set->updateUniformBuffer(*m_global_ubo, 0);
-		m_global_descriptor_set->updateTextureImage(m_global_texture->m_descriptor, 1);
 	}
 
 	Renderer::~Renderer()
@@ -186,7 +179,7 @@ namespace ToolEngine
 		ubo.projection_matrix = scene.camera.getProjectionMatrix();
 		ubo.camera_position = glm::vec4(scene.camera.transform.position, 0.0f);
 		ubo.directional_light = m_culling_result->getDirLight();
-		m_global_ubo->updateBuffer(&ubo);
+		m_culling_result->getGlobalUBO().updateBuffer(&ubo);
 		// draw culling result
 		for (int i = 0; i < scene.mesh_list.size(); i++)
 		{
@@ -197,12 +190,9 @@ namespace ToolEngine
 			VkDeviceSize offsets[] = { 0 };
 			m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
 			m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
-			// binding ubo
-			RHIUniformBuffer& uniform_buffer = m_culling_result->getUniformBuffer(scene.mesh_name_list[i]);
-			uniform_buffer.updateBuffer(&ubo);
 			// binding texture
 			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(scene.mesh_name_list[i]);
-			const std::vector<VkDescriptorSet> descriptorsets = { m_global_descriptor_set->getHandle()};
+			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle()};
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 			// push constant
 			m_push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();

@@ -10,12 +10,12 @@ namespace ToolEngine
 		m_dir_light.direction = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 		m_dir_light.intensity = 1.0f;
 		m_dir_light.position = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+		m_global_ubo = std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO));
 	}
 	CullingResult::~CullingResult()
 	{
 		m_model_name_to_index_buffer.clear();
 		m_model_name_to_vertex_buffer.clear();
-		m_model_name_to_uniform_buffer.clear();
 		m_texture_name_to_image.clear();
 	}
 	void CullingResult::cull(RenderScene& scene)
@@ -44,9 +44,9 @@ namespace ToolEngine
 				m_model_name_to_index_buffer.emplace(model_name, std::make_unique<RHIIndexBuffer>(m_device, scene.mesh_list[i].index_buffer));
 				m_model_name_to_vertex_buffer.emplace(model_name, std::make_unique<RHIVertexBuffer>(m_device, scene.mesh_list[i].vertex_buffer));
 				// ubo
-				m_model_name_to_uniform_buffer.emplace(model_name, std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO)));
 				m_model_name_to_ubo_descriptor_set.emplace(model_name,
 					std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
+				m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_global_ubo, 0);
 				//m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_model_name_to_uniform_buffer[model_name], 0);
 				for (int j = 0; j < scene.material_list[i].texture_bindings.size(); j++)
 				{
@@ -68,12 +68,7 @@ namespace ToolEngine
 		RHIIndexBuffer& index_buffer_ref = *(it->second.get());
 		return index_buffer_ref;
 	}
-	RHIUniformBuffer& CullingResult::getUniformBuffer(const std::string& model_name)
-	{
-		auto it = m_model_name_to_uniform_buffer.find(model_name);
-		RHIUniformBuffer& uniform_buffer_ref = *(it->second.get());
-		return uniform_buffer_ref;
-	}
+	
 	RHIDescriptorSet& CullingResult::getDescriptorSet(const std::string& model_name)
 	{
 		auto it = m_model_name_to_ubo_descriptor_set.find(model_name);
