@@ -44,14 +44,14 @@ namespace ToolEngine
 				m_model_name_to_index_buffer.emplace(model_name, std::make_unique<RHIIndexBuffer>(m_device, scene.mesh_list[i].index_buffer));
 				m_model_name_to_vertex_buffer.emplace(model_name, std::make_unique<RHIVertexBuffer>(m_device, scene.mesh_list[i].vertex_buffer));
 				// ubo
-				m_model_name_to_ubo_descriptor_set.emplace(model_name,
+				m_model_name_to_descriptor_set.emplace(model_name,
 					std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
-				m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_global_ubo, 0);
+				m_model_name_to_descriptor_set[model_name]->updateUniformBuffer(*m_global_ubo, 0);
 				//m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_model_name_to_uniform_buffer[model_name], 0);
 				for (int j = 0; j < scene.material_list[i].texture_bindings.size(); j++)
 				{
 					std::string texture_name = scene.material_list[i].texture_bindings[j].texture_path;
-					m_model_name_to_ubo_descriptor_set[model_name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, scene.material_list[i].texture_bindings[j].binding_index);
+					m_model_name_to_descriptor_set[model_name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, scene.material_list[i].texture_bindings[j].binding_index);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ namespace ToolEngine
 	
 	RHIDescriptorSet& CullingResult::getDescriptorSet(const std::string& model_name)
 	{
-		auto it = m_model_name_to_ubo_descriptor_set.find(model_name);
+		auto it = m_model_name_to_descriptor_set.find(model_name);
 		RHIDescriptorSet& descriptor_set_ref = *(it->second.get());
 		return descriptor_set_ref;
 	}
