@@ -3,18 +3,20 @@ file(GLOB_RECURSE SOURCES "*.cpp")
 
 set(SHADER_DIR "../Shader/Source")
 file(GLOB HLSL_HEADERS "${SHADER_DIR}/ShaderLibrary/*.hlsl")
+file(GLOB CS_SOURCES "${SHADER_DIR}/Compute/*.hlsl")
 file(GLOB HLSL_SOURCES "${SHADER_DIR}/*.hlsl")
 set(ALL_FILES ${HEADERS} ${SOURCES})
 
-add_library(Engine STATIC ${ALL_FILES} ${HLSL_SOURCES} ${HLSL_HEADERS})
+add_library(Engine STATIC ${ALL_FILES} ${HLSL_SOURCES} ${HLSL_HEADERS} ${CS_SOURCES})
 target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add shader in folder
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_FILES})
 source_group("Shaders" FILES ${HLSL_SOURCES})
 source_group("Shaders/ShaderLibrary" FILES ${HLSL_HEADERS})
+source_group("Shaders/Compute" FILES ${CS_SOURCES})
 # HLSL only need to be included in the project, but not compiled
-set_source_files_properties(${HLSL_SOURCES} ${HLSL_HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties(${HLSL_SOURCES} ${HLSL_HEADERS} ${CS_SOURCES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # Link libraries
 find_package(Vulkan REQUIRED)
@@ -41,6 +43,15 @@ foreach(SHADER_FILE ${HLSL_SOURCES})
         COMMAND ${DXC_DIR} -E MainVS -spirv -Zi -Qembed_debug -O0 -T vs_6_0 -Fo ${SPV_TARGET_DIR}/${FILE_NAME}.vert.spv ${SHADER_FILE}
         COMMAND ${DXC_DIR} -E MainPS -spirv -Zi -Qembed_debug -O0 -T ps_6_0 -Fo ${SPV_TARGET_DIR}/${FILE_NAME}.frag.spv ${SHADER_FILE}
         )
+    
+endforeach()
+
+foreach(SHADER_FILE ${CS_SOURCES})
+    get_filename_component(FILE_NAME ${SHADER_FILE} NAME_WE)
+    message("Compile shader: ${SHADER_FILE}")
+    add_custom_command(TARGET CompileShader POST_BUILD
+		COMMAND ${DXC_DIR} -E MainCS -spirv -Zi -Qembed_debug -O0 -T cs_6_0 -Fo ${SPV_TARGET_DIR}/${FILE_NAME}.comp.spv ${SHADER_FILE}
+		)
 endforeach()
 
 add_dependencies(Engine CompileShader)
