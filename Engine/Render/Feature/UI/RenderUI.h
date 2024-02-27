@@ -25,6 +25,8 @@ namespace ToolEngine
 		uint32_t m_scene_height = 1080;
 		bool need_resize = true;
 		bool enable_gizmos = true;
+		float metallic = 0.134f;
+		float roughness = 0.276f;
 	};
 	class RenderUI
 	{
@@ -34,7 +36,7 @@ namespace ToolEngine
 
 		void tick(RHICommandBuffer& cmd, uint32_t frame_index);
 
-		UIContext m_ui_context;
+		UIContext& getUIContext() { return m_ui_context; }
 	private:
 		RHIContext& m_rhi_context;
 		RHIDescriptorSet& m_descriptor_set;
@@ -46,7 +48,9 @@ namespace ToolEngine
 		std::unique_ptr<RHIDescriptorSetLayout> m_texture_descriptor_set_layout;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_texture_name_to_ubo_descriptor_set;
-
+		
+		UIContext m_ui_context;
+		
 		void drawMainMenuBar();
 		void drawHierarchy();
 		void drawScene();

@@ -93,8 +93,8 @@ namespace ToolEngine
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		if (m_enable_ui)
 		{
-			width = m_render_ui->m_ui_context.m_scene_width;
-			height = m_render_ui->m_ui_context.m_scene_height;
+			width = m_render_ui->getUIContext().m_scene_width;
+			height = m_render_ui->getUIContext().m_scene_height;
 		}
 
 		m_forward_pass_width = width;
@@ -115,9 +115,9 @@ namespace ToolEngine
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->wait();
 
-		if (m_enable_ui && m_render_ui->m_ui_context.need_resize)
+		if (m_enable_ui && m_render_ui->getUIContext().need_resize)
 		{
-			m_render_ui->m_ui_context.need_resize = false;
+			m_render_ui->getUIContext().need_resize = false;
 			resize();
 			return false;
 		}
@@ -198,13 +198,13 @@ namespace ToolEngine
 			m_push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
 			m_push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
 			m_push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
-			m_push_constant.metallic = 0.1f;
-			m_push_constant.roughness = 0.0f;
+			m_push_constant.metallic = m_render_ui->getUIContext().metallic;
+			m_push_constant.roughness = m_render_ui->getUIContext().roughness;
 			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstantWithMaterial), &m_push_constant);
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}
-		if (m_enable_ui && m_render_ui->m_ui_context.enable_gizmos)
+		if (m_enable_ui && m_render_ui->getUIContext().enable_gizmos)
 		{
 			m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
 		}
@@ -216,13 +216,13 @@ namespace ToolEngine
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 			// update imgui ui context
-			m_render_ui->m_ui_context.camera_pos = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
+			m_render_ui->getUIContext().camera_pos = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
 			auto camera_euler = scene.camera.transform.rotation.getEulerDegrees();
-			m_render_ui->m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
-			m_render_ui->m_ui_context.camera_speed = scene.camera.camera_speed;
-			m_render_ui->m_ui_context.cube_pos = { scene.mesh_transform_list[0].position.x, scene.mesh_transform_list[0].position.y, scene.mesh_transform_list[0].position.z };
+			m_render_ui->getUIContext().camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
+			m_render_ui->getUIContext().camera_speed = scene.camera.camera_speed;
+			m_render_ui->getUIContext().cube_pos = { scene.mesh_transform_list[0].position.x, scene.mesh_transform_list[0].position.y, scene.mesh_transform_list[0].position.z };
 			auto cube_euler = scene.mesh_transform_list[0].rotation.getEulerDegrees();
-			m_render_ui->m_ui_context.cube_rotation = { cube_euler[0], cube_euler[1], cube_euler[2] };
+			m_render_ui->getUIContext().cube_rotation = { cube_euler[0], cube_euler[1], cube_euler[2] };
 
 			m_render_ui->tick(*m_command_buffer, frame_index);
 

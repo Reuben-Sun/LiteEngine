@@ -171,6 +171,8 @@ namespace ToolEngine
 		{
 			m_ui_context.enable_gizmos = !m_ui_context.enable_gizmos;
 		}
+		ImGui::SliderFloat("Metallic", &m_ui_context.metallic, 0.0f, 1.0f);
+		ImGui::SliderFloat("Roughness", &m_ui_context.roughness, 0.0f, 1.0f);
 		ImGui::End();
 	}
 	
