@@ -6,5 +6,12 @@
 
 namespace ToolEngine
 {
-
+	class RHIComputePipeline
+	{
+	public:
+		RHIComputePipeline(RHIDevice& device);
+		~RHIComputePipeline();
+	private:
+		RHIDevice& m_device;
+	};
 }
