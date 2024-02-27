@@ -9,12 +9,12 @@ namespace ToolEngine
 {
 	struct QueueFamilyIndices
 	{
-		std::optional<uint32_t> graphics_family;
+		std::optional<uint32_t> graphics_and_compute_family;
 		std::optional<uint32_t> present_family;
 
 		bool isComplete()
 		{
-			return graphics_family.has_value() && present_family.has_value();
+			return graphics_and_compute_family.has_value() && present_family.has_value();
 		}
 
 		static QueueFamilyIndices getQueueFamilyIndices(VkPhysicalDevice device, VkSurfaceKHR surface);
@@ -58,6 +58,7 @@ namespace ToolEngine
 		
 		uint32_t m_graphics_family_index{ UINT32_MAX };
 		VkQueue m_graphics_queue{ VK_NULL_HANDLE };
+		VkQueue m_compute_queue{ VK_NULL_HANDLE };
 		VkQueue m_present_queue{ VK_NULL_HANDLE };
 
 		std::vector<const char*> m_supported_device_extensions;

@@ -16,9 +16,9 @@ namespace ToolEngine
         int family_index = 0;
         for (const auto& queue_family : queue_families)
         {
-            if (queue_family.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            if ((queue_family.queueFlags & VK_QUEUE_GRAPHICS_BIT) && (queue_family.queueFlags & VK_QUEUE_COMPUTE_BIT))
             {
-                indices.graphics_family = family_index;
+                indices.graphics_and_compute_family = family_index;
             }
             VkBool32 present_support = false;
             vkGetPhysicalDeviceSurfaceSupportKHR(device, family_index, surface, &present_support);
@@ -104,10 +104,10 @@ namespace ToolEngine
         std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
         std::set<uint32_t> unique_queue_families =
         {
-            indices.graphics_family.value(),
+            indices.graphics_and_compute_family.value(),
             indices.present_family.value()
         };
-        m_graphics_family_index = indices.graphics_family.value();
+        m_graphics_family_index = indices.graphics_and_compute_family.value();
         float queuePriority = 1.0f;
         for (uint32_t queue_family_index : unique_queue_families)
         {
@@ -148,9 +148,10 @@ namespace ToolEngine
 
         LOG_INFO("Create Logical Device!");
 
-        if (checkPresentSupport(m_physical_device, indices.graphics_family.value()))
+        if (checkPresentSupport(m_physical_device, indices.graphics_and_compute_family.value()))
         {
-            vkGetDeviceQueue(m_logical_device, indices.graphics_family.value(), 0, &m_graphics_queue);
+            vkGetDeviceQueue(m_logical_device, indices.graphics_and_compute_family.value(), 0, &m_graphics_queue);
+            vkGetDeviceQueue(m_logical_device, indices.graphics_and_compute_family.value(), 0, &m_compute_queue);
         }
         if (checkPresentSupport(m_physical_device, indices.present_family.value()))
         {
@@ -158,7 +159,7 @@ namespace ToolEngine
         }
         LOG_INFO("Create Queue!");
 
-        m_command_pool = std::make_unique<RHICommandPool>(m_logical_device, indices.graphics_family.value());
+        m_command_pool = std::make_unique<RHICommandPool>(m_logical_device, indices.graphics_and_compute_family.value());
         LOG_INFO("Create Command Pool!");
     }
 

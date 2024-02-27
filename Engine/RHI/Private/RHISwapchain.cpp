@@ -22,8 +22,8 @@ namespace ToolEngine
 		swapchain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
 		QueueFamilyIndices indices = QueueFamilyIndices::getQueueFamilyIndices(m_device.getPhysicalDevice(), m_instance.getSurfaceHandle());
-		uint32_t queueFamilyIndices[] = { indices.graphics_family.value(), indices.present_family.value() };
-		if (indices.graphics_family != indices.present_family)
+		uint32_t queueFamilyIndices[] = { indices.graphics_and_compute_family.value(), indices.present_family.value() };
+		if (indices.graphics_and_compute_family != indices.present_family)
 		{
 			swapchain_create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			swapchain_create_info.queueFamilyIndexCount = 2;
