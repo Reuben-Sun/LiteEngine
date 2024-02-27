@@ -1,4 +1,4 @@
-add_executable(Client Main.cpp)
+add_executable(Client Engine.h Engine.cpp Render.h Render.cpp Main.cpp)
 target_link_libraries(Client PRIVATE Engine)
 
 # Copy DLL
