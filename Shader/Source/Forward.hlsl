@@ -1,4 +1,5 @@
 #include "ShaderLibrary/LitInput.hlsl"
+#include "ShaderLibrary/BRDF.hlsl"
 
 struct Attributes
 {
@@ -14,6 +15,16 @@ struct Varyings
     float2 uv : TEXCOORD0;
     float3 normalWS : NORMAL0;
     float3 positionWS : TEXCOORD1;
+};
+
+struct PushConstant
+{
+    float4x4 modelMatrix;
+    float3 baseColor;
+    float metallic;
+    float3 emissionColor;
+    float roughness;
+    
 };
 
 cbuffer ubo : register(b0) { UBO ubo; }
@@ -37,13 +48,24 @@ float4 MainPS(Varyings input) : SV_TARGET
 {
     float3 lightDir = ubo.dirLight.direction.xyz;
     float3 lightColor = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
-    float3 ambientColor = float3(0.1f, 0.1f, 0.1f);
     float3 albedo = _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
-    float3 diffuse = max(dot(input.normalWS, lightDir), 0.0f) * lightColor * albedo;
-    float3 reflectDir = reflect(-lightDir, input.normalWS);
     float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
-    float3 halfDir = normalize(lightDir + viewDir);
-    float3 specular = pow(max(dot(reflectDir, viewDir), 0.0f), 32.0f) * lightColor;
-    //return float4(lightDir, 1.0);
-    return float4(ambientColor + diffuse + specular, 1.0);
+    
+    BRDFData data = (BRDFData) 0;
+    data.albedo = albedo;
+    data.metallic = pushConstant.metallic;
+    data.emissionColor = pushConstant.emissionColor;
+    data.roughness = pushConstant.roughness;
+    
+    Input litInput = (Input) 0;
+    litInput.L = lightDir;
+    litInput.radiance = lightColor;
+    litInput.H = normalize(lightDir + viewDir);
+    litInput.NoV = max(0.0f, dot(input.normalWS, viewDir));
+    litInput.NoL = max(0.0f, dot(input.normalWS, lightDir));
+    litInput.NoH = max(0.0f, dot(input.normalWS, litInput.H));
+    litInput.VoH = max(0.0f, dot(viewDir, litInput.H));
+    
+    float4 result = BRDF(data, litInput);
+    return result;
 }

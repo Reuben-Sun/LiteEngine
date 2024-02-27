@@ -13,8 +13,3 @@ struct UBO
     float4 cameraPosition;
     Light dirLight;
 };
-
-struct PushConstant
-{
-    float4x4 modelMatrix;
-};

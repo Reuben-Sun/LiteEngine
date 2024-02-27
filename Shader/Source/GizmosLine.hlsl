@@ -12,6 +12,11 @@ struct Varyings
     float3 color : COLOR0;
 };
 
+struct PushConstant
+{
+    float4x4 modelMatrix;
+};
+
 cbuffer ubo : register(b0) { UBO ubo; }
 
 [[vk::push_constant]]PushConstant pushConstant;

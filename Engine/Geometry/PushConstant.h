@@ -11,4 +11,13 @@ namespace ToolEngine
 	{
 		glm::mat4 model_matrix;
 	};
+
+	struct PushConstantWithMaterial
+	{
+		glm::mat4 model_matrix;
+		glm::vec3 base_color;
+		float metallic;
+		glm::vec3 emission_color;
+		float roughness;
+	};
 }

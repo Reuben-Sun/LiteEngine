@@ -196,7 +196,11 @@ namespace ToolEngine
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 			// push constant
 			m_push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
-			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
+			m_push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
+			m_push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
+			m_push_constant.metallic = 0.1f;
+			m_push_constant.roughness = 0.0f;
+			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstantWithMaterial), &m_push_constant);
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}

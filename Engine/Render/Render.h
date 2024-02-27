@@ -57,7 +57,7 @@ namespace ToolEngine
 		std::vector<std::unique_ptr<Semaphore>> m_image_available_semaphores;
 		std::vector<std::unique_ptr<Semaphore>> m_render_finished_semaphores;
 
-		PushConstant m_push_constant;
+		PushConstantWithMaterial m_push_constant;
 		
 		uint32_t m_current_frame{ 0 };
 		uint32_t getFrameIndex() const { return m_current_frame % m_max_frames_in_flight; }

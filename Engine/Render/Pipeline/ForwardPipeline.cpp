@@ -10,6 +10,10 @@ namespace ToolEngine
 		std::vector<RHIDescriptorType> layout_descriptor;
 		layout_descriptor.push_back(RHIDescriptorType::ConstantBuffer);
 		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+		layout_descriptor.push_back(RHIDescriptorType::Sampler);
 		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, layout_descriptor);
 		createPipeline();
 		LOG_INFO("Create ForwardPipeline!");
@@ -112,7 +116,7 @@ namespace ToolEngine
 		dynamicState.pDynamicStates = dynamicStates.data();
 
 		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle()};
-		const std::vector<VkPushConstantRange> push_constant_ranges = { { VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant) } };
+		const std::vector<VkPushConstantRange> push_constant_ranges = { { VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstantWithMaterial) } };
 		VkPipelineLayoutCreateInfo pipeline_layout_info{};
 		pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();
