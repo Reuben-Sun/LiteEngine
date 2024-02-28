@@ -58,6 +58,14 @@ namespace ToolEngine
 				std::string texture_name = material.texture_bindings[j].texture_path;
 				m_material_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, material.texture_bindings[j].binding_index);
 			}
+			// push constant
+			
+			PushConstant push_constant;
+			push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
+			push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
+			push_constant.metallic = 1.0f;
+			push_constant.roughness = 1.0f;
+			m_material_name_to_push_constant.emplace(name, push_constant);
 		}
 	}
 	RHIVertexBuffer& CullingResult::getVertexBuffer(const std::string& model_name)
@@ -79,5 +87,10 @@ namespace ToolEngine
 		auto it = m_material_name_to_descriptor_set.find(material_name);
 		RHIDescriptorSet& descriptor_set_ref = *(it->second.get());
 		return descriptor_set_ref;
+	}
+	PushConstant CullingResult::getPushConstant(const std::string& model_name)
+	{
+		std::string material_name = m_model_name_to_material_name[model_name];
+		return m_material_name_to_push_constant[material_name];;
 	}
 }

@@ -183,24 +183,24 @@ namespace ToolEngine
 		// draw culling result
 		for (int i = 0; i < scene.mesh_list.size(); i++)
 		{
+			auto current_mesh_name = scene.mesh_name_list[i];
 			// binding index buffer and vertex buffer
 			uint32_t index_count = scene.mesh_list[i].index_buffer.size();
-			RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(scene.mesh_name_list[i]);
-			RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(scene.mesh_name_list[i]);
+			RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(current_mesh_name);
+			RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(current_mesh_name);
 			VkDeviceSize offsets[] = { 0 };
 			m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
 			m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
 			// binding texture
-			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(scene.mesh_name_list[i]);
+			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(current_mesh_name);
 			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 			// push constant
-			m_push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
-			m_push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
-			m_push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
-			m_push_constant.metallic = m_render_ui->getUIContext().metallic;
-			m_push_constant.roughness = m_render_ui->getUIContext().roughness;
-			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
+			PushConstant push_constant = m_culling_result->getPushConstant(current_mesh_name);
+			push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
+			push_constant.metallic *= m_render_ui->getUIContext().metallic;
+			push_constant.roughness *= m_render_ui->getUIContext().roughness;
+			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}

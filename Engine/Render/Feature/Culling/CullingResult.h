@@ -12,6 +12,7 @@
 #include "RHI/Public/RHITextureImage.h"
 #include "Geometry/Light.h"
 #include "Geometry/UBO.h"
+#include "Geometry/PushConstant.h"
 
 namespace ToolEngine
 {
@@ -28,6 +29,7 @@ namespace ToolEngine
 		RHIIndexBuffer& getIndexBuffer(const std::string& model_name);
 		RHIUniformBuffer& getGlobalUBO() { return *m_global_ubo; }
 		RHIDescriptorSet& getDescriptorSet(const std::string& model_name);
+		PushConstant getPushConstant(const std::string& model_name);
 		Light& getDirLight() { return m_dir_light; }
 
 		
@@ -35,14 +37,17 @@ namespace ToolEngine
 		RHIDevice& m_device;
 		RHIDescriptorSetLayout& m_ubo_descriptor_set_layout;
 		RHIDescriptorPool& m_ubo_descriptor_pool;
-		// TODO: use guid to replace std::string
+
+		std::unique_ptr<RHIUniformBuffer> m_global_ubo;
+		Light m_dir_light;
+
 		// TODO: unload useless buffer
 		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_model_name_to_vertex_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_model_name_to_index_buffer;
+		std::unordered_map<std::string, std::string> m_model_name_to_material_name;
+
+		std::unordered_map<std::string, PushConstant> m_material_name_to_push_constant;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_material_name_to_descriptor_set;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
-		std::unique_ptr<RHIUniformBuffer> m_global_ubo;
-		Light m_dir_light;
-		std::unordered_map<std::string, std::string> m_model_name_to_material_name;
 	};
 }
