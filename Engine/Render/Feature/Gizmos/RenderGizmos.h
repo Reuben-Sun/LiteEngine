@@ -14,6 +14,7 @@
 #include "RHI/Public/RHITextureImage.h"
 #include "Render/Pipeline/GizmosPipeline.h"
 #include "Geometry/UBO.h"
+#include "Core/Path/Path.h"
 
 
 namespace ToolEngine
@@ -30,7 +31,8 @@ namespace ToolEngine
 		RenderGizmos(RHIDevice& device, RHIRenderPass& render_pass, RHIDescriptorPool& pool);
 		~RenderGizmos();
 
-		void tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera);	// TODO: replace aspect with camera
+		void processRenderScene(RenderScene& scene);
+		void tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera);
 	private:
 		RHIDevice& m_device;
 		RHIDescriptorPool& m_ubo_descriptor_pool;

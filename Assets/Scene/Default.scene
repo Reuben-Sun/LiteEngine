@@ -2,7 +2,7 @@
     "game_objects": [
         {
             "material_path": "Material/cube.material",
-            "mesh_path": "cube.gltf",
+            "mesh_path": "Cube.gltf",
             "name": "Cube",
             "position": [
                 0.0,
@@ -26,9 +26,9 @@
                 0.5
             ],
             "bounding_data":[
-                1.0,
-                1.0,
-                1.0
+                0.5,
+                0.5,
+                0.5
             ]
         },
         {
@@ -85,12 +85,12 @@
             "bounding_position":[
                 0.0,
                 0.0,
-                -1.0
+                -0.1
             ],
             "bounding_data":[
-                100.0,
-                100.0,
-                1.0
+                5.0,
+                5.0,
+                0.1
             ]
         },
         {
@@ -114,14 +114,14 @@
             ],
             "bounding_type": 0,
             "bounding_position":[
+                5.0,
                 0.0,
-                0.0,
-                0.0
+                1.3
             ],
             "bounding_data":[
-                1.0,
-                1.0,
-                1.0
+                1.2,
+                1.2,
+                1.3
             ]
         }
     ]

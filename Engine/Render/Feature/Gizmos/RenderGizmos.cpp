@@ -1,5 +1,6 @@
 #include "RenderGizmos.h"
 #include "Core/Time/Time.h"
+#include "Geometry/GltfLoader.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -17,6 +18,15 @@ namespace ToolEngine
         m_mesh_name_to_descriptor_set["line"] = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
         m_mesh_name_to_descriptor_set["line"]->updateUniformBuffer(*m_global_uniform_buffer, 0);
 
+        auto cube_path = Path::getInstance().getAssetPath() + "\\Cube.gltf";
+        std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(cube_path);
+        m_mesh_name_to_index_count["cube"] = loader->loaded_index_buffer[0].size();
+        m_mesh_name_to_index_buffer["cube"] = std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[0]);
+        m_mesh_name_to_vertex_buffer["cube"] = std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[0]);
+        m_mesh_name_to_descriptor_set["cube"] = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
+        m_mesh_name_to_descriptor_set["cube"]->updateUniformBuffer(*m_global_uniform_buffer, 0);
+
+        auto sphere_path = Path::getInstance().getAssetPath() + "\\Sphere.gltf";
 
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -48,6 +58,26 @@ namespace ToolEngine
     }
     RenderGizmos::~RenderGizmos()
     {
+    }
+    void RenderGizmos::processRenderScene(RenderScene& scene)
+    {
+        m_gizmo_temp_objects.clear();
+        // show physics bounding
+        for (int i = 0; i < scene.mesh_name_list.size(); i++)
+        {
+            auto bounding = scene.bounding_list[i];
+            if (bounding.type == BoundingType::Box)
+            {
+                GizmoObject gizmo_object;
+                gizmo_object.mesh_name = "cube";
+                gizmo_object.transform.position = bounding.position;
+                gizmo_object.transform.rotation = Quaternion::Identity();
+                gizmo_object.transform.scale = bounding.data;
+                gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);
+                m_gizmo_temp_objects.push_back(gizmo_object);
+            }
+			
+        }
     }
     void RenderGizmos::tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera)
     {

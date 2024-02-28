@@ -207,6 +207,7 @@ namespace ToolEngine
 		}
 		if (m_enable_ui && m_render_ui->getUIContext().enable_gizmos)
 		{
+			m_render_gizmos->processRenderScene(scene);
 			m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
 		}
 
