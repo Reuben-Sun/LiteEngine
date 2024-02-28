@@ -20,15 +20,16 @@
 	],
 	"meshes":[
 		{
-			"name":"Sphere",
+			"name":"Sphere.001",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"TANGENT":3
 					},
-					"indices":3
+					"indices":4
 				}
 			]
 		}
@@ -37,15 +38,15 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":1984,
+			"count":65280,
 			"max":[
-				0.9999997019767761,
+				0.9999995827674866,
 				1,
 				1
 			],
 			"min":[
-				-0.9999990463256836,
-				-0.9999993443489075,
+				-0.9999986886978149,
+				-0.9999992251396179,
 				-1
 			],
 			"type":"VEC3"
@@ -53,51 +54,63 @@
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":1984,
+			"count":65280,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":1984,
+			"count":65280,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
+			"componentType":5126,
+			"count":65280,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":4,
 			"componentType":5123,
-			"count":2880,
+			"count":97536,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":23808,
+			"byteLength":783360,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":23808,
-			"byteOffset":23808,
+			"byteLength":783360,
+			"byteOffset":783360,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":15872,
-			"byteOffset":47616,
+			"byteLength":522240,
+			"byteOffset":1566720,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":5760,
-			"byteOffset":63488,
+			"byteLength":1044480,
+			"byteOffset":2088960,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":195072,
+			"byteOffset":3133440,
 			"target":34963
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":69248,
+			"byteLength":3328512,
 			"uri":"Sphere.bin"
 		}
 	]

@@ -7,6 +7,7 @@ struct Attributes
     float3 inColor : COLOR0;
     float2 texcoord : TEXCOORD0;
     float3 normalOS : NORMAL0;
+    float3 tangentOS : TANGENT0;
 };
 
 struct Varyings
