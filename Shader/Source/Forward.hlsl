@@ -44,6 +44,15 @@ Varyings MainVS(Attributes input)
 Texture2D _BaseMap : register(t1);
 SamplerState _BaseMap_ST : register(s1);
 
+Texture2D _MetallicMap : register(t2);
+SamplerState _MetallicMap_ST : register(s2);
+
+Texture2D _NormalMap : register(t3);
+SamplerState _NormalMap_ST : register(s3);
+
+Texture2D _RoughnessMap : register(t4);
+SamplerState _RoughnessMap_ST : register(s4);
+
 float4 MainPS(Varyings input) : SV_TARGET
 {
     float3 lightDir = ubo.dirLight.direction.xyz;
