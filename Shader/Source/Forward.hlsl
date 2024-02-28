@@ -50,19 +50,37 @@ float4 MainPS(Varyings input) : SV_TARGET
 {
     float3 lightDir = ubo.dirLight.direction.xyz;
     float3 lightColor = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
-    float3 albedo = _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
     
-    float3 bitangent = cross(input.normalWS, input.tangentOS.xyz) * input.tangentOS.w;
-    float3x3 TBN = float3x3(input.tangentOS.xyz, bitangent, input.normalWS);
-    float3 normalTS = _NormalMap.Sample(_NormalMap_ST, input.uv).xyz;
-    float3 normalWS = normalize(mul(normalTS, TBN));
+    float3 albedo = pushConstant.baseColor;
+    if (pushConstant.textureEnable & ENABLE_BASECOLOR)
+    {
+        albedo *= _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
+    }
+    float metallic = pushConstant.metallic;
+    if (pushConstant.textureEnable & ENABLE_METALLIC)
+    {
+        //metallic *= _MetallicMap.Sample(_MetallicMap_ST, input.uv).x;
+    }
+    float3 normalWS = input.normalWS;
+    if (pushConstant.textureEnable & ENABLE_NORMAL)
+    {
+        float3 bitangent = cross(input.normalWS, input.tangentOS.xyz) * input.tangentOS.w;
+        float3x3 TBN = float3x3(input.tangentOS.xyz, bitangent, input.normalWS);
+        float3 normalTS = _NormalMap.Sample(_NormalMap_ST, input.uv).xyz;
+        normalWS = normalize(mul(normalTS, TBN));
+    }
+    float roughness = pushConstant.roughness;
+    if (pushConstant.textureEnable & ENABLE_ROUGHNESS)
+    {
+        //roughness *= _RoughnessMap.Sample(_RoughnessMap_ST, input.uv).x;
+    }
     
     BRDFData data = (BRDFData) 0;
     data.albedo = albedo;
-    data.metallic = pushConstant.metallic;
+    data.metallic = metallic;
     data.emissionColor = pushConstant.emissionColor;
-    data.roughness = pushConstant.roughness;
+    data.roughness = roughness;
     
     Input litInput = (Input) 0;
     litInput.L = lightDir;

@@ -23,6 +23,12 @@ struct PushConstant
     float metallic;
     float3 emissionColor;
     float roughness;
-    
+    uint textureEnable;
+    float3 padding;
 };
+
+#define ENABLE_BASECOLOR 0x2
+#define ENABLE_METALLIC 0x4
+#define ENABLE_NORMAL 0x8
+#define ENABLE_ROUGHNESS 0x10
 #endif

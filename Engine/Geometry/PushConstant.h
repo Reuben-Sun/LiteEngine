@@ -14,5 +14,7 @@ namespace ToolEngine
 		float metallic;
 		glm::vec3 emission_color;
 		float roughness;
+		uint32_t texture_enable;
+		glm::vec3 padding;
 	};
 }
