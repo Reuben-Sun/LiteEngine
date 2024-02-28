@@ -10,8 +10,14 @@ namespace ToolEngine
     {
         m_gizmos_pipeline = std::make_unique<GizmosPipeline>(m_device, render_pass.getHandle());
         m_global_uniform_buffer = std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO));
-        Mesh mesh = Mesh::createLine(5, {0.3f, 0, 0});
-        Mesh mesh1 = Mesh::createLine(5, { 0, 0.3f, 0 });
+        Mesh line = Mesh::createLine(5, { 0.3f, 0, 0 });
+        m_mesh_name_to_index_count["line"] = line.index_buffer.size();
+        m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.index_buffer);
+        m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.vertex_buffer);
+        m_mesh_name_to_descriptor_set["line"] = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
+        m_mesh_name_to_descriptor_set["line"]->updateUniformBuffer(*m_global_uniform_buffer, 0);
+
+
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
         transform.rotation = Quaternion::Identity();
@@ -19,7 +25,7 @@ namespace ToolEngine
         for (int i = -4; i <= 4; i++)
         {
             transform.position = glm::vec3(0.0f, i, 0.0f);
-            addMesh(mesh, transform);
+            m_gizmo_objects.push_back({ "line", transform });
         }
         
         Transform transform2;
@@ -29,16 +35,11 @@ namespace ToolEngine
         for (int i = -4; i <= 4; i++)
         {
             transform2.position = glm::vec3(i, 0.0f, 0.0f);
-            addMesh(mesh1, transform2);
+            m_gizmo_objects.push_back({ "line", transform2 });
         }
     }
     RenderGizmos::~RenderGizmos()
     {
-		m_index_count_list.clear();
-		m_vertex_buffer_list.clear();
-        m_index_buffer_list.clear();
-        m_ubo_descriptor_set_list.clear();
-        m_transform_list.clear();
     }
     void RenderGizmos::tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera)
     {
@@ -47,31 +48,19 @@ namespace ToolEngine
         ubo.view_matrix = camera.getViewMatrix();
         ubo.projection_matrix = camera.getProjectionMatrix();
         m_global_uniform_buffer->updateBuffer(&ubo);
-		for (int i = 0; i < m_index_count_list.size(); i++)
-		{
-			uint32_t index_count = m_index_count_list[i];
-			VkDeviceSize offsets[] = { 0 };
-			cmd.bindIndexBuffer(frame_index, *m_index_buffer_list[i], 0, VK_INDEX_TYPE_UINT32);
-			cmd.bindVertexBuffer(frame_index, *m_vertex_buffer_list[i], offsets, 0, 1);
-		
-			Transform& transform = m_transform_list[i];
-            m_push_constant.model_matrix = transform.getModelMatrix();
-            cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
-			const std::vector<VkDescriptorSet> descriptorsets = { m_ubo_descriptor_set_list[i]->getHandle() };
-			cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
 
-			// draw
-			cmd.drawIndexed(frame_index, index_count, 1, 0, 0, 0);
-		}
-    }
-    void RenderGizmos::addMesh(Mesh& mesh, Transform& transform)
-    {
-        m_index_count_list.push_back(mesh.index_buffer.size());
-        int current_index = m_index_count_list.size() - 1;
-        m_vertex_buffer_list.push_back(std::make_unique<RHIVertexBuffer>(m_device, mesh.vertex_buffer));
-        m_index_buffer_list.push_back(std::make_unique<RHIIndexBuffer>(m_device, mesh.index_buffer));
-        m_ubo_descriptor_set_list.push_back(std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout()));
-        m_ubo_descriptor_set_list[current_index]->updateUniformBuffer(*m_global_uniform_buffer, 0);
-        m_transform_list.push_back(transform);
+        for (int i = 0; i < m_gizmo_objects.size(); i++)
+        {
+            auto mesh_name = m_gizmo_objects[i].mesh_name;
+            cmd.bindIndexBuffer(frame_index, *m_mesh_name_to_index_buffer[mesh_name], 0, VK_INDEX_TYPE_UINT32);
+            VkDeviceSize offsets[] = { 0 };
+            cmd.bindVertexBuffer(frame_index, *m_mesh_name_to_vertex_buffer[mesh_name], offsets, 0, 1);
+            m_push_constant.model_matrix = m_gizmo_objects[i].transform.getModelMatrix();
+            cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
+            const std::vector<VkDescriptorSet> descriptorsets = { m_mesh_name_to_descriptor_set[mesh_name]->getHandle() };
+            cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
+            cmd.drawIndexed(frame_index, m_mesh_name_to_index_count[mesh_name], 1, 0, 0, 0);
+
+        }
     }
 }
