@@ -25,7 +25,11 @@ namespace ToolEngine
         for (int i = -4; i <= 4; i++)
         {
             transform.position = glm::vec3(0.0f, i, 0.0f);
-            m_gizmo_objects.push_back({ "line", transform });
+            GizmoObject gizmo_object;
+            gizmo_object.mesh_name = "line";
+            gizmo_object.transform = transform;
+            gizmo_object.constant.color = glm::vec3(1.0f, 0.0f, 0.0f);
+            m_gizmo_objects.push_back(gizmo_object);
         }
         
         Transform transform2;
@@ -35,7 +39,11 @@ namespace ToolEngine
         for (int i = -4; i <= 4; i++)
         {
             transform2.position = glm::vec3(i, 0.0f, 0.0f);
-            m_gizmo_objects.push_back({ "line", transform2 });
+            GizmoObject gizmo_object;
+            gizmo_object.mesh_name = "line";
+            gizmo_object.transform = transform2;
+            gizmo_object.constant.color = glm::vec3(0.0f, 1.0f, 0.0f);
+            m_gizmo_objects.push_back(gizmo_object);
         }
     }
     RenderGizmos::~RenderGizmos()
@@ -55,8 +63,9 @@ namespace ToolEngine
             cmd.bindIndexBuffer(frame_index, *m_mesh_name_to_index_buffer[mesh_name], 0, VK_INDEX_TYPE_UINT32);
             VkDeviceSize offsets[] = { 0 };
             cmd.bindVertexBuffer(frame_index, *m_mesh_name_to_vertex_buffer[mesh_name], offsets, 0, 1);
-            m_push_constant.model_matrix = m_gizmo_objects[i].transform.getModelMatrix();
-            cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
+            GizmoPushConstant& constant = m_gizmo_objects[i].constant;
+            constant.model_matrix = m_gizmo_objects[i].transform.getModelMatrix();
+            cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GizmoPushConstant), &constant);
             const std::vector<VkDescriptorSet> descriptorsets = { m_mesh_name_to_descriptor_set[mesh_name]->getHandle() };
             cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
             cmd.drawIndexed(frame_index, m_mesh_name_to_index_count[mesh_name], 1, 0, 0, 0);

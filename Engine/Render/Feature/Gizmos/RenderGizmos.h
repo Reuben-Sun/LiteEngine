@@ -22,6 +22,7 @@ namespace ToolEngine
 	{
 		std::string mesh_name;
 		Transform transform;
+		GizmoPushConstant constant;
 	};
 	class RenderGizmos
 	{
@@ -33,15 +34,13 @@ namespace ToolEngine
 	private:
 		RHIDevice& m_device;
 		RHIDescriptorPool& m_ubo_descriptor_pool;
-		std::unique_ptr<RHIUniformBuffer> m_global_uniform_buffer;
-
 		std::unique_ptr<GizmosPipeline> m_gizmos_pipeline;
-		PushConstant m_push_constant;
 
 		std::vector<GizmoObject> m_gizmo_objects;
 		std::unordered_map<std::string, uint32_t> m_mesh_name_to_index_count;
 		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_mesh_name_to_vertex_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_mesh_name_to_index_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_mesh_name_to_descriptor_set;
+		std::unique_ptr<RHIUniformBuffer> m_global_uniform_buffer;
 	};
 }

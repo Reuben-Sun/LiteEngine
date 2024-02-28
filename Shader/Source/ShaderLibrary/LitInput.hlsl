@@ -16,18 +16,6 @@ struct UBO
     Light dirLight;
 };
 
-struct PushConstant
-{
-    float4x4 modelMatrix;
-    float3 baseColor;
-    float metallic;
-    float3 emissionColor;
-    float roughness;
-    uint textureEnable;
-    uint debugMode;
-    float2 padding;
-};
-
 // texture enable
 #define ENABLE_BASECOLOR 0x2
 #define ENABLE_METALLIC 0x4

@@ -19,6 +19,18 @@ struct Varyings
     float4 tangentOS : TEXCOORD2;
 };
 
+struct PushConstant
+{
+    float4x4 modelMatrix;
+    float3 baseColor;
+    float metallic;
+    float3 emissionColor;
+    float roughness;
+    uint textureEnable;
+    uint debugMode;
+    float2 padding;
+};
+
 cbuffer ubo : register(b0) { UBO ubo; }
 
 [[vk::push_constant]]PushConstant pushConstant;

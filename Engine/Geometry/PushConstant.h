@@ -7,6 +7,7 @@
 
 namespace ToolEngine
 {
+	// Forward pipeline use
 	struct PushConstant
 	{
 		glm::mat4 model_matrix;
@@ -17,5 +18,13 @@ namespace ToolEngine
 		uint32_t texture_enable;
 		uint32_t debug_mode;
 		glm::vec2 padding;
+	};
+
+	// Gizmos pipeline use
+	struct GizmoPushConstant
+	{
+		glm::mat4 model_matrix;
+		glm::vec3 color;
+		float alpha;	// TODO: support alpha
 	};
 }
