@@ -27,6 +27,7 @@ namespace ToolEngine
 		bool enable_gizmos = true;
 		float metallic = 0.134f;
 		float roughness = 0.276f;
+		int debug_mode = 0;
 	};
 	class RenderUI
 	{

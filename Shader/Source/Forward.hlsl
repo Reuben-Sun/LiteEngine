@@ -46,6 +46,8 @@ SamplerState _NormalMap_ST : register(s3);
 Texture2D _RoughnessMap : register(t4);
 SamplerState _RoughnessMap_ST : register(s4);
 
+static float3 _DebugColor = float3(1.0f, 0.0f, 1.0f);
+
 float4 MainPS(Varyings input) : SV_TARGET
 {
     float3 lightDir = ubo.dirLight.direction.xyz;
@@ -60,7 +62,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     float metallic = pushConstant.metallic;
     if (pushConstant.textureEnable & ENABLE_METALLIC)
     {
-        //metallic *= _MetallicMap.Sample(_MetallicMap_ST, input.uv).x;
+        metallic *= _MetallicMap.Sample(_MetallicMap_ST, input.uv).x;
     }
     float3 normalWS = input.normalWS;
     if (pushConstant.textureEnable & ENABLE_NORMAL)
@@ -73,7 +75,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     float roughness = pushConstant.roughness;
     if (pushConstant.textureEnable & ENABLE_ROUGHNESS)
     {
-        //roughness *= _RoughnessMap.Sample(_RoughnessMap_ST, input.uv).x;
+        roughness *= _RoughnessMap.Sample(_RoughnessMap_ST, input.uv).x;
     }
     
     BRDFData data = (BRDFData) 0;
@@ -92,6 +94,31 @@ float4 MainPS(Varyings input) : SV_TARGET
     litInput.VoH = max(0.0f, dot(viewDir, litInput.H));
     
     float4 result = BRDF(data, litInput);
-    return result;
-    //return float4(normalWS, 1.0f);
+
+    if(pushConstant.debugMode == 1)
+    {
+        _DebugColor = input.normalWS;
+    }
+    else if(pushConstant.debugMode == 2)
+    {
+        _DebugColor = normalWS;
+    }
+    else if (pushConstant.debugMode == 3)
+    {
+        _DebugColor = metallic.xxx;
+    }
+    else if(pushConstant.debugMode == 4)
+    {
+        _DebugColor = roughness.xxx;
+    }
+    
+    if (pushConstant.debugMode == 0)
+    {
+        return float4(result.xyz, 1.0f);
+    }
+    else
+    {
+        return float4(_DebugColor, 1.0f);
+    }
+    
 }

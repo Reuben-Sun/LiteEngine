@@ -200,6 +200,7 @@ namespace ToolEngine
 			push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
 			push_constant.metallic *= m_render_ui->getUIContext().metallic;
 			push_constant.roughness *= m_render_ui->getUIContext().roughness;
+			push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;
 			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);

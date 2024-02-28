@@ -174,9 +174,8 @@ namespace ToolEngine
 		ImGui::SliderFloat("Metallic", &m_ui_context.metallic, 0.0f, 1.0f);
 		ImGui::SliderFloat("Roughness", &m_ui_context.roughness, 0.0f, 1.0f);
 	
-		static const char* items[] = { "Item 1", "Item 2", "Item 3", "Item 4" };
-		static int currentItem = 0;
-		ImGui::Combo("Combo", &currentItem, items, IM_ARRAYSIZE(items));
+		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness"};
+		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
 		ImGui::End();
 	}
 	
