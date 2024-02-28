@@ -15,8 +15,9 @@ namespace ToolEngine
 		std::vector<std::string> mesh_name_list;
 		std::vector<Mesh> mesh_list;
 		std::vector<Transform> mesh_transform_list;
-		std::vector<Material> material_list;
+		std::vector<std::string> material_name_list;
 		std::vector<Bounding> bounding_list;
+		std::unordered_map<std::string, Material> name_to_material_map;
 		Camera camera;
 	};
 }

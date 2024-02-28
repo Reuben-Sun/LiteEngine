@@ -55,8 +55,9 @@ namespace ToolEngine
 				m_scene.mesh_name_list.push_back(name);
 				m_scene.mesh_list.push_back(mesh_list[mesh_index]);
 				m_scene.mesh_transform_list.push_back(transform);
-				m_scene.material_list.push_back(material);
+				m_scene.material_name_list.push_back(go.material_path);
 				m_scene.bounding_list.push_back(bounding);
+				m_scene.name_to_material_map[go.material_path] = material;
 			}
 			
 		}

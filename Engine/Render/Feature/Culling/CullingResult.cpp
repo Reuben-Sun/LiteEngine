@@ -21,10 +21,28 @@ namespace ToolEngine
 	void CullingResult::cull(RenderScene& scene)
 	{
 		// TODO: currrent without culling
-		// preprocess image
-		for (int i = 0; i < scene.material_list.size(); i++)
+		
+		// process mesh
+		for (int i = 0; i < scene.mesh_name_list.size(); i++)
 		{
-			auto& material = scene.material_list[i];
+			if(m_model_name_to_index_buffer.find(scene.mesh_name_list[i]) == m_model_name_to_index_buffer.end())
+			{
+				std::string model_name = scene.mesh_name_list[i];
+				m_model_name_to_index_buffer.emplace(model_name, std::make_unique<RHIIndexBuffer>(m_device, scene.mesh_list[i].index_buffer));
+				m_model_name_to_vertex_buffer.emplace(model_name, std::make_unique<RHIVertexBuffer>(m_device, scene.mesh_list[i].vertex_buffer));
+				m_model_name_to_material_name.emplace(model_name, scene.material_name_list[i]);
+			}
+		}
+		// each material has a descriptor set
+		for (auto item : scene.name_to_material_map)
+		{
+			auto name = item.first;
+			auto material = item.second;
+			// create descriptor set and update uniform buffer
+			m_material_name_to_descriptor_set.emplace(name,
+				std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
+			m_material_name_to_descriptor_set[name]->updateUniformBuffer(*m_global_ubo, 0);
+			// load texture
 			for (int j = 0; j < material.texture_bindings.size(); j++)
 			{
 				std::string texture_name = material.texture_bindings[j].texture_path;
@@ -34,25 +52,11 @@ namespace ToolEngine
 					m_texture_name_to_image.emplace(texture_name, std::make_unique<RHITextureImage>(m_device, texture_path));
 				}
 			}
-		}
-		// process mesh and ubo
-		for (int i = 0; i < scene.mesh_name_list.size(); i++)
-		{
-			if(m_model_name_to_index_buffer.find(scene.mesh_name_list[i]) == m_model_name_to_index_buffer.end())
+			// update texture
+			for (int j = 0; j < material.texture_bindings.size(); j++)
 			{
-				std::string model_name = scene.mesh_name_list[i];
-				m_model_name_to_index_buffer.emplace(model_name, std::make_unique<RHIIndexBuffer>(m_device, scene.mesh_list[i].index_buffer));
-				m_model_name_to_vertex_buffer.emplace(model_name, std::make_unique<RHIVertexBuffer>(m_device, scene.mesh_list[i].vertex_buffer));
-				// ubo
-				m_model_name_to_descriptor_set.emplace(model_name,
-					std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
-				m_model_name_to_descriptor_set[model_name]->updateUniformBuffer(*m_global_ubo, 0);
-				//m_model_name_to_ubo_descriptor_set[model_name]->updateUniformBuffer(*m_model_name_to_uniform_buffer[model_name], 0);
-				for (int j = 0; j < scene.material_list[i].texture_bindings.size(); j++)
-				{
-					std::string texture_name = scene.material_list[i].texture_bindings[j].texture_path;
-					m_model_name_to_descriptor_set[model_name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, scene.material_list[i].texture_bindings[j].binding_index);
-				}
+				std::string texture_name = material.texture_bindings[j].texture_path;
+				m_material_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, material.texture_bindings[j].binding_index);
 			}
 		}
 	}
@@ -71,14 +75,9 @@ namespace ToolEngine
 	
 	RHIDescriptorSet& CullingResult::getDescriptorSet(const std::string& model_name)
 	{
-		auto it = m_model_name_to_descriptor_set.find(model_name);
+		auto material_name = m_model_name_to_material_name[model_name];
+		auto it = m_material_name_to_descriptor_set.find(material_name);
 		RHIDescriptorSet& descriptor_set_ref = *(it->second.get());
 		return descriptor_set_ref;
-	}
-	RHITextureImage& CullingResult::getTextureImage(const std::string& texture_name)
-	{
-		auto it = m_texture_name_to_image.find(texture_name);
-		RHITextureImage& texture_image_ref = *(it->second.get());
-		return texture_image_ref;
 	}
 }
