@@ -24,7 +24,7 @@ namespace ToolEngine
 		uint32_t m_scene_width = 1920;
 		uint32_t m_scene_height = 1080;
 		bool need_resize = true;
-		bool enable_gizmos = true;
+		bool enable_gizmos = false;
 		float metallic = 0.134f;
 		float roughness = 0.276f;
 		int debug_mode = 0;

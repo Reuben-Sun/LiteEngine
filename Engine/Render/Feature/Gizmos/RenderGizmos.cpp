@@ -11,22 +11,24 @@ namespace ToolEngine
     {
         m_gizmos_pipeline = std::make_unique<GizmosPipeline>(m_device, render_pass.getHandle());
         m_global_uniform_buffer = std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO));
+        m_global_descriptor_set = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
+        m_global_descriptor_set->updateUniformBuffer(*m_global_uniform_buffer, 0);
         Mesh line = Mesh::createLine(5, { 0.3f, 0, 0 });
         m_mesh_name_to_index_count["line"] = line.index_buffer.size();
         m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.index_buffer);
         m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.vertex_buffer);
-        m_mesh_name_to_descriptor_set["line"] = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
-        m_mesh_name_to_descriptor_set["line"]->updateUniformBuffer(*m_global_uniform_buffer, 0);
 
         auto cube_path = Path::getInstance().getAssetPath() + "\\Cube.gltf";
         std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(cube_path);
         m_mesh_name_to_index_count["cube"] = loader->loaded_index_buffer[0].size();
         m_mesh_name_to_index_buffer["cube"] = std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[0]);
         m_mesh_name_to_vertex_buffer["cube"] = std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[0]);
-        m_mesh_name_to_descriptor_set["cube"] = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
-        m_mesh_name_to_descriptor_set["cube"]->updateUniformBuffer(*m_global_uniform_buffer, 0);
 
-        auto sphere_path = Path::getInstance().getAssetPath() + "\\Sphere.gltf";
+        auto sphere_path = Path::getInstance().getAssetPath() + "\\SimpleSphere.gltf";
+        std::unique_ptr<GltfLoader> loader2 = std::make_unique<GltfLoader>(sphere_path);
+        m_mesh_name_to_index_count["sphere"] = loader2->loaded_index_buffer[0].size();
+        m_mesh_name_to_index_buffer["sphere"] = std::make_unique<RHIIndexBuffer>(m_device, loader2->loaded_index_buffer[0]);
+        m_mesh_name_to_vertex_buffer["sphere"] = std::make_unique<RHIVertexBuffer>(m_device, loader2->loaded_vertex_buffer[0]);
 
         Transform transform;
         transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -76,6 +78,16 @@ namespace ToolEngine
                 gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);
                 m_gizmo_temp_objects.push_back(gizmo_object);
             }
+            else if (bounding.type == BoundingType::Sphere)
+            {
+				GizmoObject gizmo_object;
+				gizmo_object.mesh_name = "sphere";
+				gizmo_object.transform.position = scene.mesh_transform_list[i].position;
+				gizmo_object.transform.rotation = Quaternion::Identity();
+				gizmo_object.transform.scale = bounding.data;
+				gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);
+				m_gizmo_temp_objects.push_back(gizmo_object);
+            }
 			
         }
     }
@@ -86,7 +98,8 @@ namespace ToolEngine
         ubo.view_matrix = camera.getViewMatrix();
         ubo.projection_matrix = camera.getProjectionMatrix();
         m_global_uniform_buffer->updateBuffer(&ubo);
-
+        const std::vector<VkDescriptorSet> descriptorsets = { m_global_descriptor_set->getHandle() };
+        cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
         for (auto& object : m_gizmo_global_objects)
         {
             drawGizmoObject(cmd, frame_index, object);
@@ -104,8 +117,6 @@ namespace ToolEngine
         cmd.bindVertexBuffer(frame_index, *m_mesh_name_to_vertex_buffer[mesh_name], offsets, 0, 1);
         object.constant.model_matrix = object.transform.getModelMatrix();
         cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GizmoPushConstant), &object.constant);
-        const std::vector<VkDescriptorSet> descriptorsets = { m_mesh_name_to_descriptor_set[mesh_name]->getHandle() };
-        cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
         cmd.drawIndexed(frame_index, m_mesh_name_to_index_count[mesh_name], 1, 0, 0, 0);
     }
 }

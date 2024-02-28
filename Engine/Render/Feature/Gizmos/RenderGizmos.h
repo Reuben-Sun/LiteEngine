@@ -43,8 +43,8 @@ namespace ToolEngine
 		std::unordered_map<std::string, uint32_t> m_mesh_name_to_index_count;
 		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_mesh_name_to_vertex_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_mesh_name_to_index_buffer;
-		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_mesh_name_to_descriptor_set;
 		std::unique_ptr<RHIUniformBuffer> m_global_uniform_buffer;
+		std::unique_ptr<RHIDescriptorSet> m_global_descriptor_set;
 
 		void drawGizmoObject(RHICommandBuffer& cmd, uint32_t frame_index, GizmoObject& object);
 	};
