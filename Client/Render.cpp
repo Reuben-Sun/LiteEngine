@@ -200,7 +200,7 @@ namespace ToolEngine
 			m_push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
 			m_push_constant.metallic = m_render_ui->getUIContext().metallic;
 			m_push_constant.roughness = m_render_ui->getUIContext().roughness;
-			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstantWithMaterial), &m_push_constant);
+			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &m_push_constant);
 			// draw
 			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
 		}

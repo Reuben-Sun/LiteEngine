@@ -1,3 +1,5 @@
+#ifndef LITINPUT_HLSL
+#define LITINPUT_HLSL
 struct Light
 {
     float3 position;
@@ -13,3 +15,14 @@ struct UBO
     float4 cameraPosition;
     Light dirLight;
 };
+
+struct PushConstant
+{
+    float4x4 modelMatrix;
+    float3 baseColor;
+    float metallic;
+    float3 emissionColor;
+    float roughness;
+    
+};
+#endif

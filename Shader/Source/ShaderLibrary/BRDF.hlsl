@@ -1,3 +1,5 @@
+#ifndef BRDF_HLSL
+#define BRDF_HLSL
 struct BRDFData
 {
     float3 albedo;
@@ -45,3 +47,4 @@ float4 BRDF(BRDFData data, Input input)
     float3 result = diffuseColor + specularColor;
     return float4(result, 1.0f);
 }
+#endif

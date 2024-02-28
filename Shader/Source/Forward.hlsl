@@ -7,7 +7,7 @@ struct Attributes
     float3 inColor : COLOR0;
     float2 texcoord : TEXCOORD0;
     float3 normalOS : NORMAL0;
-    float3 tangentOS : TANGENT0;
+    float4 tangentOS : TANGENT0;
 };
 
 struct Varyings
@@ -16,16 +16,7 @@ struct Varyings
     float2 uv : TEXCOORD0;
     float3 normalWS : NORMAL0;
     float3 positionWS : TEXCOORD1;
-};
-
-struct PushConstant
-{
-    float4x4 modelMatrix;
-    float3 baseColor;
-    float metallic;
-    float3 emissionColor;
-    float roughness;
-    
+    float4 tangentOS : TEXCOORD2;
 };
 
 cbuffer ubo : register(b0) { UBO ubo; }
@@ -39,6 +30,7 @@ Varyings MainVS(Attributes input)
     output.uv = input.texcoord;
     output.normalWS = normalize(mul(pushConstant.modelMatrix, float4(input.normalOS, 0.0f)).xyz);
     output.positionWS = mul(pushConstant.modelMatrix, float4(input.positionOS, 1.0f)).xyz;
+    output.tangentOS = float4(input.tangentOS.xyz, 1.0f);
 	return output;
 }
 
@@ -61,6 +53,11 @@ float4 MainPS(Varyings input) : SV_TARGET
     float3 albedo = _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
     
+    float3 bitangent = cross(input.normalWS, input.tangentOS.xyz) * input.tangentOS.w;
+    float3x3 TBN = float3x3(input.tangentOS.xyz, bitangent, input.normalWS);
+    float3 normalTS = _NormalMap.Sample(_NormalMap_ST, input.uv).xyz;
+    float3 normalWS = normalize(mul(normalTS, TBN));
+    
     BRDFData data = (BRDFData) 0;
     data.albedo = albedo;
     data.metallic = pushConstant.metallic;
@@ -71,11 +68,12 @@ float4 MainPS(Varyings input) : SV_TARGET
     litInput.L = lightDir;
     litInput.radiance = lightColor;
     litInput.H = normalize(lightDir + viewDir);
-    litInput.NoV = max(0.0f, dot(input.normalWS, viewDir));
-    litInput.NoL = max(0.0f, dot(input.normalWS, lightDir));
-    litInput.NoH = max(0.0f, dot(input.normalWS, litInput.H));
+    litInput.NoV = max(0.0f, dot(normalWS, viewDir));
+    litInput.NoL = max(0.0f, dot(normalWS, lightDir));
+    litInput.NoH = max(0.0f, dot(normalWS, litInput.H));
     litInput.VoH = max(0.0f, dot(viewDir, litInput.H));
     
     float4 result = BRDF(data, litInput);
     return result;
+    //return float4(normalWS, 1.0f);
 }

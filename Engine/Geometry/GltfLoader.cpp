@@ -76,10 +76,10 @@ namespace ToolEngine
 						const tinygltf::BufferView& buffer_view = m_model.bufferViews[accessor.bufferView];
 						const tinygltf::Buffer& buffer = m_model.buffers[buffer_view.buffer];
 						const float* data_ptr = reinterpret_cast<const float*>(&buffer.data[buffer_view.byteOffset + accessor.byteOffset]);
-						const int tangent_byte_stride = 3;
+						const int tangent_byte_stride = 4;
 						for (int i = 0; i < vertex_count; i++)
 						{
-							local_vertex_buffer[i].tangent = glm::vec3(data_ptr[i * tangent_byte_stride], data_ptr[i * tangent_byte_stride + 1], data_ptr[i * tangent_byte_stride + 2]);
+							local_vertex_buffer[i].tangent = glm::vec4(data_ptr[i * tangent_byte_stride], data_ptr[i * tangent_byte_stride + 1], data_ptr[i * tangent_byte_stride + 2], data_ptr[i * tangent_byte_stride + 3]);
 						}
 					}
 					// in color
