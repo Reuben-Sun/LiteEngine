@@ -11,6 +11,8 @@ namespace ToolEngine
 		m_dir_light.intensity = 1.0f;
 		m_dir_light.position = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 		m_global_ubo = std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO));
+		auto global_texture_path = Path::getInstance().getAssetPath() + "\\default.jpg";
+		m_global_default_texture = std::make_unique<RHITextureImage>(m_device, global_texture_path);
 	}
 	CullingResult::~CullingResult()
 	{
@@ -58,6 +60,11 @@ namespace ToolEngine
 
 				// update texture
 				uint32_t texture_enable = 0;
+				for (int j = TEXTURE_MIN_BINDING; j <= TEXTURE_MAX_BINDING; j++)
+				{
+					// Hack: give each binding point default texture
+					m_material_name_to_descriptor_set[name]->updateTextureImage(m_global_default_texture->m_descriptor, j);
+				}
 				for (int j = 0; j < material.texture_bindings.size(); j++)
 				{
 					std::string texture_name = material.texture_bindings[j].texture_path;

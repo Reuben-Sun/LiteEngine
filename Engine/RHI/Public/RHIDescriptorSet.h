@@ -30,7 +30,8 @@ namespace ToolEngine
 	static std::unordered_map<RHIDescriptorType, VkShaderStageFlags> RHIDescriptorShaderStageMap =
 	{
 		{ RHIDescriptorType::Sampler, VK_SHADER_STAGE_FRAGMENT_BIT },
-		{ RHIDescriptorType::ConstantBuffer, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT}
+		{ RHIDescriptorType::ConstantBuffer, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT},
+		{ RHIDescriptorType::TextureSRV, VK_SHADER_STAGE_FRAGMENT_BIT}
 	};
 
 	class RHIDescriptorSetLayout

@@ -39,6 +39,7 @@ namespace ToolEngine
 		RHIDescriptorPool& m_ubo_descriptor_pool;
 
 		std::unique_ptr<RHIUniformBuffer> m_global_ubo;
+		std::unique_ptr<RHITextureImage> m_global_default_texture;
 		Light m_dir_light;
 
 		// TODO: unload useless buffer
@@ -49,5 +50,8 @@ namespace ToolEngine
 		std::unordered_map<std::string, PushConstant> m_material_name_to_push_constant;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_material_name_to_descriptor_set;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
+
+		const uint32_t TEXTURE_MIN_BINDING = 1;
+		const uint32_t TEXTURE_MAX_BINDING = 4;
 	};
 }

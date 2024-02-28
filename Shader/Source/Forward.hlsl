@@ -38,13 +38,10 @@ Texture2D _BaseMap : register(t1);
 SamplerState _BaseMap_ST : register(s1);
 
 Texture2D _MetallicMap : register(t2);
-SamplerState _MetallicMap_ST : register(s2);
 
 Texture2D _NormalMap : register(t3);
-SamplerState _NormalMap_ST : register(s3);
 
 Texture2D _RoughnessMap : register(t4);
-SamplerState _RoughnessMap_ST : register(s4);
 
 static float3 _DebugColor = float3(1.0f, 0.0f, 1.0f);
 
@@ -62,20 +59,20 @@ float4 MainPS(Varyings input) : SV_TARGET
     float metallic = pushConstant.metallic;
     if (pushConstant.textureEnable & ENABLE_METALLIC)
     {
-        metallic *= _MetallicMap.Sample(_MetallicMap_ST, input.uv).x;
+        metallic *= _MetallicMap.Sample(_BaseMap_ST, input.uv).x;
     }
     float3 normalWS = input.normalWS;
     if (pushConstant.textureEnable & ENABLE_NORMAL)
     {
         float3 bitangent = cross(input.normalWS, input.tangentOS.xyz) * input.tangentOS.w;
         float3x3 TBN = float3x3(input.tangentOS.xyz, bitangent, input.normalWS);
-        float3 normalTS = _NormalMap.Sample(_NormalMap_ST, input.uv).xyz;
+        float3 normalTS = _NormalMap.Sample(_BaseMap_ST, input.uv).xyz;
         normalWS = normalize(mul(normalTS, TBN));
     }
     float roughness = pushConstant.roughness;
     if (pushConstant.textureEnable & ENABLE_ROUGHNESS)
     {
-        roughness *= _RoughnessMap.Sample(_RoughnessMap_ST, input.uv).x;
+        roughness *= _RoughnessMap.Sample(_BaseMap_ST, input.uv).x;
     }
     
     BRDFData data = (BRDFData) 0;
