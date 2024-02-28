@@ -29,7 +29,7 @@ namespace ToolEngine
             gizmo_object.mesh_name = "line";
             gizmo_object.transform = transform;
             gizmo_object.constant.color = glm::vec3(1.0f, 0.0f, 0.0f);
-            m_gizmo_objects.push_back(gizmo_object);
+            m_gizmo_global_objects.push_back(gizmo_object);
         }
         
         Transform transform2;
@@ -43,7 +43,7 @@ namespace ToolEngine
             gizmo_object.mesh_name = "line";
             gizmo_object.transform = transform2;
             gizmo_object.constant.color = glm::vec3(0.0f, 1.0f, 0.0f);
-            m_gizmo_objects.push_back(gizmo_object);
+            m_gizmo_global_objects.push_back(gizmo_object);
         }
     }
     RenderGizmos::~RenderGizmos()
@@ -57,19 +57,25 @@ namespace ToolEngine
         ubo.projection_matrix = camera.getProjectionMatrix();
         m_global_uniform_buffer->updateBuffer(&ubo);
 
-        for (int i = 0; i < m_gizmo_objects.size(); i++)
+        for (auto& object : m_gizmo_global_objects)
         {
-            auto mesh_name = m_gizmo_objects[i].mesh_name;
-            cmd.bindIndexBuffer(frame_index, *m_mesh_name_to_index_buffer[mesh_name], 0, VK_INDEX_TYPE_UINT32);
-            VkDeviceSize offsets[] = { 0 };
-            cmd.bindVertexBuffer(frame_index, *m_mesh_name_to_vertex_buffer[mesh_name], offsets, 0, 1);
-            GizmoPushConstant& constant = m_gizmo_objects[i].constant;
-            constant.model_matrix = m_gizmo_objects[i].transform.getModelMatrix();
-            cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GizmoPushConstant), &constant);
-            const std::vector<VkDescriptorSet> descriptorsets = { m_mesh_name_to_descriptor_set[mesh_name]->getHandle() };
-            cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
-            cmd.drawIndexed(frame_index, m_mesh_name_to_index_count[mesh_name], 1, 0, 0, 0);
-
+            drawGizmoObject(cmd, frame_index, object);
         }
+        for (auto& object : m_gizmo_temp_objects)
+        {
+            drawGizmoObject(cmd, frame_index, object);
+        }
+    }
+    void RenderGizmos::drawGizmoObject(RHICommandBuffer& cmd, uint32_t frame_index, GizmoObject& object)
+    {
+        auto mesh_name = object.mesh_name;
+        cmd.bindIndexBuffer(frame_index, *m_mesh_name_to_index_buffer[mesh_name], 0, VK_INDEX_TYPE_UINT32);
+        VkDeviceSize offsets[] = { 0 };
+        cmd.bindVertexBuffer(frame_index, *m_mesh_name_to_vertex_buffer[mesh_name], offsets, 0, 1);
+        object.constant.model_matrix = object.transform.getModelMatrix();
+        cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GizmoPushConstant), &object.constant);
+        const std::vector<VkDescriptorSet> descriptorsets = { m_mesh_name_to_descriptor_set[mesh_name]->getHandle() };
+        cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_gizmos_pipeline->getLayout(), descriptorsets, 0, 1);
+        cmd.drawIndexed(frame_index, m_mesh_name_to_index_count[mesh_name], 1, 0, 0, 0);
     }
 }

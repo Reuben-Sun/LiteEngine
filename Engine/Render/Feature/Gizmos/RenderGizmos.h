@@ -36,11 +36,14 @@ namespace ToolEngine
 		RHIDescriptorPool& m_ubo_descriptor_pool;
 		std::unique_ptr<GizmosPipeline> m_gizmos_pipeline;
 
-		std::vector<GizmoObject> m_gizmo_objects;
+		std::vector<GizmoObject> m_gizmo_global_objects;
+		std::vector<GizmoObject> m_gizmo_temp_objects;
 		std::unordered_map<std::string, uint32_t> m_mesh_name_to_index_count;
 		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_mesh_name_to_vertex_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_mesh_name_to_index_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_mesh_name_to_descriptor_set;
 		std::unique_ptr<RHIUniformBuffer> m_global_uniform_buffer;
+
+		void drawGizmoObject(RHICommandBuffer& cmd, uint32_t frame_index, GizmoObject& object);
 	};
 }
