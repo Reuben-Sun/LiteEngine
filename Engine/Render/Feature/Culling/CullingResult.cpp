@@ -38,11 +38,7 @@ namespace ToolEngine
 		{
 			auto name = item.first;
 			auto material = item.second;
-			// create descriptor set and update uniform buffer
-			m_material_name_to_descriptor_set.emplace(name,
-				std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
-			m_material_name_to_descriptor_set[name]->updateUniformBuffer(*m_global_ubo, 0);
-			// load texture
+
 			for (int j = 0; j < material.texture_bindings.size(); j++)
 			{
 				std::string texture_name = material.texture_bindings[j].texture_path;
@@ -52,24 +48,33 @@ namespace ToolEngine
 					m_texture_name_to_image.emplace(texture_name, std::make_unique<RHITextureImage>(m_device, texture_path));
 				}
 			}
-			// update texture
-			uint32_t texture_enable = 0;
-			for (int j = 0; j < material.texture_bindings.size(); j++)
+
+			if (m_material_name_to_descriptor_set.find(name) == m_material_name_to_descriptor_set.end())
 			{
-				std::string texture_name = material.texture_bindings[j].texture_path;
-				m_material_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, material.texture_bindings[j].binding_index);
-				uint32_t enable_byte = 1 << material.texture_bindings[j].binding_index;
-				texture_enable |= enable_byte;
+				// create descriptor set and update uniform buffer
+				m_material_name_to_descriptor_set.emplace(name,
+					std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
+				m_material_name_to_descriptor_set[name]->updateUniformBuffer(*m_global_ubo, 0);
+
+				// update texture
+				uint32_t texture_enable = 0;
+				for (int j = 0; j < material.texture_bindings.size(); j++)
+				{
+					std::string texture_name = material.texture_bindings[j].texture_path;
+					m_material_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, material.texture_bindings[j].binding_index);
+					uint32_t enable_byte = 1 << material.texture_bindings[j].binding_index;
+					texture_enable |= enable_byte;
+				}
+				// push constant
+
+				PushConstant push_constant;
+				push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
+				push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
+				push_constant.metallic = 1.0f;
+				push_constant.roughness = 1.0f;
+				push_constant.texture_enable = texture_enable;
+				m_material_name_to_push_constant.emplace(name, push_constant);
 			}
-			// push constant
-			
-			PushConstant push_constant;
-			push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
-			push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
-			push_constant.metallic = 1.0f;
-			push_constant.roughness = 1.0f;
-			push_constant.texture_enable = texture_enable;
-			m_material_name_to_push_constant.emplace(name, push_constant);
 		}
 	}
 	RHIVertexBuffer& CullingResult::getVertexBuffer(const std::string& model_name)
