@@ -5,8 +5,8 @@
             "mesh_path": "Cube.gltf",
             "name": "Cube",
             "position": [
-                0.0,
-                0.0,
+                -2.0,
+                2.0,
                 0.5
             ],
             "rotation": [
@@ -21,8 +21,8 @@
             ],
             "bounding_type": 0,
             "bounding_position":[
-                0.0,
-                0.0,
+                -2.0,
+                2.0,
                 0.5
             ],
             "bounding_data":[
@@ -36,7 +36,7 @@
             "mesh_path": "Sphere.gltf",
             "name": "Sphere",
             "position": [
-                -2.0,
+                2.0,
                 -2.0,
                 20.0
             ],
@@ -52,7 +52,7 @@
             ],
             "bounding_type": 1,
             "bounding_position":[
-                -2.0,
+                2.0,
                 -2.0,
                 20.0
             ],
@@ -98,7 +98,7 @@
             "mesh_path": "ShaderSphere.gltf",
             "name": "ShaderSphere",
             "position": [
-                5.0,
+                0.0,
                 0.0,
                 0.0
             ],
@@ -114,7 +114,7 @@
             ],
             "bounding_type": 0,
             "bounding_position":[
-                5.0,
+                0.0,
                 0.0,
                 1.3
             ],
