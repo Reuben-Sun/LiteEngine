@@ -62,7 +62,7 @@ namespace ToolEngine
 			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
 
 		m_blit_descriptor_set = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device, *m_rhi_context.m_descriptor_pool, m_blit_pipeline->getDescriptorSetLayout());
-		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
+		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0, RHIDescriptorType::Sampler);
 		m_render_ui = std::make_unique<RenderUI>(m_rhi_context, *m_ui_pass, *m_blit_descriptor_set);
 	}
 
@@ -108,7 +108,7 @@ namespace ToolEngine
 			m_color_resources->getImageView(),
 			m_depth_resources->getImageView(),
 			width, height);
-		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0);
+		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0, RHIDescriptorType::Sampler);
 	}
 	bool Renderer::prepareFrame(uint32_t& image_index)
 	{

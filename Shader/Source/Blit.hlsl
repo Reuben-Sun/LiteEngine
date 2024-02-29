@@ -12,8 +12,8 @@ Varyings MainVS(uint VertexIndex : SV_VertexID)
 	return output;
 }
 
-Texture2D _BaseMap : register(t1);
-SamplerState _BaseMap_ST : register(s1);
+Texture2D _BaseMap : register(t0);
+SamplerState _BaseMap_ST : register(s0);
 
 float4 MainPS(Varyings input) : SV_TARGET
 {
