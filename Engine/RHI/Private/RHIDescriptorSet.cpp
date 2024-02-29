@@ -67,14 +67,14 @@ namespace ToolEngine
 		uint32_t descriptor_write_count = static_cast<uint32_t>(descriptor_writes.size());
 		vkUpdateDescriptorSets(m_device.getLogicalDevice(), descriptor_write_count, descriptor_writes.data(), 0, nullptr);
 	}
-	void RHIDescriptorSet::updateTextureImage(VkDescriptorImageInfo image_info, uint32_t binding_index)
+	void RHIDescriptorSet::updateTextureImage(VkDescriptorImageInfo image_info, uint32_t binding_index, RHIDescriptorType texture_type)
 	{
 		std::vector<VkWriteDescriptorSet> descriptor_writes(1);
 		descriptor_writes[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptor_writes[0].dstSet = m_descriptor_set;
 		descriptor_writes[0].dstBinding = binding_index;
 		descriptor_writes[0].dstArrayElement = 0;
-		descriptor_writes[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptor_writes[0].descriptorType = RHIDescriptorTypeMap[texture_type];
 		descriptor_writes[0].descriptorCount = 1;
 		descriptor_writes[0].pImageInfo = &image_info;
 		uint32_t descriptor_write_count = static_cast<uint32_t>(descriptor_writes.size());

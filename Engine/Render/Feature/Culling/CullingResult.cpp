@@ -68,7 +68,18 @@ namespace ToolEngine
 				for (int j = 0; j < material.texture_bindings.size(); j++)
 				{
 					std::string texture_name = material.texture_bindings[j].texture_path;
-					m_material_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, material.texture_bindings[j].binding_index);
+					if (material.texture_bindings[j].binding_index == TEXTURE_MIN_BINDING)
+					{
+						// the first texture have sampler
+						m_material_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, 
+							material.texture_bindings[j].binding_index, RHIDescriptorType::Sampler);
+					}
+					else 
+					{
+						m_material_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor, 
+							material.texture_bindings[j].binding_index, RHIDescriptorType::TextureSRV);
+					}
+					
 					uint32_t enable_byte = 1 << material.texture_bindings[j].binding_index;
 					texture_enable |= enable_byte;
 				}
