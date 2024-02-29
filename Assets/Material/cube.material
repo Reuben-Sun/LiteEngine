@@ -3,10 +3,12 @@
     "texture_bindings": [
         {
             "binding_index": 1,
+            "binding_type": 0,
             "texture_path": "MarblesTiles.jpg"
         },
         {
             "binding_index": 3,
+            "binding_type": 1,
             "texture_path": "MarblesTiles_N.jpg"
         }
     ],

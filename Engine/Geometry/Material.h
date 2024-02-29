@@ -8,6 +8,7 @@ namespace ToolEngine
 	struct TextureBinding
 	{
 		uint32_t binding_index;
+		uint32_t binding_type;
 		std::string texture_path;
 	};
 	struct Material
@@ -24,6 +25,7 @@ namespace ToolEngine
 			{
 				texture_bindings.push_back(nlohmann::json{
 					{"binding_index", tb.binding_index},
+					{"binding_type", tb.binding_type},
 					{"texture_path", tb.texture_path}
 				});
 			}
@@ -43,6 +45,7 @@ namespace ToolEngine
 			{
 				material.texture_bindings.push_back(TextureBinding{
 					tb.at("binding_index").get<uint32_t>(),
+					tb.at("binding_type").get<uint32_t>(),
 					tb.at("texture_path").get<std::string>()
 				});
 			}
