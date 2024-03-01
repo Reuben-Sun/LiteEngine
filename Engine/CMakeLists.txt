@@ -27,6 +27,7 @@ target_link_libraries(Engine PUBLIC tinygltf)
 target_link_libraries(Engine PUBLIC VulkanMemoryAllocator)
 target_link_libraries(Engine PUBLIC imgui)
 target_link_libraries(Engine PUBLIC Jolt)
+target_link_libraries(Engine PUBLIC EnTT)
 target_compile_options(Engine PRIVATE /wd4996)
 
 # Compile shaders

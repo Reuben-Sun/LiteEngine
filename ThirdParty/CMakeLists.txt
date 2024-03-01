@@ -59,3 +59,8 @@ if(NOT TARGET JoltPhysics)
   set_property(TARGET Jolt PROPERTY FOLDER "ThirdParty")
 endif()
 
+# entt
+if(NOT TARGET EnTT)
+  add_subdirectory(entt)
+  set_property(TARGET EnTT PROPERTY FOLDER "ThirdParty")
+endif()
