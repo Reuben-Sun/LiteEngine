@@ -11,5 +11,6 @@ namespace ToolEngine
 		entt::registry scene_context;
 		uint32_t global_id = 0;
 		void loadScene(const std::string& path);
+		// TODO: save scene
 	};
 }

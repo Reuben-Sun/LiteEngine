@@ -5,8 +5,7 @@ namespace ToolEngine
 {
 	void LogicScene::loadScene(const std::string& path)
 	{
-		std::string asset_path = Path::getInstance().getAssetPath();
-		std::string file_path = asset_path + path;
+		std::string file_path = Path::getInstance().getAssetPath() + path;
 		auto j = Path::getInstance().readJson(file_path);
 		auto game_objects = j.at("game_objects").get<std::vector<nlohmann::json>>();
 		for (auto& go : game_objects)
@@ -18,10 +17,10 @@ namespace ToolEngine
 			info_component.id = global_id++;
 
 			MeshComponent mesh_component;
-			mesh_component.mesh_path = asset_path + go.at("mesh_path").get<std::string>();
+			mesh_component.mesh_path = go.at("mesh_path").get<std::string>();
 
 			MaterialComponent material_component;
-			material_component.material_path = asset_path + go.at("material_path").get<std::string>();
+			material_component.material_path = go.at("material_path").get<std::string>();
 
 			TransformComponent transform_component;
 			Transform transform;
