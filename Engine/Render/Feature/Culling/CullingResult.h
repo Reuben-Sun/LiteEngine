@@ -25,14 +25,14 @@ namespace ToolEngine
 		// TODO: cull with camera
 		void cull(RenderScene& scene);
 
-		RHIVertexBuffer& getVertexBuffer(const std::string& model_name);
-		RHIIndexBuffer& getIndexBuffer(const std::string& model_name);
+		RHIVertexBuffer& getVertexBuffer(const std::string& sub_model_name);
+		RHIIndexBuffer& getIndexBuffer(const std::string& sub_model_name);
 		RHIUniformBuffer& getGlobalUBO() { return *m_global_ubo; }
 		RHIDescriptorSet& getDescriptorSet(const std::string& model_name);
 		PushConstant getPushConstant(const std::string& model_name);
 		Light& getDirLight() { return m_dir_light; }
 
-		
+		std::unordered_map<std::string, std::vector<std::string>> m_model_name_to_sub_model_name;
 	private:
 		RHIDevice& m_device;
 		RHIDescriptorSetLayout& m_ubo_descriptor_set_layout;

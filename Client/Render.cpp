@@ -184,26 +184,31 @@ namespace ToolEngine
 		for (int i = 0; i < scene.mesh_list.size(); i++)
 		{
 			auto current_mesh_name = scene.mesh_name_list[i];
-			// binding index buffer and vertex buffer
-			uint32_t index_count = scene.mesh_list[i].index_buffer.size();
-			RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(current_mesh_name);
-			RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(current_mesh_name);
-			VkDeviceSize offsets[] = { 0 };
-			m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
-			m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
-			// binding texture
-			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(current_mesh_name);
-			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
-			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
-			// push constant
-			PushConstant push_constant = m_culling_result->getPushConstant(current_mesh_name);
-			push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
-			push_constant.metallic *= m_render_ui->getUIContext().metallic;
-			push_constant.roughness *= m_render_ui->getUIContext().roughness;
-			push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;
-			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
-			// draw
-			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
+			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[current_mesh_name];
+			for (int sub_model_index = 0; sub_model_index < sub_model_names.size(); sub_model_index++)
+			{
+				auto sub_model_name = sub_model_names[sub_model_index];
+				// binding index buffer and vertex buffer
+				uint32_t index_count = scene.mesh_list[i].meshs[sub_model_index].index_buffer.size();
+				RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(sub_model_name);
+				RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(sub_model_name);
+				VkDeviceSize offsets[] = { 0 };
+				m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
+				m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
+				// binding texture
+				RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(sub_model_name);
+				const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
+				m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
+				// push constant
+				PushConstant push_constant = m_culling_result->getPushConstant(sub_model_name);
+				push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
+				push_constant.metallic *= m_render_ui->getUIContext().metallic;
+				push_constant.roughness *= m_render_ui->getUIContext().roughness;
+				push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;
+				m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
+				// draw
+				m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
+			}
 		}
 		if (m_enable_ui && m_render_ui->getUIContext().enable_gizmos)
 		{

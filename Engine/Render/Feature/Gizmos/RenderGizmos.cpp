@@ -14,9 +14,9 @@ namespace ToolEngine
         m_global_descriptor_set = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
         m_global_descriptor_set->updateUniformBuffer(*m_global_uniform_buffer, 0);
         Mesh line = Mesh::createLine(5, { 0.3f, 0, 0 });
-        m_mesh_name_to_index_count["line"] = line.index_buffer.size();
-        m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.index_buffer);
-        m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.vertex_buffer);
+        m_mesh_name_to_index_count["line"] = line.meshs[0].index_buffer.size();
+        m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.meshs[0].index_buffer);
+        m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.meshs[0].vertex_buffer);
 
         auto cube_path = Path::getInstance().getAssetPath() + "\\Cube.gltf";
         std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(cube_path);

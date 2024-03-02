@@ -13,8 +13,10 @@ namespace ToolEngine
 			{{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 0.0f}}
 		};
 		Mesh mesh;
-		mesh.index_buffer = plane_index_buffer;
-		mesh.vertex_buffer = plane_vertex_buffer;
+		SubMesh sub_mesh;
+		sub_mesh.index_buffer = plane_index_buffer;
+		sub_mesh.vertex_buffer = plane_vertex_buffer;
+		mesh.meshs.push_back(sub_mesh);
 		return mesh;
 	}
 	Mesh Mesh::createLine(float length, glm::vec3 color)
@@ -28,8 +30,10 @@ namespace ToolEngine
 			{{-length, 0.001f, 0.0f}, color, {0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 0.0f}}
 		};
 		Mesh mesh;
-		mesh.index_buffer = plane_index_buffer;
-		mesh.vertex_buffer = plane_vertex_buffer;
+		SubMesh sub_mesh;
+		sub_mesh.index_buffer = plane_index_buffer;
+		sub_mesh.vertex_buffer = plane_vertex_buffer;
+		mesh.meshs.push_back(sub_mesh);
 		return mesh;
 	}
 }

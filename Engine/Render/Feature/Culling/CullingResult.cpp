@@ -30,9 +30,17 @@ namespace ToolEngine
 			if(m_model_name_to_index_buffer.find(scene.mesh_name_list[i]) == m_model_name_to_index_buffer.end())
 			{
 				std::string model_name = scene.mesh_name_list[i];
-				m_model_name_to_index_buffer.emplace(model_name, std::make_unique<RHIIndexBuffer>(m_device, scene.mesh_list[i].index_buffer));
-				m_model_name_to_vertex_buffer.emplace(model_name, std::make_unique<RHIVertexBuffer>(m_device, scene.mesh_list[i].vertex_buffer));
-				m_model_name_to_material_name.emplace(model_name, scene.material_name_list[i]);
+				std::vector<std::string> sub_model_names;
+				for (uint32_t sub_mesh_index = 0; sub_mesh_index < scene.mesh_list[i].meshs.size(); sub_mesh_index++)
+				{
+					auto sub_mesh_name = model_name + std::to_string(sub_mesh_index);
+					sub_model_names.push_back(sub_mesh_name);
+					m_model_name_to_index_buffer.emplace(sub_mesh_name, std::make_unique<RHIIndexBuffer>(m_device, scene.mesh_list[i].meshs[sub_mesh_index].index_buffer));
+					m_model_name_to_vertex_buffer.emplace(sub_mesh_name, std::make_unique<RHIVertexBuffer>(m_device, scene.mesh_list[i].meshs[sub_mesh_index].vertex_buffer));
+					m_model_name_to_material_name.emplace(sub_mesh_name, scene.material_name_list[i]);
+				}
+				m_model_name_to_sub_model_name.emplace(model_name, sub_model_names);
+				
 			}
 		}
 		// each material has a descriptor set

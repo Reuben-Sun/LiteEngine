@@ -16,6 +16,6 @@ namespace ToolEngine
     {
         m_scene_manager->tick();
         m_fps_camera->tick();
-        m_physics_manager->tick();
+        //m_physics_manager->tick();
     }
 }

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Core/Path/Path.h"
 #include "Geometry/RenderScene.h"
+#include "Logic/ECS/LogicScene.h"
 
 namespace ToolEngine
 {
@@ -22,6 +23,7 @@ namespace ToolEngine
 		std::vector<GameObject> m_game_objects;
 
 		RenderScene& m_scene;
+		LogicScene m_logic_scene;
 
 		nlohmann::json serialize() const;
 		void deserialize(const nlohmann::json& j);
