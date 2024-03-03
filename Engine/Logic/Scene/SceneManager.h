@@ -10,14 +10,13 @@ namespace ToolEngine
 	class SceneManager final
 	{
 	public:
-		SceneManager(RenderScene& scene, const std::string& scene_json = "Scene\\Default.scene");
+		SceneManager(LogicScene& scene, const std::string& scene_json = "Scene\\Default.scene");
 		~SceneManager();
 		
-		void tick();
+		void tick(RenderScene& render_scene);
 	private:
 		std::string m_current_scene = "";
 
-		RenderScene& m_scene;
-		LogicScene m_logic_scene;
+		LogicScene& m_scene;
 	};
 }
