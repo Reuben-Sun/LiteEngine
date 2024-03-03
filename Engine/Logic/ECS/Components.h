@@ -4,6 +4,8 @@
 #include "Core/Math/Transform.h"
 #include "Geometry/Bounding.h"
 #include <entt/entt.hpp>
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Body/BodyID.h>
 
 namespace ToolEngine
 {
@@ -31,5 +33,10 @@ namespace ToolEngine
 	struct BoundingComponent
 	{
 		Bounding bounding;
+	};
+
+	struct PhysicsComponent
+	{
+		JPH::BodyID body_id;
 	};
 }

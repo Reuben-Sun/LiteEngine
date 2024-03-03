@@ -67,12 +67,13 @@ namespace ToolEngine
         // show physics bounding
         for (int i = 0; i < scene.render_entities.size(); i++)
         {
+            auto transform = scene.render_entities[i].transform;
             auto bounding = scene.render_entities[i].bounding;
             if (bounding.type == BoundingType::Box)
             {
                 GizmoObject gizmo_object;
                 gizmo_object.mesh_name = "cube";
-                gizmo_object.transform.position = bounding.position;
+                gizmo_object.transform.position = bounding.position + transform.position;
                 gizmo_object.transform.rotation = Quaternion::Identity();
                 gizmo_object.transform.scale = bounding.data;
                 gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);
@@ -82,7 +83,7 @@ namespace ToolEngine
             {
 				GizmoObject gizmo_object;
 				gizmo_object.mesh_name = "sphere";
-				gizmo_object.transform.position = scene.render_entities[i].transform.position;
+				gizmo_object.transform.position = bounding.position + transform.position;
 				gizmo_object.transform.rotation = Quaternion::Identity();
 				gizmo_object.transform.scale = bounding.data;
 				gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);

@@ -13,6 +13,7 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include "Geometry/RenderScene.h"
+#include "Logic/ECS/LogicScene.h"
 #include "JoltUtils.h"
 #include "Listener.h"
 
@@ -21,14 +22,12 @@ namespace ToolEngine
 	class PhysicsManager
 	{
 	public:
-		PhysicsManager(RenderScene& scene);
+		PhysicsManager(LogicScene& scene);
 		~PhysicsManager();
 
 		void tick();
 	private:
-		RenderScene& m_scene;
-
-		std::unordered_map<uint32_t, JPH::BodyID> m_go_id_to_body_id;
+		LogicScene& m_scene;
 
 		BPLayerInterfaceImpl layer_interface;
 		ObjectVsBroadPhaseLayerFilterImpl ob_layer_filter;
@@ -57,5 +56,6 @@ namespace ToolEngine
 		static void TraceImpl(const char* inFMT, ...);
 		static bool AssertFailedImpl(const char* inExpression, const char* inMessage, const char* inFile, unsigned int inLine);
 
+		void createPhysicsScene();
 	};
 }

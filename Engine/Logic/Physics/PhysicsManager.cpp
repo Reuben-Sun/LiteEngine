@@ -4,7 +4,7 @@
 
 namespace ToolEngine
 {
-	PhysicsManager::PhysicsManager(RenderScene& scene): m_scene(scene)
+	PhysicsManager::PhysicsManager(LogicScene& scene): m_scene(scene)
 	{
 		// Init
 		JPH::RegisterDefaultAllocator();
@@ -23,31 +23,7 @@ namespace ToolEngine
 		m_physics_system->SetContactListener(contact_listener);
 		m_physics_system->SetGravity(m_gravity);
 		
-		// create physical scene
-		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
-		/*for (uint32_t i = 0; i < scene.go_id_list.size(); i++)
-		{
-			uint32_t go_id = scene.go_id_list[i];
-			Bounding& bounding = scene.bounding_list[i];
-			if (bounding.type == BoundingType::Box)
-			{
-				JPH::BoxShapeSettings floor_shape_settings(JPH::Vec3(bounding.data[0], bounding.data[1], bounding.data[2]));
-				JPH::ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
-				JPH::ShapeRefC floor_shape = floor_shape_result.Get();
-				JPH::BodyCreationSettings floor_settings(floor_shape, JPH::RVec3(bounding.position[0], bounding.position[1], bounding.position[2]), 
-					JPH::Quat::sIdentity(), JPH::EMotionType::Static, Layers::NON_MOVING);
-				JPH::Body* box = body_interface.CreateBody(floor_settings);
-				body_interface.AddBody(box->GetID(), JPH::EActivation::DontActivate);
-				m_go_id_to_body_id[go_id] = box->GetID();
-			}
-			else if (bounding.type == BoundingType::Sphere)
-			{
-				JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(bounding.data[0]), JPH::RVec3(bounding.position[0], bounding.position[1], bounding.position[2]), 
-					JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
-				JPH::BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
-				m_go_id_to_body_id[go_id] = sphere_id;
-			}
-		}*/
+		createPhysicsScene();
 
 		m_physics_system->OptimizeBroadPhase();
 
@@ -57,11 +33,24 @@ namespace ToolEngine
 	}
 	void PhysicsManager::tick()
 	{
+		OPTICK_PUSH("Physics Update");
 		float dt = Time::getInstance().getDeltaTime();
 		m_physics_system->Update(dt, 1, m_temp_allocator, m_job_system);
+		OPTICK_POP();
+		OPTICK_PUSH("Modify entity transform");
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
-		JPH::RVec3 position = body_interface.GetCenterOfMassPosition(m_go_id_to_body_id[1]);
-		//m_scene.mesh_transform_list[1].position = { position.GetX(), position.GetY(), position.GetZ() };
+		auto view = m_scene.scene_context.view<TransformComponent, const PhysicsComponent, const BoundingComponent>();
+		for (auto entity : view)
+		{
+			auto& transform_component = view.get<TransformComponent>(entity);
+			auto& physics_component = view.get<PhysicsComponent>(entity);
+			auto& bounding_component = view.get<BoundingComponent>(entity);
+			Bounding bounding = bounding_component.bounding;
+			JPH::RVec3 position = body_interface.GetCenterOfMassPosition(physics_component.body_id);
+			glm::vec3 new_position(position.GetX(), position.GetY(), position.GetZ());
+			transform_component.transform.position = new_position - bounding.position;
+		}
+		OPTICK_POP();
 	}
 	void PhysicsManager::TraceImpl(const char* inFMT, ...)
 	{
@@ -78,6 +67,45 @@ namespace ToolEngine
 	{
 		LOG_ERROR("{0}:{1}: ({2}) {3}", inFile, inLine, inExpression, inMessage);
 		return false;
+	}
+
+	void PhysicsManager::createPhysicsScene()
+	{
+		OPTICK_EVENT();
+		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
+		auto view = m_scene.scene_context.view<const TransformComponent, const BoundingComponent>();
+		for (auto entity : view)
+		{
+			auto& transform_component = view.get<TransformComponent>(entity);
+			auto& bounding_component = view.get<BoundingComponent>(entity);
+			Transform transform = transform_component.transform;
+			Bounding bounding = bounding_component.bounding;
+			PhysicsComponent physics_component;
+			if (bounding.type == BoundingType::Box)
+			{
+				JPH::BoxShapeSettings floor_shape_settings(JPH::Vec3(bounding.data[0], bounding.data[1], bounding.data[2]));
+				JPH::ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
+				JPH::ShapeRefC floor_shape = floor_shape_result.Get();
+				JPH::RVec3 floor_position(transform.position[0] + bounding.position[0], 
+					transform.position[1] + bounding.position[1], transform.position[2] + bounding.position[2]);
+
+				JPH::BodyCreationSettings floor_settings(floor_shape, floor_position,
+					JPH::Quat::sIdentity(), JPH::EMotionType::Static, Layers::NON_MOVING);
+				JPH::Body* box = body_interface.CreateBody(floor_settings);
+				body_interface.AddBody(box->GetID(), JPH::EActivation::DontActivate);
+				physics_component.body_id = box->GetID();
+			}
+			else if (bounding.type == BoundingType::Sphere)
+			{
+				JPH::RVec3 sphere_position(transform.position[0] + bounding.position[0],
+					transform.position[1] + bounding.position[1], transform.position[2] + bounding.position[2]);
+				JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(bounding.data[0]), sphere_position,
+					JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
+				JPH::BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
+				physics_component.body_id = sphere_id;
+			}
+			m_scene.scene_context.emplace<PhysicsComponent>(entity, physics_component);
+		}
 	}
 	
 }
