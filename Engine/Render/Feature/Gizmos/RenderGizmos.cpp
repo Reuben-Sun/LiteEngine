@@ -65,9 +65,9 @@ namespace ToolEngine
     {
         m_gizmo_temp_objects.clear();
         // show physics bounding
-        /*for (int i = 0; i < scene.mesh_name_list.size(); i++)
+        for (int i = 0; i < scene.render_entities.size(); i++)
         {
-            auto bounding = scene.bounding_list[i];
+            auto bounding = scene.render_entities[i].bounding;
             if (bounding.type == BoundingType::Box)
             {
                 GizmoObject gizmo_object;
@@ -82,14 +82,14 @@ namespace ToolEngine
             {
 				GizmoObject gizmo_object;
 				gizmo_object.mesh_name = "sphere";
-				gizmo_object.transform.position = scene.mesh_transform_list[i].position;
+				gizmo_object.transform.position = scene.render_entities[i].transform.position;
 				gizmo_object.transform.rotation = Quaternion::Identity();
 				gizmo_object.transform.scale = bounding.data;
 				gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);
 				m_gizmo_temp_objects.push_back(gizmo_object);
             }
 			
-        }*/
+        }
     }
     void RenderGizmos::tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera)
     {
