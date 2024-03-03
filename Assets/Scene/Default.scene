@@ -94,7 +94,10 @@
             ]
         },
         {
-            "material_path": ["Material/cube.material"],
+            "material_path": [
+                "Material/VerdeAlpiMarbles.material",
+                "Material/cube.material"
+            ],
             "mesh_path": "ShaderSphere.gltf",
             "name": "ShaderSphere",
             "position": [

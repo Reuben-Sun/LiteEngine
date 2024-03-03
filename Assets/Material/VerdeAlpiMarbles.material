@@ -1,0 +1,16 @@
+{
+    "frag_shader_path": "",
+    "texture_bindings": [
+        {
+            "binding_index": 1,
+            "binding_type": 0,
+            "texture_path": "VerdeAlpiMarbles.jpg"
+        },
+        {
+            "binding_index": 4,
+            "binding_type": 1,
+            "texture_path": "VerdeAlpiMarbles_R.jpg"
+        }
+    ],
+    "vertex_shader_path": ""
+}
