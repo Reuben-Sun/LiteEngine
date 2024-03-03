@@ -17,8 +17,8 @@ namespace ToolEngine
 	}
 	CullingResult::~CullingResult()
 	{
-		m_model_name_to_index_buffer.clear();
-		m_model_name_to_vertex_buffer.clear();
+		m_sub_mesh_name_to_index_buffer.clear();
+		m_sub_mesh_name_to_vertex_buffer.clear();
 		m_texture_name_to_image.clear();
 	}
 	void CullingResult::cull(RenderScene& scene)
@@ -29,14 +29,14 @@ namespace ToolEngine
 			auto& entity = scene.render_entities[i];
 			auto& mesh_name = entity.mesh_name;
 			// mesh
-			if(m_model_name_to_index_buffer.find(mesh_name) == m_model_name_to_index_buffer.end())
+			if(m_sub_mesh_name_to_index_buffer.find(mesh_name) == m_sub_mesh_name_to_index_buffer.end())
 			{
 				if (mesh_name == "plane")
 				{
 					Mesh plane_mesh = Mesh::createPlane();
-					m_model_name_to_index_buffer.emplace(mesh_name, 
+					m_sub_mesh_name_to_index_buffer.emplace(mesh_name, 
 						std::make_unique<RHIIndexBuffer>(m_device, plane_mesh.meshs[0].index_buffer));
-					m_model_name_to_vertex_buffer.emplace(mesh_name, 
+					m_sub_mesh_name_to_vertex_buffer.emplace(mesh_name, 
 						std::make_unique<RHIVertexBuffer>(m_device, plane_mesh.meshs[0].vertex_buffer));
 					m_model_name_to_sub_model_name.emplace(mesh_name, std::vector<std::string>{mesh_name});
 				}
@@ -48,8 +48,8 @@ namespace ToolEngine
 					for (int sub_mesh_index = 0; sub_mesh_index < loader->loaded_index_buffer.size(); sub_mesh_index++)
 					{
 						auto sub_mesh_name = mesh_name + std::to_string(sub_mesh_index);
-						m_model_name_to_index_buffer.emplace(sub_mesh_name, std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[sub_mesh_index]));
-						m_model_name_to_vertex_buffer.emplace(sub_mesh_name, std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[sub_mesh_index]));
+						m_sub_mesh_name_to_index_buffer.emplace(sub_mesh_name, std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[sub_mesh_index]));
+						m_sub_mesh_name_to_vertex_buffer.emplace(sub_mesh_name, std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[sub_mesh_index]));
 						sub_mesh_names.push_back(sub_mesh_name);
 					}
 					m_model_name_to_sub_model_name.emplace(mesh_name, sub_mesh_names);
@@ -120,13 +120,13 @@ namespace ToolEngine
 	}
 	RHIVertexBuffer& CullingResult::getVertexBuffer(const std::string& model_name)
 	{
-		auto it = m_model_name_to_vertex_buffer.find(model_name);
+		auto it = m_sub_mesh_name_to_vertex_buffer.find(model_name);
 		RHIVertexBuffer& vertex_buffer_ref = *(it->second.get());
 		return vertex_buffer_ref;
 	}
 	RHIIndexBuffer& CullingResult::getIndexBuffer(const std::string& model_name)
 	{
-		auto it = m_model_name_to_index_buffer.find(model_name);
+		auto it = m_sub_mesh_name_to_index_buffer.find(model_name);
 		RHIIndexBuffer& index_buffer_ref = *(it->second.get());
 		return index_buffer_ref;
 	}

@@ -43,8 +43,8 @@ namespace ToolEngine
 		Light m_dir_light;
 
 		// TODO: unload useless buffer
-		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_model_name_to_vertex_buffer;
-		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_model_name_to_index_buffer;
+		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_sub_mesh_name_to_vertex_buffer;
+		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_sub_mesh_name_to_index_buffer;
 
 		std::unordered_map<std::string, PushConstant> m_material_name_to_push_constant;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_material_name_to_descriptor_set;

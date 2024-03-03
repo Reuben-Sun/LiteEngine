@@ -176,6 +176,7 @@ namespace ToolEngine
 	
 		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness"};
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
+		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
 	
