@@ -22,3 +22,6 @@
 [submodule "ThirdParty/entt"]
 	path = ThirdParty/entt
 	url = https://github.com/skypjack/entt.git
+[submodule "ThirdParty/optick"]
+	path = ThirdParty/optick
+	url = https://github.com/Reuben-Sun/optick.git
