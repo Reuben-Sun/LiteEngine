@@ -60,6 +60,7 @@ namespace ToolEngine
 	}
 	void FPSCamera::tick()
 	{
+		OPTICK_EVENT();
 		if (m_forward_state.value() == 1)
 		{
 			m_scene.camera.transform.position -= m_scene.camera.transform.getForward() * m_scene.camera.camera_speed * Time::getInstance().getDeltaTime();

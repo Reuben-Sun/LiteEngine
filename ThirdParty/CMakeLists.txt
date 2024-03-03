@@ -68,7 +68,6 @@ endif()
 # optick
 if(NOT TARGET optick)
   set(OPTICK_INSTALL_TARGETS OFF)
-  set(OPTICK_USE_VULKAN ON)
   add_subdirectory(Optick)
   set_property(TARGET OptickCore PROPERTY FOLDER "ThirdParty")
 endif()

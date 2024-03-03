@@ -28,6 +28,7 @@ namespace ToolEngine
     }
     void Engine::tick()
     {
+        OPTICK_FRAME("MainThread");
         Time::getInstance().tick();
         m_window->tick();
         m_rhi_context->tick();

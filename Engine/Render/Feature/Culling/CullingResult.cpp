@@ -23,13 +23,15 @@ namespace ToolEngine
 	}
 	void CullingResult::cull(RenderScene& scene)
 	{
+		OPTICK_EVENT();
 		// TODO: currrent without culling
 		for (int i = 0; i < scene.render_entities.size(); i++)
 		{
 			auto& entity = scene.render_entities[i];
 			auto& mesh_name = entity.mesh_name;
+			OPTICK_PUSH("Process Mesh");
 			// mesh
-			if(m_sub_mesh_name_to_index_buffer.find(mesh_name) == m_sub_mesh_name_to_index_buffer.end())
+			if(m_model_name_to_sub_model_name.find(mesh_name) == m_model_name_to_sub_model_name.end())
 			{
 				if (mesh_name == "plane")
 				{
@@ -56,6 +58,8 @@ namespace ToolEngine
 				}
 				
 			}
+			OPTICK_POP();
+			OPTICK_PUSH("Process Material");
 			// material
 			for (int i = 0; i < entity.material_names.size(); i++)
 			{
@@ -64,6 +68,7 @@ namespace ToolEngine
 				nlohmann::json material_json = Path::getInstance().readJson(material_path);
 				Material material = Material::deserialize(material_json);
 				// texture
+				OPTICK_PUSH("Process Texture");
 				for (int j = 0; j < material.texture_bindings.size(); j++)
 				{
 					std::string texture_name = material.texture_bindings[j].texture_path;
@@ -73,7 +78,9 @@ namespace ToolEngine
 						m_texture_name_to_image.emplace(texture_name, std::make_unique<RHITextureImage>(m_device, texture_path));
 					}
 				}
+				OPTICK_POP();
 				// material descriptor set
+				OPTICK_PUSH("Process Material Descriptor Set");
 				if (m_material_name_to_descriptor_set.find(material_name) == m_material_name_to_descriptor_set.end())
 				{
 					// create descriptor set and update uniform buffer
@@ -115,7 +122,9 @@ namespace ToolEngine
 					push_constant.texture_enable = texture_enable;
 					m_material_name_to_push_constant.emplace(material_name, push_constant);
 				}
+				OPTICK_POP();
 			}
+			OPTICK_POP();
 		}
 	}
 	RHIVertexBuffer& CullingResult::getVertexBuffer(const std::string& model_name)

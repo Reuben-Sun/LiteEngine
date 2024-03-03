@@ -109,6 +109,7 @@ namespace ToolEngine
 
 	void GlfwWindow::tick()
 	{
+		OPTICK_EVENT();
 		glfwPollEvents();
 	}
 	void GlfwWindow::setEventCallback(const EventCallbackFunc& callback)

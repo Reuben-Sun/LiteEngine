@@ -73,6 +73,7 @@ namespace ToolEngine
 
 	void Renderer::tick(RenderScene& scene)
 	{
+		OPTICK_EVENT();
 		uint32_t image_index;
 		if (!prepareFrame(image_index))
 		{
@@ -112,6 +113,7 @@ namespace ToolEngine
 	}
 	bool Renderer::prepareFrame(uint32_t& image_index)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->wait();
 
@@ -137,6 +139,7 @@ namespace ToolEngine
 	}
 	void Renderer::submitFrame(uint32_t image_index)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->resetFence();
 
@@ -152,6 +155,7 @@ namespace ToolEngine
 	}
 	void Renderer::record(RenderScene& scene)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
@@ -172,6 +176,7 @@ namespace ToolEngine
 
 		// culling
 		m_culling_result->cull(scene);
+		OPTICK_PUSH("Draw Forward");
 		// global ubo
 		GlobalUBO ubo{};
 		scene.camera.aspect = m_forward_pass_width / (float)m_forward_pass_height;
@@ -214,16 +219,17 @@ namespace ToolEngine
 				m_command_buffer->drawIndexed(frame_index, index_buffer.getIndexCount(), 1, 0, 0, 0);
 			}
 		}
-		
+		OPTICK_POP();
+		OPTICK_PUSH("Draw Gizmos");
 		if (m_enable_ui && m_render_ui->getUIContext().enable_gizmos)
 		{
 			m_render_gizmos->processRenderScene(scene);
 			m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
 		}
-
+		OPTICK_POP();
 
 		m_command_buffer->endRenderPass(frame_index);
-
+		OPTICK_PUSH("Draw UI or Present");
 		if (m_enable_ui)
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
@@ -255,6 +261,7 @@ namespace ToolEngine
 
 			m_command_buffer->endRenderPass(frame_index);
 		}
+		OPTICK_POP();
 
 		m_command_buffer->endRecord(frame_index);
 	}

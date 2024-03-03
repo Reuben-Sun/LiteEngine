@@ -31,5 +31,6 @@ namespace ToolEngine
 	
 	void SceneManager::tick()
 	{
+		OPTICK_EVENT();
 	}
 }

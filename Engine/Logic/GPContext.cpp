@@ -14,6 +14,7 @@ namespace ToolEngine
     }
     void GPContext::tick()
     {
+        OPTICK_EVENT();
         m_scene_manager->tick();
         m_fps_camera->tick();
         //m_physics_manager->tick();

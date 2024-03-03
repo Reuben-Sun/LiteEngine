@@ -16,6 +16,8 @@
 
 #include "Core/Log/Log.h"
 
+#include <optick.h>
+
 #define PI 3.14159265358979323846f
 
 #define BIT(x) (1 << x)
