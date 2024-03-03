@@ -40,3 +40,8 @@ git submodule update
 - 辅助线绘制物理BV
 
 ![24_2_28](Doc/24_2_28.png)
+
+#### 2024.3.3
+
+- 使用entt重写logic scene逻辑
+- 使用optick进行性能测试
