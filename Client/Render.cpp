@@ -181,35 +181,40 @@ namespace ToolEngine
 		ubo.directional_light = m_culling_result->getDirLight();
 		m_culling_result->getGlobalUBO().updateBuffer(&ubo);
 		// draw culling result
-		for (int i = 0; i < scene.mesh_list.size(); i++)
+		for (int i = 0; i < scene.render_entities.size(); i++)
 		{
-			auto current_mesh_name = scene.mesh_name_list[i];
-			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[current_mesh_name];
-			for (int sub_model_index = 0; sub_model_index < sub_model_names.size(); sub_model_index++)
+			auto& entity = scene.render_entities[i];
+			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[entity.mesh_name];
+			for (int sub_index = 0; sub_index < sub_model_names.size(); sub_index++)
 			{
-				auto sub_model_name = sub_model_names[sub_model_index];
-				// binding index buffer and vertex buffer
-				uint32_t index_count = scene.mesh_list[i].meshs[sub_model_index].index_buffer.size();
+				auto& sub_model_name = sub_model_names[sub_index];
+				uint32_t material_index = sub_index;
+				if (material_index >= entity.material_names.size())
+				{
+					material_index = entity.material_names.size() - 1;
+				}
+				auto& material_name = entity.material_names[material_index];
 				RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(sub_model_name);
 				RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(sub_model_name);
 				VkDeviceSize offsets[] = { 0 };
 				m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
 				m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
 				// binding texture
-				RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(sub_model_name);
+				RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(material_name);
 				const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 				m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 				// push constant
-				PushConstant push_constant = m_culling_result->getPushConstant(sub_model_name);
-				push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
+				PushConstant push_constant = m_culling_result->getPushConstant(material_name);
+				push_constant.model_matrix = entity.transform.getModelMatrix();
 				push_constant.metallic *= m_render_ui->getUIContext().metallic;
 				push_constant.roughness *= m_render_ui->getUIContext().roughness;
 				push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;
 				m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
 				// draw
-				m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
+				m_command_buffer->drawIndexed(frame_index, index_buffer.getIndexCount(), 1, 0, 0, 0);
 			}
 		}
+		
 		if (m_enable_ui && m_render_ui->getUIContext().enable_gizmos)
 		{
 			m_render_gizmos->processRenderScene(scene);
@@ -227,8 +232,9 @@ namespace ToolEngine
 			auto camera_euler = scene.camera.transform.rotation.getEulerDegrees();
 			m_render_ui->getUIContext().camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
 			m_render_ui->getUIContext().camera_speed = scene.camera.camera_speed;
-			m_render_ui->getUIContext().cube_pos = { scene.mesh_transform_list[0].position.x, scene.mesh_transform_list[0].position.y, scene.mesh_transform_list[0].position.z };
-			auto cube_euler = scene.mesh_transform_list[0].rotation.getEulerDegrees();
+			m_render_ui->getUIContext().cube_pos = { scene.render_entities[0].transform.position.x, 
+				scene.render_entities[0].transform.position.y, scene.render_entities[0].transform.position.z };
+			auto cube_euler = scene.render_entities[0].transform.rotation.getEulerDegrees();
 			m_render_ui->getUIContext().cube_rotation = { cube_euler[0], cube_euler[1], cube_euler[2] };
 
 			m_render_ui->tick(*m_command_buffer, frame_index);

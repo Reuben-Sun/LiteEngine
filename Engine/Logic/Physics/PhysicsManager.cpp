@@ -25,7 +25,7 @@ namespace ToolEngine
 		
 		// create physical scene
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
-		for (uint32_t i = 0; i < scene.go_id_list.size(); i++)
+		/*for (uint32_t i = 0; i < scene.go_id_list.size(); i++)
 		{
 			uint32_t go_id = scene.go_id_list[i];
 			Bounding& bounding = scene.bounding_list[i];
@@ -47,7 +47,7 @@ namespace ToolEngine
 				JPH::BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
 				m_go_id_to_body_id[go_id] = sphere_id;
 			}
-		}
+		}*/
 
 		m_physics_system->OptimizeBroadPhase();
 
@@ -61,7 +61,7 @@ namespace ToolEngine
 		m_physics_system->Update(dt, 1, m_temp_allocator, m_job_system);
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
 		JPH::RVec3 position = body_interface.GetCenterOfMassPosition(m_go_id_to_body_id[1]);
-		m_scene.mesh_transform_list[1].position = { position.GetX(), position.GetY(), position.GetZ() };
+		//m_scene.mesh_transform_list[1].position = { position.GetX(), position.GetY(), position.GetZ() };
 	}
 	void PhysicsManager::TraceImpl(const char* inFMT, ...)
 	{

@@ -9,15 +9,17 @@
 
 namespace ToolEngine
 {
+	struct RenderEntity
+	{
+		uint32_t go_id;
+		std::string mesh_name;
+		std::vector<std::string> material_names;
+		Transform transform;
+		Bounding bounding;
+	};
 	struct RenderScene
 	{
-		std::vector<uint32_t> go_id_list;
-		std::vector<std::string> mesh_name_list;
-		std::vector<Mesh> mesh_list;
-		std::vector<Transform> mesh_transform_list;
-		std::vector<std::string> material_name_list;
-		std::vector<Bounding> bounding_list;
-		std::unordered_map<std::string, Material> name_to_material_map;
+		std::vector<RenderEntity> render_entities;
 		Camera camera;
 	};
 }

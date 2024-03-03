@@ -28,8 +28,8 @@ namespace ToolEngine
 		RHIVertexBuffer& getVertexBuffer(const std::string& sub_model_name);
 		RHIIndexBuffer& getIndexBuffer(const std::string& sub_model_name);
 		RHIUniformBuffer& getGlobalUBO() { return *m_global_ubo; }
-		RHIDescriptorSet& getDescriptorSet(const std::string& model_name);
-		PushConstant getPushConstant(const std::string& model_name);
+		RHIDescriptorSet& getDescriptorSet(const std::string& material_name);
+		PushConstant getPushConstant(const std::string& material_name);
 		Light& getDirLight() { return m_dir_light; }
 
 		std::unordered_map<std::string, std::vector<std::string>> m_model_name_to_sub_model_name;
@@ -45,7 +45,6 @@ namespace ToolEngine
 		// TODO: unload useless buffer
 		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_model_name_to_vertex_buffer;
 		std::unordered_map<std::string, std::unique_ptr<RHIIndexBuffer>> m_model_name_to_index_buffer;
-		std::unordered_map<std::string, std::string> m_model_name_to_material_name;
 
 		std::unordered_map<std::string, PushConstant> m_material_name_to_push_constant;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_material_name_to_descriptor_set;

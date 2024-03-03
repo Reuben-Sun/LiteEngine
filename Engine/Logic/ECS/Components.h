@@ -20,7 +20,7 @@ namespace ToolEngine
 
 	struct MaterialComponent
 	{
-		std::string material_path;
+		std::vector<std::string> material_paths;
 	};
 
 	struct TransformComponent

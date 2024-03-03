@@ -20,7 +20,7 @@ namespace ToolEngine
 			mesh_component.mesh_path = go.at("mesh_path").get<std::string>();
 
 			MaterialComponent material_component;
-			material_component.material_path = go.at("material_path").get<std::string>();
+			material_component.material_paths = go.at("material_path").get<std::vector<std::string>>();
 
 			TransformComponent transform_component;
 			Transform transform;

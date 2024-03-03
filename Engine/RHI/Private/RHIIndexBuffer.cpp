@@ -4,6 +4,7 @@ namespace ToolEngine
 {
 	RHIIndexBuffer::RHIIndexBuffer(RHIDevice& device, std::vector<uint32_t>& index_buffer): m_device(device)
 	{
+		m_index_count = index_buffer.size();
 		VkDeviceSize buffer_size = sizeof(index_buffer[0]) * index_buffer.size();
 		// create staging buffer in CPU memory
 		VkBuffer staging_buffer;
