@@ -14,6 +14,7 @@ namespace ToolEngine
 
     void Time::tick()
     {
+        OPTICK_EVENT();
         auto current_time = std::chrono::high_resolution_clock::now();
         delta_time = std::chrono::duration<float, std::ratio<1, 1>>(current_time - last_time).count();
         last_time = current_time;

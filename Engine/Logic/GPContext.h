@@ -4,6 +4,7 @@
 #include "Scene/SceneManager.h"
 #include "Camera/FPSCamera.h"
 #include "Physics/PhysicsManager.h"
+#include "Logic/ECS/LogicScene.h"
 
 namespace ToolEngine
 {
@@ -21,5 +22,6 @@ namespace ToolEngine
 		void tick();
 	private:
 		RenderScene m_scene;
+		LogicScene m_logic_scene;
 	};
 }

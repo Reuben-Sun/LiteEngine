@@ -14,9 +14,9 @@ namespace ToolEngine
         m_global_descriptor_set = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
         m_global_descriptor_set->updateUniformBuffer(*m_global_uniform_buffer, 0);
         Mesh line = Mesh::createLine(5, { 0.3f, 0, 0 });
-        m_mesh_name_to_index_count["line"] = line.index_buffer.size();
-        m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.index_buffer);
-        m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.vertex_buffer);
+        m_mesh_name_to_index_count["line"] = line.meshs[0].index_buffer.size();
+        m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.meshs[0].index_buffer);
+        m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.meshs[0].vertex_buffer);
 
         auto cube_path = Path::getInstance().getAssetPath() + "\\Cube.gltf";
         std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(cube_path);
@@ -65,14 +65,15 @@ namespace ToolEngine
     {
         m_gizmo_temp_objects.clear();
         // show physics bounding
-        for (int i = 0; i < scene.mesh_name_list.size(); i++)
+        for (int i = 0; i < scene.render_entities.size(); i++)
         {
-            auto bounding = scene.bounding_list[i];
+            auto transform = scene.render_entities[i].transform;
+            auto bounding = scene.render_entities[i].bounding;
             if (bounding.type == BoundingType::Box)
             {
                 GizmoObject gizmo_object;
                 gizmo_object.mesh_name = "cube";
-                gizmo_object.transform.position = bounding.position;
+                gizmo_object.transform.position = bounding.position + transform.position;
                 gizmo_object.transform.rotation = Quaternion::Identity();
                 gizmo_object.transform.scale = bounding.data;
                 gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);
@@ -82,7 +83,7 @@ namespace ToolEngine
             {
 				GizmoObject gizmo_object;
 				gizmo_object.mesh_name = "sphere";
-				gizmo_object.transform.position = scene.mesh_transform_list[i].position;
+				gizmo_object.transform.position = bounding.position + transform.position;
 				gizmo_object.transform.rotation = Quaternion::Identity();
 				gizmo_object.transform.scale = bounding.data;
 				gizmo_object.constant.color = glm::vec3(0.3f, 0.3f, 1.0f);

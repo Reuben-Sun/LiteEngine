@@ -4,6 +4,7 @@ namespace ToolEngine
 {
 	GltfLoader::GltfLoader(std::string file_path)
 	{
+		OPTICK_EVENT();
 		std::string gltf_load_error;
 		std::string gltf_load_warning;
 		bool gltf_load_result = m_context.LoadASCIIFromFile(&m_model, &gltf_load_error, &gltf_load_warning, file_path);

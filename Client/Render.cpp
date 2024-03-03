@@ -73,6 +73,7 @@ namespace ToolEngine
 
 	void Renderer::tick(RenderScene& scene)
 	{
+		OPTICK_EVENT();
 		uint32_t image_index;
 		if (!prepareFrame(image_index))
 		{
@@ -112,6 +113,7 @@ namespace ToolEngine
 	}
 	bool Renderer::prepareFrame(uint32_t& image_index)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->wait();
 
@@ -137,6 +139,7 @@ namespace ToolEngine
 	}
 	void Renderer::submitFrame(uint32_t image_index)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->resetFence();
 
@@ -152,6 +155,7 @@ namespace ToolEngine
 	}
 	void Renderer::record(RenderScene& scene)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
@@ -172,6 +176,7 @@ namespace ToolEngine
 
 		// culling
 		m_culling_result->cull(scene);
+		OPTICK_PUSH("Draw Forward");
 		// global ubo
 		GlobalUBO ubo{};
 		scene.camera.aspect = m_forward_pass_width / (float)m_forward_pass_height;
@@ -181,39 +186,50 @@ namespace ToolEngine
 		ubo.directional_light = m_culling_result->getDirLight();
 		m_culling_result->getGlobalUBO().updateBuffer(&ubo);
 		// draw culling result
-		for (int i = 0; i < scene.mesh_list.size(); i++)
+		for (int i = 0; i < scene.render_entities.size(); i++)
 		{
-			auto current_mesh_name = scene.mesh_name_list[i];
-			// binding index buffer and vertex buffer
-			uint32_t index_count = scene.mesh_list[i].index_buffer.size();
-			RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(current_mesh_name);
-			RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(current_mesh_name);
-			VkDeviceSize offsets[] = { 0 };
-			m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
-			m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
-			// binding texture
-			RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(current_mesh_name);
-			const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
-			m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
-			// push constant
-			PushConstant push_constant = m_culling_result->getPushConstant(current_mesh_name);
-			push_constant.model_matrix = scene.mesh_transform_list[i].getModelMatrix();
-			push_constant.metallic *= m_render_ui->getUIContext().metallic;
-			push_constant.roughness *= m_render_ui->getUIContext().roughness;
-			push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;
-			m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
-			// draw
-			m_command_buffer->drawIndexed(frame_index, index_count, 1, 0, 0, 0);
+			auto& entity = scene.render_entities[i];
+			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[entity.mesh_name];
+			for (int sub_index = 0; sub_index < sub_model_names.size(); sub_index++)
+			{
+				auto& sub_model_name = sub_model_names[sub_index];
+				uint32_t material_index = sub_index;
+				if (material_index >= entity.material_names.size())
+				{
+					material_index = entity.material_names.size() - 1;
+				}
+				auto& material_name = entity.material_names[material_index];
+				RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(sub_model_name);
+				RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(sub_model_name);
+				VkDeviceSize offsets[] = { 0 };
+				m_command_buffer->bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
+				m_command_buffer->bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
+				// binding texture
+				RHIDescriptorSet& descriptor_set = m_culling_result->getDescriptorSet(material_name);
+				const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
+				m_command_buffer->bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
+				// push constant
+				PushConstant push_constant = m_culling_result->getPushConstant(material_name);
+				push_constant.model_matrix = entity.transform.getModelMatrix();
+				push_constant.metallic *= m_render_ui->getUIContext().metallic;
+				push_constant.roughness *= m_render_ui->getUIContext().roughness;
+				push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;
+				m_command_buffer->pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
+				// draw
+				m_command_buffer->drawIndexed(frame_index, index_buffer.getIndexCount(), 1, 0, 0, 0);
+			}
 		}
+		OPTICK_POP();
+		OPTICK_PUSH("Draw Gizmos");
 		if (m_enable_ui && m_render_ui->getUIContext().enable_gizmos)
 		{
 			m_render_gizmos->processRenderScene(scene);
 			m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
 		}
-
+		OPTICK_POP();
 
 		m_command_buffer->endRenderPass(frame_index);
-
+		OPTICK_PUSH("Draw UI or Present");
 		if (m_enable_ui)
 		{
 			m_command_buffer->beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
@@ -222,8 +238,9 @@ namespace ToolEngine
 			auto camera_euler = scene.camera.transform.rotation.getEulerDegrees();
 			m_render_ui->getUIContext().camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
 			m_render_ui->getUIContext().camera_speed = scene.camera.camera_speed;
-			m_render_ui->getUIContext().cube_pos = { scene.mesh_transform_list[0].position.x, scene.mesh_transform_list[0].position.y, scene.mesh_transform_list[0].position.z };
-			auto cube_euler = scene.mesh_transform_list[0].rotation.getEulerDegrees();
+			m_render_ui->getUIContext().cube_pos = { scene.render_entities[0].transform.position.x, 
+				scene.render_entities[0].transform.position.y, scene.render_entities[0].transform.position.z };
+			auto cube_euler = scene.render_entities[0].transform.rotation.getEulerDegrees();
 			m_render_ui->getUIContext().cube_rotation = { cube_euler[0], cube_euler[1], cube_euler[2] };
 
 			m_render_ui->tick(*m_command_buffer, frame_index);
@@ -244,6 +261,7 @@ namespace ToolEngine
 
 			m_command_buffer->endRenderPass(frame_index);
 		}
+		OPTICK_POP();
 
 		m_command_buffer->endRecord(frame_index);
 	}

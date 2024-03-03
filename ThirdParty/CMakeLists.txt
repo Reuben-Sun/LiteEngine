@@ -59,3 +59,15 @@ if(NOT TARGET JoltPhysics)
   set_property(TARGET Jolt PROPERTY FOLDER "ThirdParty")
 endif()
 
+# entt
+if(NOT TARGET EnTT)
+  add_subdirectory(entt)
+  set_property(TARGET EnTT PROPERTY FOLDER "ThirdParty")
+endif()
+
+# optick
+if(NOT TARGET optick)
+  set(OPTICK_INSTALL_TARGETS OFF)
+  add_subdirectory(Optick)
+  set_property(TARGET OptickCore PROPERTY FOLDER "ThirdParty")
+endif()

@@ -1,7 +1,7 @@
 {
     "game_objects": [
         {
-            "material_path": "Material/cube.material",
+            "material_path": ["Material/cube.material"],
             "mesh_path": "Cube.gltf",
             "name": "Cube",
             "position": [
@@ -21,9 +21,9 @@
             ],
             "bounding_type": 0,
             "bounding_position":[
-                -2.0,
-                2.0,
-                0.5
+                0.0,
+                0.0,
+                0.0
             ],
             "bounding_data":[
                 0.5,
@@ -32,7 +32,7 @@
             ]
         },
         {
-            "material_path": "Material/cube.material",
+            "material_path": ["Material/cube.material"],
             "mesh_path": "Sphere.gltf",
             "name": "Sphere",
             "position": [
@@ -52,9 +52,9 @@
             ],
             "bounding_type": 1,
             "bounding_position":[
-                2.0,
-                -2.0,
-                20.0
+                0.0,
+                0.0,
+                0.0
             ],
             "bounding_data":[
                 0.5,
@@ -63,9 +63,9 @@
             ]
         },
         {
-            "material_path": "Material/plane.material",
+            "material_path": ["Material/plane.material"],
             "mesh_path": "plane",
-            "name": "Plane",
+            "name": "plane",
             "position": [
                 0.0,
                 0.0,
@@ -94,7 +94,7 @@
             ]
         },
         {
-            "material_path": "Material/cube.material",
+            "material_path": ["Material/cube.material"],
             "mesh_path": "ShaderSphere.gltf",
             "name": "ShaderSphere",
             "position": [
