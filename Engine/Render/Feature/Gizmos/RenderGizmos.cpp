@@ -18,13 +18,13 @@ namespace ToolEngine
         m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.meshs[0].index_buffer);
         m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.meshs[0].vertex_buffer);
 
-        auto cube_path = Path::getInstance().getAssetPath() + "\\Cube.gltf";
+        auto cube_path = Path::getInstance().getAssetPath() + "Cube.gltf";
         std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(cube_path);
         m_mesh_name_to_index_count["cube"] = loader->loaded_index_buffer[0].size();
         m_mesh_name_to_index_buffer["cube"] = std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[0]);
         m_mesh_name_to_vertex_buffer["cube"] = std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[0]);
 
-        auto sphere_path = Path::getInstance().getAssetPath() + "\\SimpleSphere.gltf";
+        auto sphere_path = Path::getInstance().getAssetPath() + "SimpleSphere.gltf";
         std::unique_ptr<GltfLoader> loader2 = std::make_unique<GltfLoader>(sphere_path);
         m_mesh_name_to_index_count["sphere"] = loader2->loaded_index_buffer[0].size();
         m_mesh_name_to_index_buffer["sphere"] = std::make_unique<RHIIndexBuffer>(m_device, loader2->loaded_index_buffer[0]);
