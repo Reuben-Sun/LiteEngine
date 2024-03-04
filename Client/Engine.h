@@ -34,8 +34,10 @@ namespace ToolEngine
         bool m_running = true;
 
         uint32_t m_mouse_button_state = 0;  // 0 is disable, 1 is start, 2 is running
-        float m_last_mouse_x = 0.0f;
+        float m_last_mouse_x = 0.0f;    // use for rotation
         float m_last_mouse_y = 0.0f;
+        float m_mouse_x = 0.0f;     // use for pick up
+        float m_mouse_y = 0.0f;
 
         bool onWindowClose(WindowCloseEvent& e);
         bool onKeyPressed(KeyPressedEvent& e);

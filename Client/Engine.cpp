@@ -76,6 +76,8 @@ namespace ToolEngine
     }
     bool Engine::OnMouseMoved(MouseMovedEvent& e)
     {
+        m_mouse_x = e.getX();
+        m_mouse_y = e.getY();
         if(m_mouse_button_state == 1)
 		{
             m_mouse_button_state = 2;
