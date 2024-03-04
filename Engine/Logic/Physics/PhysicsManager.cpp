@@ -1,6 +1,10 @@
 #include "PhysicsManager.h"
 #include <cstdarg>
 #include "Core/Time/Time.h"
+#include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
+#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseQuery.h>
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/CastResult.h>
 
 namespace ToolEngine
 {
@@ -37,6 +41,7 @@ namespace ToolEngine
 		float dt = Time::getInstance().getDeltaTime();
 		m_physics_system->Update(dt, 1, m_temp_allocator, m_job_system);
 		OPTICK_POP();
+
 		OPTICK_PUSH("Modify entity transform");
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
 		auto view = m_scene.scene_context.view<TransformComponent, const PhysicsComponent, const BoundingComponent>();
@@ -51,6 +56,18 @@ namespace ToolEngine
 			transform_component.transform.position = new_position - bounding.position;
 		}
 		OPTICK_POP();
+
+		JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
+		const JPH::BroadPhaseQuery& bp = m_physics_system->GetBroadPhaseQuery();
+		JPH::RayCast ray_cast(JPH::RVec3(0, 0, 1), JPH::RVec3(0, 0, -100));
+		bp.CastRay(ray_cast, collector);
+		size_t nums = collector.mHits.size();
+		JPH::BroadPhaseCastResult* results = collector.mHits.data();
+		for (int i = 0; i < nums; i++)
+		{
+			JPH::RVec3 position = body_interface.GetCenterOfMassPosition(results[i].mBodyID);
+			LOG_INFO("Hit position: {0}, {1}, {2}", position.GetX(), position.GetY(), position.GetZ());
+		}
 	}
 	void PhysicsManager::TraceImpl(const char* inFMT, ...)
 	{
