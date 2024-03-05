@@ -181,6 +181,13 @@ namespace ToolEngine
 	{
 		ImGui::Begin("SceneView");
 		ImVec2 window_size = ImGui::GetContentRegionAvail();
+		if (m_ui_context.m_scene_width != (uint32_t)window_size.x || 
+			m_ui_context.m_scene_height != (uint32_t)window_size.y)
+		{
+			m_ui_context.m_scene_width = (uint32_t)window_size.x;
+			m_ui_context.m_scene_height = (uint32_t)window_size.y;
+			m_ui_context.need_resize = true;
+		}
 		ImGui::Image(scene_image.getHandle(), window_size);
 		ImGui::End();
 	}

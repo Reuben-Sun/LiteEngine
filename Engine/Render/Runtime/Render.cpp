@@ -51,18 +51,13 @@ namespace ToolEngine
 
 
 	// when imgui scene window resize, forward pass need resize
-	/*void Renderer::resize()
+	void Renderer::resize()
 	{
 		m_rhi_context.m_device->waitIdle();
 		VkFormat color_format = m_rhi_context.m_swapchain->getFormat();
 		VkFormat depth_format = m_rhi_context.m_device->getDepthFormatDetail();
-		uint32_t width = m_rhi_context.m_swapchain->getWidth();
-		uint32_t height = m_rhi_context.m_swapchain->getHeight();
-		if (m_enable_ui)
-		{
-			width = m_render_ui->getUIContext().m_scene_width;
-			height = m_render_ui->getUIContext().m_scene_height;
-		}
+		uint32_t width = m_ui_context.m_scene_width;
+		uint32_t height = m_ui_context.m_scene_height;
 
 		m_forward_pass_width = width;
 		m_forward_pass_height = height;
@@ -75,12 +70,17 @@ namespace ToolEngine
 			m_color_resources->getImageView(),
 			m_depth_resources->getImageView(),
 			width, height);
-		m_blit_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0, RHIDescriptorType::Sampler);
-	}*/
+		m_scene_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0, RHIDescriptorType::Sampler);
+	}
 	
 	void Renderer::record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index)
 	{
 		OPTICK_EVENT();
+		if (m_ui_context.need_resize)
+		{
+			resize();
+			m_ui_context.need_resize = false;
+		}
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		uint32_t w_start = 0;

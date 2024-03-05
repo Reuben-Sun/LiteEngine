@@ -25,7 +25,7 @@ namespace ToolEngine
 		~Renderer();
 
 		void record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index);
-		//void resize();
+		void resize();
 
 		uint32_t m_forward_pass_width;
 		uint32_t m_forward_pass_height;
