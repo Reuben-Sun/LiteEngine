@@ -6,6 +6,7 @@ namespace ToolEngine
 	RenderContext::RenderContext(RHIContext& rhi_context): m_rhi_context(rhi_context)
 	{
 		m_editor_ui = std::make_unique<EditorUI>(m_rhi_context);
+		m_renderer = std::make_unique<Renderer>(m_rhi_context);
 		m_max_frames_in_flight = m_rhi_context.m_swapchain->getImageCount();
 		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, m_max_frames_in_flight);
 		for (uint32_t i = 0; i < m_max_frames_in_flight; i++)
@@ -26,7 +27,8 @@ namespace ToolEngine
 			return;
 		}
 		uint32_t frame_index = getFrameIndex();
-		m_editor_ui->record(*m_command_buffer, frame_index);
+		m_renderer->record(scene, *m_command_buffer, frame_index);
+		//m_editor_ui->record(*m_command_buffer, frame_index);
 		submitFrame(image_index);
 	}
 	bool RenderContext::prepareFrame(uint32_t& image_index)

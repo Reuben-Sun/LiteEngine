@@ -11,7 +11,6 @@
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHITextureImage.h"
 #include "Geometry/RenderScene.h"
-#include "Render/Editor/EditorUI.h"
 
 namespace ToolEngine
 {
@@ -26,6 +25,7 @@ namespace ToolEngine
 		RHIContext& m_rhi_context;
 		
 		std::unique_ptr<EditorUI> m_editor_ui;
+		std::unique_ptr<Renderer> m_renderer;
 		std::unique_ptr<RHICommandBuffer> m_command_buffer;
 		
 		std::vector<std::unique_ptr<Fence>> m_in_flight_fences;
