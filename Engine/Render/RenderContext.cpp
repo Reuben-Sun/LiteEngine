@@ -27,8 +27,10 @@ namespace ToolEngine
 			return;
 		}
 		uint32_t frame_index = getFrameIndex();
+		m_command_buffer->beginRecord(frame_index);
 		m_renderer->record(scene, *m_command_buffer, frame_index);
 		m_editor_ui->record(*m_command_buffer, frame_index, *m_renderer->m_scene_descriptor_set);
+		m_command_buffer->endRecord(frame_index);
 		submitFrame(image_index);
 	}
 	bool RenderContext::prepareFrame(uint32_t& image_index)
