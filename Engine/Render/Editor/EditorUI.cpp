@@ -23,7 +23,7 @@ namespace ToolEngine
 	EditorUI::~EditorUI()
 	{
 	}
-	void EditorUI::record(RHICommandBuffer& cmd, uint32_t frame_index)
+	void EditorUI::record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image)
 	{
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
@@ -39,7 +39,7 @@ namespace ToolEngine
 
 		drawMainMenuBar();
 		drawHierarchy();
-		drawScene();
+		drawScene(scene_image);
 		drawBrowser();
 		drawDetail();
 
@@ -179,10 +179,11 @@ namespace ToolEngine
 
 		ImGui::End();
 	}
-	void EditorUI::drawScene()
+	void EditorUI::drawScene(RHIDescriptorSet& scene_image)
 	{
 		ImGui::Begin("SceneView");
-
+		ImVec2 window_size = ImGui::GetContentRegionAvail();
+		ImGui::Image(scene_image.getHandle(), window_size);
 		ImGui::End();
 	}
 	void EditorUI::drawBrowser()

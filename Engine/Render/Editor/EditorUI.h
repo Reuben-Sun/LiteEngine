@@ -19,7 +19,7 @@ namespace ToolEngine
 		EditorUI(RHIContext& rhi_context);
 		~EditorUI();
 
-		void record(RHICommandBuffer& cmd, uint32_t frame_index);
+		void record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
 	private:
 		RHIContext& m_rhi_context;
 
@@ -36,7 +36,7 @@ namespace ToolEngine
 		void setImGuiStyle();
 		void drawMainMenuBar();
 		void drawHierarchy();
-		void drawScene();
+		void drawScene(RHIDescriptorSet& scene_image);
 		void drawBrowser();
 		void drawDetail();
 		std::string selectIcon(const std::string& file_name);
