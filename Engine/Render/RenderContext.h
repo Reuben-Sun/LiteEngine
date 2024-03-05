@@ -27,6 +27,7 @@ namespace ToolEngine
 		std::unique_ptr<EditorUI> m_editor_ui;
 		std::unique_ptr<Renderer> m_renderer;
 		std::unique_ptr<RHICommandBuffer> m_command_buffer;
+		UIContext m_ui_context;		
 		
 		std::vector<std::unique_ptr<Fence>> m_in_flight_fences;
 		std::vector<std::unique_ptr<Semaphore>> m_image_available_semaphores;

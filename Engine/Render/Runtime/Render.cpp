@@ -8,7 +8,7 @@
 
 namespace ToolEngine
 {
-	Renderer::Renderer(RHIContext& rhi_context) : m_rhi_context(rhi_context)
+	Renderer::Renderer(RHIContext& rhi_context, UIContext& ui_context) : m_rhi_context(rhi_context), m_ui_context(ui_context)
 	{
 		LOG_INFO("Create Renderer!")
 		VkFormat color_format = m_rhi_context.m_swapchain->getFormat();
@@ -133,12 +133,9 @@ namespace ToolEngine
 				// push constant
 				PushConstant push_constant = m_culling_result->getPushConstant(material_name);
 				push_constant.model_matrix = entity.transform.getModelMatrix();
-				/*push_constant.metallic *= m_render_ui->getUIContext().metallic;
-				push_constant.roughness *= m_render_ui->getUIContext().roughness;
-				push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;*/
-				push_constant.metallic = 1.0f;
-				push_constant.roughness = 1.0f;
-				push_constant.debug_mode = 0;
+				push_constant.metallic *= m_ui_context.metallic;
+				push_constant.roughness *= m_ui_context.roughness;
+				push_constant.debug_mode = m_ui_context.debug_mode;
 				cmd.pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
 				// draw
 				cmd.drawIndexed(frame_index, index_buffer.getIndexCount(), 1, 0, 0, 0);
@@ -146,11 +143,11 @@ namespace ToolEngine
 		}
 		OPTICK_POP();
 		OPTICK_PUSH("Draw Gizmos");
-		/*if (m_enable_ui && m_render_ui->getUIContext().enable_gizmos)
+		if (m_ui_context.enable_gizmos)
 		{
 			m_render_gizmos->processRenderScene(scene);
-			m_render_gizmos->tick(*m_command_buffer, frame_index, scene.camera);
-		}*/
+			m_render_gizmos->tick(cmd, frame_index, scene.camera);
+		}
 		OPTICK_POP();
 
 		cmd.endRenderPass(frame_index);

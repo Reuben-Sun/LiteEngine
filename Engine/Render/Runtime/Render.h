@@ -14,13 +14,14 @@
 #include "Render/Pass/BlitPass.h"
 #include "Render/Pipeline/BlitPipeline.h"
 #include "Render/Runtime/Feature/Gizmos/RenderGizmos.h"
+#include "Render/Editor/EditorUI.h"
 
 namespace ToolEngine
 {
 	class Renderer
 	{
 	public:
-		Renderer(RHIContext& rhi_context);
+		Renderer(RHIContext& rhi_context, UIContext& ui_context);
 		~Renderer();
 
 		void record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index);
@@ -32,6 +33,7 @@ namespace ToolEngine
 		std::unique_ptr<RHIDescriptorSet> m_scene_descriptor_set;
 	private:
 		RHIContext& m_rhi_context;
+		UIContext& m_ui_context;
 		
 		std::unique_ptr<CullingResult> m_culling_result;
 		std::unique_ptr<ForwardPass> m_forward_pass;

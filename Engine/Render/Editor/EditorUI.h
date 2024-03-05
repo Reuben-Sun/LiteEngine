@@ -13,15 +13,30 @@
 
 namespace ToolEngine
 {
+	struct UIContext
+	{
+		std::vector<float> camera_rotation;
+		std::vector<float> camera_pos;
+		float camera_speed;
+		uint32_t m_scene_width = 1920;
+		uint32_t m_scene_height = 1080;
+		bool need_resize = true;
+		bool enable_gizmos = false;
+		float metallic = 0.134f;
+		float roughness = 0.276f;
+		int debug_mode = 0;
+	};
+
 	class EditorUI
 	{
 	public:
-		EditorUI(RHIContext& rhi_context);
+		EditorUI(RHIContext& rhi_context, UIContext& ui_context);
 		~EditorUI();
 
 		void record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
 	private:
 		RHIContext& m_rhi_context;
+		UIContext& m_ui_context;
 
 		std::unique_ptr<UIPass> m_ui_pass;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_ui_frame_buffers;

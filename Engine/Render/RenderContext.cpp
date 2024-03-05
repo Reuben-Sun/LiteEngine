@@ -5,8 +5,8 @@ namespace ToolEngine
 {
 	RenderContext::RenderContext(RHIContext& rhi_context): m_rhi_context(rhi_context)
 	{
-		m_editor_ui = std::make_unique<EditorUI>(m_rhi_context);
-		m_renderer = std::make_unique<Renderer>(m_rhi_context);
+		m_editor_ui = std::make_unique<EditorUI>(m_rhi_context, m_ui_context);
+		m_renderer = std::make_unique<Renderer>(m_rhi_context, m_ui_context);
 		m_max_frames_in_flight = m_rhi_context.m_swapchain->getImageCount();
 		m_command_buffer = std::make_unique<RHICommandBuffer>(*m_rhi_context.m_device, m_max_frames_in_flight);
 		for (uint32_t i = 0; i < m_max_frames_in_flight; i++)
@@ -21,6 +21,11 @@ namespace ToolEngine
 	}
 	void RenderContext::tick(RenderScene& scene)
 	{
+		m_ui_context.camera_pos = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
+		auto camera_euler = scene.camera.transform.rotation.getEulerDegrees();
+		m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
+		m_ui_context.camera_speed = scene.camera.camera_speed;
+
 		uint32_t image_index;
 		if (!prepareFrame(image_index))
 		{

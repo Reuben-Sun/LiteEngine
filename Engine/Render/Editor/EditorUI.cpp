@@ -3,7 +3,7 @@
 
 namespace ToolEngine
 {
-	EditorUI::EditorUI(RHIContext& rhi_context): m_rhi_context(rhi_context)
+	EditorUI::EditorUI(RHIContext& rhi_context, UIContext& ui_context): m_rhi_context(rhi_context), m_ui_context(ui_context)
 	{
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
@@ -244,6 +244,25 @@ namespace ToolEngine
 	void EditorUI::drawDetail()
 	{
 		ImGui::Begin("Detail");
+
+		ImGui::Text("Camera Info");
+		ImGui::InputFloat3("Camera Position", m_ui_context.camera_pos.data());
+		ImGui::InputFloat3("Camera Rotation", m_ui_context.camera_rotation.data());
+		ImGui::InputFloat("Camera Speed", &m_ui_context.camera_speed);
+		ImGui::Separator();
+		ImGui::Text("Debug Tools");
+		std::string button_name = m_ui_context.enable_gizmos ? "Gizmos ON" : "Gizmos OFF";
+		if (ImGui::Button(button_name.c_str()))
+		{
+			m_ui_context.enable_gizmos = !m_ui_context.enable_gizmos;
+		}
+		ImGui::SliderFloat("Metallic", &m_ui_context.metallic, 0.0f, 1.0f);
+		ImGui::SliderFloat("Roughness", &m_ui_context.roughness, 0.0f, 1.0f);
+
+		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness" };
+		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
+		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+
 		ImGui::End();
 	}
 	std::string EditorUI::selectIcon(const std::string& file_name)
