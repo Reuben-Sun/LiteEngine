@@ -27,7 +27,7 @@ namespace ToolEngine
 	{
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
-		cmd.beginRecord(frame_index);
+		//cmd.beginRecord(frame_index);
 		cmd.beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 		cmd.setViewport(frame_index, 0, width, 0, height, 0.0f, 1.0f, 0, 1);
 		cmd.setScissor(frame_index, 0, width, 0, height, 0, 1);

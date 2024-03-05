@@ -138,6 +138,9 @@ namespace ToolEngine
 				/*push_constant.metallic *= m_render_ui->getUIContext().metallic;
 				push_constant.roughness *= m_render_ui->getUIContext().roughness;
 				push_constant.debug_mode = m_render_ui->getUIContext().debug_mode;*/
+				push_constant.metallic = 1.0f;
+				push_constant.roughness = 1.0f;
+				push_constant.debug_mode = 0;
 				cmd.pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
 				// draw
 				cmd.drawIndexed(frame_index, index_buffer.getIndexCount(), 1, 0, 0, 0);
@@ -154,7 +157,7 @@ namespace ToolEngine
 
 		cmd.endRenderPass(frame_index);
 
-		cmd.endRecord(frame_index);
+		//cmd.endRecord(frame_index);
 	}
 
 }
