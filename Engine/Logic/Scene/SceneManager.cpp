@@ -34,5 +34,7 @@ namespace ToolEngine
 			render_entity.bounding = bounding_component.bounding;
 			render_scene.render_entities.push_back(render_entity);
 		}
+		auto camera_view = m_scene.scene_context.view<const CameraComponent>();
+		render_scene.camera = camera_view.get<CameraComponent>(camera_view.front()).camera;
 	}
 }

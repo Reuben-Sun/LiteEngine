@@ -3,8 +3,9 @@
 
 namespace ToolEngine
 {
-	FPSCamera::FPSCamera(RenderScene& scene): m_scene(scene)
+	FPSCamera::FPSCamera(LogicScene& scene): m_scene(scene)
 	{
+		CameraComponent camera_component;
 		Camera camera;
 		camera.transform.position = glm::vec3(3.0f, 3.0f, 3.0f);
 		camera.transform.rotation = Quaternion::fromEulerDegreesXYZ(glm::vec3(-63.8f, 0.0f, -133.4f));
@@ -14,8 +15,9 @@ namespace ToolEngine
 		camera.far_plane = 50.0f;
 		camera.view_size = 10;
 		camera.camera_speed = 2.0f;
-
-		m_scene.camera = camera;
+		camera_component.camera = camera;
+		auto camera_entity = m_scene.scene_context.create();
+		m_scene.scene_context.emplace<CameraComponent>(camera_entity, camera_component);
 	}
 	FPSCamera::~FPSCamera()
 	{
@@ -49,41 +51,50 @@ namespace ToolEngine
 	}
 	void FPSCamera::updateRotation(float delta_x, float delta_y)
 	{
-		auto euler = m_scene.camera.transform.rotation.getEulerRandians();
+		auto view = m_scene.scene_context.view<CameraComponent>();
+		auto& camera = view.get<CameraComponent>(view.front()).camera;
+		auto euler = camera.transform.rotation.getEulerRandians();
 		euler.x += delta_y * 0.001f;
 		euler.z += delta_x * 0.001f;
-		m_scene.camera.transform.rotation = Quaternion::fromEulerRadiansXYZ(euler);
+		camera.transform.rotation = Quaternion::fromEulerRadiansXYZ(euler);
+		
 	}
 	void FPSCamera::updateCameraSpeed(float delta_speed)
 	{
-		m_scene.camera.camera_speed = std::clamp(m_scene.camera.camera_speed + delta_speed, 0.0f, 100.0f);
+		auto view = m_scene.scene_context.view<CameraComponent>();
+		auto& camera = view.get<CameraComponent>(view.front()).camera;
+		camera.camera_speed = std::clamp(camera.camera_speed + delta_speed, 0.0f, 100.0f);
 	}
 	void FPSCamera::tick()
 	{
 		OPTICK_EVENT();
+		auto view = m_scene.scene_context.view<CameraComponent>();
+		auto& camera = view.get<CameraComponent>(view.front()).camera;
+			
 		if (m_forward_state.value() == 1)
 		{
-			m_scene.camera.transform.position -= m_scene.camera.transform.getForward() * m_scene.camera.camera_speed * Time::getInstance().getDeltaTime();
+			camera.transform.position -= camera.transform.getForward() * camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		else if (m_forward_state.value() == -1)
 		{
-			m_scene.camera.transform.position += m_scene.camera.transform.getForward() * m_scene.camera.camera_speed * Time::getInstance().getDeltaTime();
+			camera.transform.position += camera.transform.getForward() * camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		if (m_right_state.value() == 1)
 		{
-			m_scene.camera.transform.position -= m_scene.camera.transform.getRight() * m_scene.camera.camera_speed * Time::getInstance().getDeltaTime();
+			camera.transform.position -= camera.transform.getRight() * camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		else if (m_right_state.value() == -1)
 		{
-			m_scene.camera.transform.position += m_scene.camera.transform.getRight() * m_scene.camera.camera_speed * Time::getInstance().getDeltaTime();
+			camera.transform.position += camera.transform.getRight() * camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		if (m_up_state.value() == 1)
 		{
-			m_scene.camera.transform.position += m_scene.camera.transform.getUp() * m_scene.camera.camera_speed * Time::getInstance().getDeltaTime();
+			camera.transform.position += camera.transform.getUp() * camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
 		else if (m_up_state.value() == -1)
 		{
-			m_scene.camera.transform.position -= m_scene.camera.transform.getUp() * m_scene.camera.camera_speed * Time::getInstance().getDeltaTime();
+			camera.transform.position -= camera.transform.getUp() * camera.camera_speed * Time::getInstance().getDeltaTime();
 		}
+		
 	}
 }

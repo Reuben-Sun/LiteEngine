@@ -3,6 +3,7 @@
 #include "Marco.h"
 #include "Geometry/Camera.h"
 #include "Geometry/RenderScene.h"
+#include "Logic/ECS/LogicScene.h"
 
 namespace ToolEngine
 {
@@ -25,7 +26,7 @@ namespace ToolEngine
 	class FPSCamera
 	{
 	public:
-		FPSCamera(RenderScene& scene);
+		FPSCamera(LogicScene& scene);
 		~FPSCamera();
 
 		void updateMoveState(uint32_t keycode, bool pressed);
@@ -39,6 +40,6 @@ namespace ToolEngine
 		MoveState m_up_state;
 		
 	private:
-		RenderScene& m_scene;
+		LogicScene& m_scene;
 	};
 }

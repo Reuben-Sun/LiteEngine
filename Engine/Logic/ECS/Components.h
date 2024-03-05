@@ -6,6 +6,7 @@
 #include <entt/entt.hpp>
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
+#include "Geometry/Camera.h"
 
 namespace ToolEngine
 {
@@ -38,5 +39,10 @@ namespace ToolEngine
 	struct PhysicsComponent
 	{
 		JPH::BodyID body_id;
+	};
+
+	struct CameraComponent
+	{
+		Camera camera;
 	};
 }
