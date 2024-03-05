@@ -24,7 +24,7 @@ namespace ToolEngine
         m_window->setEventCallback(std::bind(&Engine::processEvent, this, std::placeholders::_1));
         m_gp_context = std::make_unique<GPContext>();
         m_rhi_context = std::make_unique<RHIContext>(*m_window);
-        m_renderer = std::make_unique<Renderer>(*m_rhi_context);
+        m_render_context = std::make_unique<RenderContext>(*m_rhi_context);
     }
     void Engine::tick()
     {
@@ -34,7 +34,7 @@ namespace ToolEngine
         m_rhi_context->tick();
         m_gp_context->tick();
         RenderScene& scene = m_gp_context->getScene();
-        m_renderer->tick(scene);
+        m_render_context->tick(scene);
     }
     void Engine::cleanup()
     {
@@ -62,8 +62,8 @@ namespace ToolEngine
 
         if (e.getKeyCode() == 85)   // 85 is u, TODO: move this to resource
         {
-            m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
-            m_renderer->resize();
+            /*m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
+            m_renderer->resize();*/
         }
         
         m_gp_context->m_fps_camera->updateMoveState(e.getKeyCode(), true);
