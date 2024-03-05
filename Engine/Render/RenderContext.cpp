@@ -38,6 +38,10 @@ namespace ToolEngine
 		m_command_buffer->endRecord(frame_index);
 		submitFrame(image_index);
 	}
+	void RenderContext::setFullScreen()
+	{
+		m_editor_ui->m_full_screen = !m_editor_ui->m_full_screen;
+	}
 	bool RenderContext::prepareFrame(uint32_t& image_index)
 	{
 		uint32_t frame_index = getFrameIndex();

@@ -21,6 +21,8 @@ namespace ToolEngine
 		~RenderContext();
 
 		void tick(RenderScene& scene);
+
+		void setFullScreen();
 	private:
 		RHIContext& m_rhi_context;
 		
@@ -39,8 +41,5 @@ namespace ToolEngine
 
 		bool prepareFrame(uint32_t& image_index);
 		void submitFrame(uint32_t image_index);
-
-		
-		
 	};
 }

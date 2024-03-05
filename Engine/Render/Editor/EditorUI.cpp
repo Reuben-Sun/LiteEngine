@@ -37,11 +37,18 @@ namespace ToolEngine
 		ImGui::NewFrame();
 		ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
-		drawMainMenuBar();
-		drawHierarchy();
-		drawScene(scene_image);
-		drawBrowser();
-		drawDetail();
+		if (m_full_screen)
+		{
+			drawScene(scene_image);
+		}
+		else 
+		{
+			drawMainMenuBar();
+			drawHierarchy();
+			drawScene(scene_image);
+			drawBrowser();
+			drawDetail();
+		}
 
 		ImGui::Render();
 

@@ -34,6 +34,7 @@ namespace ToolEngine
 		~EditorUI();
 
 		void record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
+		bool m_full_screen = false;
 	private:
 		RHIContext& m_rhi_context;
 		UIContext& m_ui_context;

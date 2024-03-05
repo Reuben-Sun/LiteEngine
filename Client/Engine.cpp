@@ -62,8 +62,7 @@ namespace ToolEngine
 
         if (e.getKeyCode() == 85)   // 85 is u, TODO: move this to resource
         {
-            /*m_renderer->m_enable_ui = !m_renderer->m_enable_ui;
-            m_renderer->resize();*/
+            m_render_context->setFullScreen();
         }
         
         m_gp_context->m_fps_camera->updateMoveState(e.getKeyCode(), true);
