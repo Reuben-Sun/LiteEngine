@@ -22,9 +22,9 @@ namespace ToolEngine
         WindowProps props;
         m_window = std::make_unique<GlfwWindow>(props);
         m_window->setEventCallback(std::bind(&Engine::processEvent, this, std::placeholders::_1));
+        m_gp_context = std::make_unique<GPContext>();
         m_rhi_context = std::make_unique<RHIContext>(*m_window);
         m_renderer = std::make_unique<Renderer>(*m_rhi_context);
-        m_gp_context = std::make_unique<GPContext>();
     }
     void Engine::tick()
     {

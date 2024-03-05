@@ -28,9 +28,10 @@ namespace ToolEngine
 
     private:
         std::unique_ptr<GlfwWindow> m_window;
+        std::unique_ptr<GPContext> m_gp_context;
         std::unique_ptr<RHIContext> m_rhi_context;
         std::unique_ptr<Renderer> m_renderer;
-        std::unique_ptr<GPContext> m_gp_context;
+        
         bool m_running = true;
 
         uint32_t m_mouse_button_state = 0;  // 0 is disable, 1 is start, 2 is running
