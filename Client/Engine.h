@@ -6,9 +6,9 @@
 #include "Core/Event/MouseEvent.h"
 #include "Window/GlfwWindow.h"
 #include "RHI/Public/RHIContext.h"
-#include "Render/Render.h"
 #include "Geometry/RenderScene.h"
 #include "Logic/GPContext.h"
+#include "Render/RenderContext.h"
 
 
 namespace ToolEngine
@@ -30,7 +30,7 @@ namespace ToolEngine
         std::unique_ptr<GlfwWindow> m_window;
         std::unique_ptr<GPContext> m_gp_context;
         std::unique_ptr<RHIContext> m_rhi_context;
-        std::unique_ptr<Renderer> m_renderer;
+        std::unique_ptr<RenderContext> m_render_context;
         
         bool m_running = true;
 
