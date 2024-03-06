@@ -35,7 +35,8 @@ namespace ToolEngine
 		void bindIndexBuffer(uint32_t current_frame, RHIIndexBuffer& buffer, VkDeviceSize offset, VkIndexType index_type);
 		void bindDescriptorSets(uint32_t current_frame, VkPipelineBindPoint bind_point, VkPipelineLayout layout, const std::vector<VkDescriptorSet> descriptor_sets, uint32_t first_set_index, uint32_t descriptor_set_count);
 		void pushConstants(uint32_t current_frame, VkPipelineLayout layout, VkShaderStageFlags stage_flags, uint32_t offset, uint32_t size, const void* data);
-	
+		void beginDebugUtilsLabel(uint32_t current_frame, std::string label_name);
+		void endDebugUtilsLabel(uint32_t current_frame);
 	private:
 		RHIDevice& m_device;
 		std::vector<VkCommandBuffer> m_command_buffers;

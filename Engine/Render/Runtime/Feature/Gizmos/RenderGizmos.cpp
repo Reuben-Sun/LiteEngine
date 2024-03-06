@@ -94,6 +94,7 @@ namespace ToolEngine
     }
     void RenderGizmos::tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera)
     {
+        cmd.beginDebugUtilsLabel(frame_index, "Gizmos Pass");
         cmd.bindPipeline(frame_index, m_gizmos_pipeline->getHandle());
         GlobalUBO ubo{};
         ubo.view_matrix = camera.getViewMatrix();
@@ -109,6 +110,7 @@ namespace ToolEngine
         {
             drawGizmoObject(cmd, frame_index, object);
         }
+        cmd.endDebugUtilsLabel(frame_index);
     }
     void RenderGizmos::drawGizmoObject(RHICommandBuffer& cmd, uint32_t frame_index, GizmoObject& object)
     {

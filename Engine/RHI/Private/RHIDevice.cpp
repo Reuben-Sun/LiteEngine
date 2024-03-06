@@ -57,10 +57,15 @@ namespace ToolEngine
         return details;
     }
 
+    // Vulkan extension function pointers
+    PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT = nullptr;
+    PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT = nullptr;
+
     RHIDevice::RHIDevice(RHIInstance& instance) : m_instance(instance)
     {
         createPhysicalDevice();
         createLogicalDevice();
+        loadExtensionFunctions();
     }
     RHIDevice::~RHIDevice()
     {
@@ -162,6 +167,12 @@ namespace ToolEngine
         LOG_INFO("Create Command Pool!");
     }
 
+    void RHIDevice::loadExtensionFunctions()
+    {
+        vkCmdBeginDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdBeginDebugUtilsLabelEXT>(vkGetInstanceProcAddr(m_instance.getHandle(), "vkCmdBeginDebugUtilsLabelEXT"));
+        vkCmdEndDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdEndDebugUtilsLabelEXT>(vkGetInstanceProcAddr(m_instance.getHandle(), "vkCmdEndDebugUtilsLabelEXT"));
+    }
+
     VkFormat RHIDevice::getDepthFormatDetail()
     {
         VkFormat depth_format = VK_FORMAT_UNDEFINED;
@@ -245,6 +256,16 @@ namespace ToolEngine
         present_info.pImageIndices = &image_index;
 
         vkQueuePresentKHR(m_present_queue, &present_info);
+    }
+
+    void RHIDevice::beginDebugUtilsLabel(VkCommandBuffer cmd, const VkDebugUtilsLabelEXT& label)
+    {
+        vkCmdBeginDebugUtilsLabelEXT(cmd, &label);
+    }
+
+    void RHIDevice::endDebugUtilsLabel(VkCommandBuffer cmd)
+    {
+        vkCmdEndDebugUtilsLabelEXT(cmd);
     }
 
 

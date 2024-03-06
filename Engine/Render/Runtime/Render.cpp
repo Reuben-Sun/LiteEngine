@@ -87,7 +87,7 @@ namespace ToolEngine
 		uint32_t h_start = 0;
 		uint32_t w_width = m_forward_pass_width;
 		uint32_t h_height = m_forward_pass_height;
-
+		cmd.beginDebugUtilsLabel(frame_index, "Forward Pass");
 		cmd.beginRenderPass(frame_index, *m_forward_pass, *m_forward_frame_buffer, w_width, h_height);
 
 		cmd.bindPipeline(frame_index, m_forward_pipeline->getHandle());
@@ -151,6 +151,7 @@ namespace ToolEngine
 		OPTICK_POP();
 
 		cmd.endRenderPass(frame_index);
+		cmd.endDebugUtilsLabel(frame_index);
 	}
 
 }

@@ -27,7 +27,7 @@ namespace ToolEngine
 	{
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
-
+		cmd.beginDebugUtilsLabel(frame_index, "UI Pass");
 		cmd.beginRenderPass(frame_index, *m_ui_pass, *m_ui_frame_buffers[frame_index], width, height);
 		cmd.setViewport(frame_index, 0, width, 0, height, 0.0f, 1.0f, 0, 1);
 		cmd.setScissor(frame_index, 0, width, 0, height, 0, 1);
@@ -54,8 +54,8 @@ namespace ToolEngine
 
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd.getHandle(frame_index));
 
-
 		cmd.endRenderPass(frame_index);
+		cmd.endDebugUtilsLabel(frame_index);
 	}
 	void EditorUI::initImGui()
 	{

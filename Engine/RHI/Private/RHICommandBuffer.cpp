@@ -134,4 +134,15 @@ namespace ToolEngine
 	{
 		vkCmdPushConstants(m_command_buffers[current_frame], layout, stage_flags, offset, size, data);
 	}
+	void RHICommandBuffer::beginDebugUtilsLabel(uint32_t current_frame, std::string label_name)
+	{
+		VkDebugUtilsLabelEXT labelInfo = {};
+		labelInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+		labelInfo.pLabelName = label_name.data();
+		m_device.beginDebugUtilsLabel(m_command_buffers[current_frame], labelInfo);
+	}
+	void RHICommandBuffer::endDebugUtilsLabel(uint32_t current_frame)
+	{
+		m_device.endDebugUtilsLabel(m_command_buffers[current_frame]);
+	}
 }

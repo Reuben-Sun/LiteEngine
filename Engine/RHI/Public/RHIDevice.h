@@ -47,6 +47,8 @@ namespace ToolEngine
 		void copyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer, VkDeviceSize size);
 
 		void present(std::vector<VkSemaphore>& wait_semaphores, uint32_t image_index, std::vector<VkSwapchainKHR>& swapchains);
+		void beginDebugUtilsLabel(VkCommandBuffer cmd, const VkDebugUtilsLabelEXT& label);
+		void endDebugUtilsLabel(VkCommandBuffer cmd);
 
 		const std::vector<const char*> m_device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	private:
@@ -64,6 +66,7 @@ namespace ToolEngine
 
 		void createPhysicalDevice();
 		void createLogicalDevice();
+		void loadExtensionFunctions();
 
 		bool checkDeviceSupport(VkPhysicalDevice device);
 		bool checkDeviceExtensionSupport(VkPhysicalDevice device);
