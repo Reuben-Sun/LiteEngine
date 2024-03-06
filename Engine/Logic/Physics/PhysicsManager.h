@@ -25,7 +25,8 @@ namespace ToolEngine
 		PhysicsManager(LogicScene& scene);
 		~PhysicsManager();
 
-		void tick(float delta_time);
+		void tick();
+		
 	private:
 		LogicScene& m_scene;
 
@@ -57,5 +58,10 @@ namespace ToolEngine
 		static bool AssertFailedImpl(const char* inExpression, const char* inMessage, const char* inFile, unsigned int inLine);
 
 		void createPhysicsScene();
+
+		float m_fix_update_rate = 120.0f;
+		float getFixedDeltaTime() const { return 1.0f / m_fix_update_rate; }
+		float m_accumulator = 0.0f;
+		void fixedTick();
 	};
 }

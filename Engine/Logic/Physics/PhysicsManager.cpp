@@ -31,26 +31,21 @@ namespace ToolEngine
 	PhysicsManager::~PhysicsManager()
 	{
 	}
-	void PhysicsManager::tick(float delta_time)
+	void PhysicsManager::tick()
 	{
-		OPTICK_PUSH("Physics Update");
-		m_physics_system->Update(delta_time, 1, m_temp_allocator, m_job_system);
-		OPTICK_POP();
-		OPTICK_PUSH("Modify entity transform");
-		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
-		auto view = m_scene.scene_context.view<TransformComponent, const PhysicsComponent, const BoundingComponent>();
-		for (auto entity : view)
+		OPTICK_EVENT();
+		float fixed_delta_time = getFixedDeltaTime();
+		m_accumulator += Time::getInstance().getDeltaTime();
+		if (m_accumulator > fixed_delta_time)
 		{
-			auto& transform_component = view.get<TransformComponent>(entity);
-			auto& physics_component = view.get<PhysicsComponent>(entity);
-			auto& bounding_component = view.get<BoundingComponent>(entity);
-			Bounding bounding = bounding_component.bounding;
-			JPH::RVec3 position = body_interface.GetCenterOfMassPosition(physics_component.body_id);
-			glm::vec3 new_position(position.GetX(), position.GetY(), position.GetZ());
-			transform_component.transform.position = new_position - bounding.position;
+			while (m_accumulator > fixed_delta_time)
+			{
+				m_accumulator -= fixed_delta_time;
+			}
+			fixedTick();
 		}
-		OPTICK_POP();
 	}
+	
 	void PhysicsManager::TraceImpl(const char* inFMT, ...)
 	{
 		// Format the message
@@ -106,5 +101,26 @@ namespace ToolEngine
 			m_scene.scene_context.emplace<PhysicsComponent>(entity, physics_component);
 		}
 	}
-	
+
+	void PhysicsManager::fixedTick()
+	{
+		OPTICK_PUSH("Physics Update");
+		float dt = getFixedDeltaTime();
+		m_physics_system->Update(dt, 1, m_temp_allocator, m_job_system);
+		OPTICK_POP();
+		OPTICK_PUSH("Modify entity transform");
+		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
+		auto view = m_scene.scene_context.view<TransformComponent, const PhysicsComponent, const BoundingComponent>();
+		for (auto entity : view)
+		{
+			auto& transform_component = view.get<TransformComponent>(entity);
+			auto& physics_component = view.get<PhysicsComponent>(entity);
+			auto& bounding_component = view.get<BoundingComponent>(entity);
+			Bounding bounding = bounding_component.bounding;
+			JPH::RVec3 position = body_interface.GetCenterOfMassPosition(physics_component.body_id);
+			glm::vec3 new_position(position.GetX(), position.GetY(), position.GetZ());
+			transform_component.transform.position = new_position - bounding.position;
+		}
+		OPTICK_POP();
+	}
 }

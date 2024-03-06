@@ -23,9 +23,5 @@ namespace ToolEngine
 	private:
 		RenderScene m_scene;
 		LogicScene m_logic_scene;
-
-		float m_fix_update_rate = 60.0f;
-		float getFixedDeltaTime() const { return 1.0f / m_fix_update_rate; }
-		float m_accumulator = 0.0f;
 	};
 }
