@@ -19,7 +19,7 @@
                 0.5,
                 0.5
             ],
-            "bounding_type": 0,
+            "bounding_type": "Box",
             "bounding_position":[
                 0.0,
                 0.0,
@@ -50,7 +50,7 @@
                 0.5,
                 0.5
             ],
-            "bounding_type": 1,
+            "bounding_type": "Sphere",
             "bounding_position":[
                 0.0,
                 0.0,
@@ -81,7 +81,7 @@
                 10.0,
                 10.0
             ],
-            "bounding_type": 0,
+            "bounding_type": "Box",
             "bounding_position":[
                 0.0,
                 0.0,
@@ -115,7 +115,7 @@
                 0.01,
                 0.01
             ],
-            "bounding_type": 0,
+            "bounding_type": "Box",
             "bounding_position":[
                 0.0,
                 0.0,
@@ -148,7 +148,7 @@
                 0.05,
                 0.05
             ],
-            "bounding_type": 0,
+            "bounding_type": "Box",
             "bounding_position":[
                 0.1,
                 0.0,

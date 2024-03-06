@@ -36,14 +36,14 @@ namespace ToolEngine
 			Bounding bounding;
 			auto bounding_position = go.at("bounding_position").get<std::vector<float>>();
 			auto bounding_data = go.at("bounding_data").get<std::vector<float>>();
-			auto bounding_type = go.at("bounding_type").get<uint32_t>();
+			auto bounding_type = go.at("bounding_type").get<std::string>();
 			bounding.position = glm::vec3(bounding_position[0], bounding_position[1], bounding_position[2]);
 			bounding.data = glm::vec3(bounding_data[0], bounding_data[1], bounding_data[2]);
-			if (bounding_type == 0)
+			if (bounding_type == "Box")
 			{
 				bounding.type = BoundingType::Box;
 			}
-			else if (bounding_type == 1)
+			else if (bounding_type == "Sphere")
 			{
 				bounding.type = BoundingType::Sphere;
 			}
