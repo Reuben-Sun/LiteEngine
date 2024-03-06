@@ -129,7 +129,7 @@
         },
         {
             "material_path": [
-                "Material/cube.material"
+                "Material/WateringCan.material"
             ],
             "mesh_path": "WateringCan.gltf",
             "name": "WateringCan",

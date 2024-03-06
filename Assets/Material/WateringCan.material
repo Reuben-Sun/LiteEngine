@@ -1,0 +1,16 @@
+{
+    "frag_shader_path": "",
+    "texture_bindings": [
+        {
+            "binding_index": 1,
+            "binding_type": 0,
+            "texture_path": "wateringcan_bc.png"
+        },
+        {
+            "binding_index": 3,
+            "binding_type": 1,
+            "texture_path": "wateringcan_n.png"
+        }
+    ],
+    "vertex_shader_path": ""
+}
