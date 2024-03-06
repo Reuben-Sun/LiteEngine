@@ -38,6 +38,7 @@ namespace ToolEngine
 		m_accumulator += Time::getInstance().getDeltaTime();
 		if (m_accumulator > fixed_delta_time)
 		{
+			// HACK: A very long tick is only allowed to run once
 			while (m_accumulator > fixed_delta_time)
 			{
 				m_accumulator -= fixed_delta_time;
