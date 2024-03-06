@@ -31,11 +31,10 @@ namespace ToolEngine
 	PhysicsManager::~PhysicsManager()
 	{
 	}
-	void PhysicsManager::tick()
+	void PhysicsManager::tick(float delta_time)
 	{
 		OPTICK_PUSH("Physics Update");
-		float dt = Time::getInstance().getDeltaTime();
-		m_physics_system->Update(dt, 1, m_temp_allocator, m_job_system);
+		m_physics_system->Update(delta_time, 1, m_temp_allocator, m_job_system);
 		OPTICK_POP();
 		OPTICK_PUSH("Modify entity transform");
 		JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();

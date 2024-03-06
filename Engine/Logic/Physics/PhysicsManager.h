@@ -25,7 +25,7 @@ namespace ToolEngine
 		PhysicsManager(LogicScene& scene);
 		~PhysicsManager();
 
-		void tick();
+		void tick(float delta_time);
 	private:
 		LogicScene& m_scene;
 

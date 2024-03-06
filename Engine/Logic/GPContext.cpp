@@ -1,5 +1,6 @@
 #include "GPContext.h"
 #include "Core/Path/Path.h"
+#include "Core/Time/Time.h"
 
 namespace ToolEngine
 {
@@ -16,8 +17,18 @@ namespace ToolEngine
     void GPContext::tick()
     {
         OPTICK_EVENT();
+        float fixed_delta_time = getFixedDeltaTime();
+        m_accumulator += Time::getInstance().getDeltaTime();
+        if (m_accumulator > fixed_delta_time)
+        {
+            while (m_accumulator > fixed_delta_time)
+            {
+                m_accumulator -= fixed_delta_time;
+            }
+            m_physics_manager->tick(fixed_delta_time);
+		}
         m_fps_camera->tick();
-        m_physics_manager->tick();
+        
         // scene manager need last tick
         m_scene_manager->tick(m_scene);
     }
