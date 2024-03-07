@@ -14,14 +14,13 @@ namespace ToolEngine
 		GPContext();
 		~GPContext();
 
-		RenderScene& getScene() { return m_scene; }
+		LogicScene& getLogicScene() { return m_logic_scene; }
 		std::unique_ptr<SceneManager> m_scene_manager;
 		std::unique_ptr<FPSCamera> m_fps_camera;
 		std::unique_ptr<PhysicsManager> m_physics_manager;
 
 		void tick();
 	private:
-		RenderScene m_scene;
 		LogicScene m_logic_scene;
 	};
 }

@@ -11,6 +11,7 @@
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHITextureImage.h"
 #include "Geometry/RenderScene.h"
+#include "Logic/ECS/LogicScene.h"
 
 namespace ToolEngine
 {
@@ -20,11 +21,12 @@ namespace ToolEngine
 		RenderContext(RHIContext& rhi_context);
 		~RenderContext();
 
-		void tick(RenderScene& scene);
+		void tick(LogicScene& scene);
 
 		void setFullScreen();
 	private:
 		RHIContext& m_rhi_context;
+		RenderScene m_scene;
 		
 		std::unique_ptr<EditorUI> m_editor_ui;
 		std::unique_ptr<Renderer> m_renderer;

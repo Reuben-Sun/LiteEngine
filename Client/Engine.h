@@ -6,7 +6,6 @@
 #include "Core/Event/MouseEvent.h"
 #include "Window/GlfwWindow.h"
 #include "RHI/Public/RHIContext.h"
-#include "Geometry/RenderScene.h"
 #include "Logic/GPContext.h"
 #include "Render/RenderContext.h"
 

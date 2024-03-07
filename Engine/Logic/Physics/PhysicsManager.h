@@ -12,7 +12,6 @@
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
-#include "Geometry/RenderScene.h"
 #include "Logic/ECS/LogicScene.h"
 #include "JoltUtils.h"
 #include "Listener.h"

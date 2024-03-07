@@ -19,13 +19,37 @@ namespace ToolEngine
 	RenderContext::~RenderContext()
 	{
 	}
-	void RenderContext::tick(RenderScene& scene)
+	void RenderContext::tick(LogicScene& scene)
 	{
-		m_ui_context.camera_pos = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
-		auto camera_euler = scene.camera.transform.rotation.getEulerDegrees();
-		m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
-		m_ui_context.camera_speed = scene.camera.camera_speed;
+		OPTICK_PUSH("Logic scene to render scene");
+		m_scene.render_entities.clear();
+		auto view = scene.scene_context.view<const InfoComponent,
+			const MeshComponent, const MaterialComponent, const TransformComponent, const BoundingComponent>();
+		for (auto entity : view)
+		{
+			auto& info_component = view.get<InfoComponent>(entity);
+			auto& mesh_component = view.get<MeshComponent>(entity);
+			auto& material_component = view.get<MaterialComponent>(entity);
+			auto& transform_component = view.get<TransformComponent>(entity);
+			auto& bounding_component = view.get<BoundingComponent>(entity);
 
+			RenderEntity render_entity;
+			render_entity.go_id = info_component.id;
+			render_entity.mesh_name = info_component.name;
+			render_entity.material_names = material_component.material_paths;
+			render_entity.transform = transform_component.transform;
+			render_entity.bounding = bounding_component.bounding;
+			m_scene.render_entities.push_back(render_entity);
+		}
+		auto camera_view = scene.scene_context.view<const CameraComponent>();
+		m_scene.camera = camera_view.get<CameraComponent>(camera_view.front()).camera;
+
+		m_ui_context.camera_pos = { m_scene.camera.transform.position.x, m_scene.camera.transform.position.y, m_scene.camera.transform.position.z };
+		auto camera_euler = m_scene.camera.transform.rotation.getEulerDegrees();
+		m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
+		m_ui_context.camera_speed = m_scene.camera.camera_speed;
+		OPTICK_POP();
+		OPTICK_PUSH("RenderContext tick");
 		uint32_t image_index;
 		if (!prepareFrame(image_index))
 		{
@@ -33,10 +57,11 @@ namespace ToolEngine
 		}
 		uint32_t frame_index = getFrameIndex();
 		m_command_buffer->beginRecord(frame_index);
-		m_renderer->record(scene, *m_command_buffer, frame_index);
+		m_renderer->record(m_scene, *m_command_buffer, frame_index);
 		m_editor_ui->record(*m_command_buffer, frame_index, *m_renderer->m_scene_descriptor_set);
 		m_command_buffer->endRecord(frame_index);
 		submitFrame(image_index);
+		OPTICK_POP();
 	}
 	void RenderContext::setFullScreen()
 	{

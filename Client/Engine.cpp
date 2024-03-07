@@ -33,7 +33,7 @@ namespace ToolEngine
         m_window->tick();
         m_rhi_context->tick();
         m_gp_context->tick();
-        RenderScene& scene = m_gp_context->getScene();
+        LogicScene& scene = m_gp_context->getLogicScene();
         m_render_context->tick(scene);
     }
     void Engine::cleanup()
