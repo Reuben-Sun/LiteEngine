@@ -43,6 +43,16 @@ namespace ToolEngine
 		m_scene_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(*m_rhi_context.m_device, layout_descriptor);
 		m_scene_descriptor_set = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device, *m_rhi_context.m_descriptor_pool, *m_scene_descriptor_set_layout);
 		m_scene_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0, RHIDescriptorType::Sampler);
+
+		std::vector<std::string> skybox_images;
+		auto image_path = Path::getInstance().getAssetPath() + "Textures\\Cubemap\\";
+		skybox_images.push_back(image_path + "nx.png");
+		skybox_images.push_back(image_path + "ny.png");
+		skybox_images.push_back(image_path + "nz.png");
+		skybox_images.push_back(image_path + "px.png");
+		skybox_images.push_back(image_path + "py.png");
+		skybox_images.push_back(image_path + "pz.png");
+		m_skybox_texture = std::make_unique<RHITextureCube>(*m_rhi_context.m_device, skybox_images);
 	}
 
 	Renderer::~Renderer()

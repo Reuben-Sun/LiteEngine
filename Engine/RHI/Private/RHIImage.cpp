@@ -3,8 +3,8 @@
 
 namespace ToolEngine
 {
-	RHIImage::RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties)
-		: m_device(device), m_format(format)
+	RHIImage::RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties, ImageType type)
+		: m_device(device), m_format(format), m_type(type)
 	{
 		VkImageCreateInfo image_create_info{};
 		image_create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -20,6 +20,11 @@ namespace ToolEngine
 		image_create_info.usage = usage;
 		image_create_info.samples = VK_SAMPLE_COUNT_1_BIT;
 		image_create_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		if (m_type == ImageType::TEXTURE_CUBE)
+		{
+			image_create_info.arrayLayers = 6;
+			image_create_info.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+		}
 
 		if (vkCreateImage(m_device.getLogicalDevice(), &image_create_info, nullptr, &m_image) != VK_SUCCESS)
 		{
@@ -56,6 +61,11 @@ namespace ToolEngine
 		image_view_create_info.subresourceRange.levelCount = 1;
 		image_view_create_info.subresourceRange.baseArrayLayer = 0;
 		image_view_create_info.subresourceRange.layerCount = 1;
+		if (m_type == ImageType::TEXTURE_CUBE)
+		{
+			image_view_create_info.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
+			image_view_create_info.subresourceRange.layerCount = 6;
+		}
 		if (vkCreateImageView(m_device.getLogicalDevice(), &image_view_create_info, nullptr, &m_image_view) != VK_SUCCESS)
 		{
 			LOG_ERROR("failed to create image views!");
