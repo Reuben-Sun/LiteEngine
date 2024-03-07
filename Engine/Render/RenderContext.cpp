@@ -43,7 +43,8 @@ namespace ToolEngine
 		}
 		auto camera_view = scene.scene_context.view<const CameraComponent>();
 		m_scene.camera = camera_view.get<CameraComponent>(camera_view.front()).camera;
-
+		OPTICK_POP();
+		OPTICK_PUSH("Update UI info");
 		m_ui_context.camera_pos = { m_scene.camera.transform.position.x, m_scene.camera.transform.position.y, m_scene.camera.transform.position.z };
 		auto camera_euler = m_scene.camera.transform.rotation.getEulerDegrees();
 		m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
@@ -69,6 +70,7 @@ namespace ToolEngine
 	}
 	bool RenderContext::prepareFrame(uint32_t& image_index)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->wait();
 
@@ -87,6 +89,7 @@ namespace ToolEngine
 	}
 	void RenderContext::submitFrame(uint32_t image_index)
 	{
+		OPTICK_EVENT();
 		uint32_t frame_index = getFrameIndex();
 		m_in_flight_fences[frame_index]->resetFence();
 

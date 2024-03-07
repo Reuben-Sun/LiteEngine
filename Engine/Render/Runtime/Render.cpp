@@ -81,8 +81,6 @@ namespace ToolEngine
 			resize();
 			m_ui_context.need_resize = false;
 		}
-		uint32_t width = m_rhi_context.m_swapchain->getWidth();
-		uint32_t height = m_rhi_context.m_swapchain->getHeight();
 		uint32_t w_start = 0;
 		uint32_t h_start = 0;
 		uint32_t w_width = m_forward_pass_width;
