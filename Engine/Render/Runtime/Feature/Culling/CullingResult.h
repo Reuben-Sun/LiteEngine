@@ -31,6 +31,8 @@ namespace ToolEngine
 		RHIDescriptorSet& getDescriptorSet(const std::string& material_name);
 		PushConstant getPushConstant(const std::string& material_name);
 		Light& getDirLight() { return m_dir_light; }
+		RHITextureImage& getDefaultTexture() { return *m_global_default_texture; }
+		RHITextureCube& getSkyboxTexture() { return *m_skybox_texture; }
 
 		std::unordered_map<std::string, std::vector<std::string>> m_model_name_to_sub_model_name;
 	private:

@@ -31,11 +31,13 @@ Varyings MainVS(Attributes input)
     return output;
 }
 
+Texture2D _BaseMap : register(t1);
+SamplerState _BaseMap_ST : register(s1);
+
 TextureCube _SkyboxMap : register(t2);
-SamplerState _SkyboxMap_ST : register(s2);
 
 float4 MainPS(Varyings input) : SV_TARGET
 {
-    float3 color = _SkyboxMap.Sample(_SkyboxMap_ST, input.uvw).xyz;
+    float3 color = _SkyboxMap.Sample(_BaseMap_ST, input.uvw).xyz;
     return float4(color, 1.0f);
 }
