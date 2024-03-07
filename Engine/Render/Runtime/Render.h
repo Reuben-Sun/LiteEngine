@@ -42,8 +42,6 @@ namespace ToolEngine
 		std::unique_ptr<RenderGizmos> m_render_gizmos;
 
 		std::unique_ptr<RHIDescriptorSetLayout> m_scene_descriptor_set_layout;
-
-		std::unique_ptr<RHITextureCube> m_skybox_texture;
 		
 	};
 }

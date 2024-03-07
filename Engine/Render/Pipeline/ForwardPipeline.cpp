@@ -13,6 +13,7 @@ namespace ToolEngine
 		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
 		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
 		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
+		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
 		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, layout_descriptor);
 		createPipeline();
 		LOG_INFO("Create ForwardPipeline!");

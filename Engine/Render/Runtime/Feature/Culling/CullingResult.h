@@ -40,6 +40,7 @@ namespace ToolEngine
 
 		std::unique_ptr<RHIUniformBuffer> m_global_ubo;
 		std::unique_ptr<RHITextureImage> m_global_default_texture;
+		std::unique_ptr<RHITextureCube> m_skybox_texture;
 		Light m_dir_light;
 
 		// TODO: unload useless buffer
@@ -51,6 +52,6 @@ namespace ToolEngine
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
 
 		const uint32_t TEXTURE_MIN_BINDING = 1;
-		const uint32_t TEXTURE_MAX_BINDING = 4;
+		const uint32_t TEXTURE_MAX_BINDING = 5;
 	};
 }
