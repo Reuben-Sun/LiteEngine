@@ -5,7 +5,6 @@
 #include "RHI/Public/RHIContext.h"
 #include "Render/Editor/EditorUI.h"
 #include "Render/Runtime/Render.h"
-#include "Render/Pass/UIPass.h"
 #include "RHI/Public/RHIFrameBuffer.h"
 #include "RHI/Public/RHICommandBuffer.h"
 #include "RHI/Public/RHIDescriptorSet.h"

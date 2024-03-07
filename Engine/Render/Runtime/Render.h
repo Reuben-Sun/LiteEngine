@@ -6,13 +6,10 @@
 #include "RHI/Public/RHICommandBuffer.h"
 #include "RHI/Public/RHISynchronization.h"
 #include "Render/Pipeline/ForwardPipeline.h"
-#include "Render/Pass/UIPass.h"
 #include "Render/Resources/ColorResources.h"
 #include "Render/Resources/DepthResources.h"
 #include "Geometry/RenderScene.h"
 #include "Render/Runtime/Feature/Culling/CullingResult.h"
-#include "Render/Pass/BlitPass.h"
-#include "Render/Pipeline/BlitPipeline.h"
 #include "Render/Runtime/Feature/Gizmos/RenderGizmos.h"
 #include "Render/Editor/EditorUI.h"
 
