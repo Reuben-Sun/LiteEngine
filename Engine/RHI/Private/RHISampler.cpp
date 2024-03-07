@@ -5,9 +5,6 @@ namespace ToolEngine
 	RHISampler::RHISampler(RHIDevice& device, VkFilter magFilter, VkFilter minFilter, VkSamplerAddressMode addressMode)
 		: m_device(device)
 	{
-		VkPhysicalDeviceProperties properties{};
-		vkGetPhysicalDeviceProperties(m_device.getPhysicalDevice(), &properties);
-
 		VkSamplerCreateInfo sampler_info = {};
 		sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 		sampler_info.magFilter = magFilter;
@@ -16,7 +13,7 @@ namespace ToolEngine
 		sampler_info.addressModeV = addressMode;
 		sampler_info.addressModeW = addressMode;
 		sampler_info.anisotropyEnable = VK_TRUE;
-		sampler_info.maxAnisotropy = properties.limits.maxSamplerAnisotropy;
+		sampler_info.maxAnisotropy = m_device.getGPUInfo().limits.maxSamplerAnisotropy;
 		sampler_info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
 		sampler_info.unnormalizedCoordinates = VK_FALSE;
 		sampler_info.compareEnable = VK_FALSE;

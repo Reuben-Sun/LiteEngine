@@ -37,6 +37,7 @@ namespace ToolEngine
 
 		VkResult waitIdle() const { return vkDeviceWaitIdle(m_logical_device); }
 		VkPhysicalDevice getPhysicalDevice() const { return m_physical_device; }
+		VkPhysicalDeviceProperties getGPUInfo() const { return m_gpu_info; }
 		VkDevice getLogicalDevice() const { return m_logical_device; }
 		VkCommandPool getCommandPool() const { return m_command_pool->getHandle(); }
 		VkFormat getDepthFormatDetail();
@@ -54,7 +55,7 @@ namespace ToolEngine
 	private:
 		RHIInstance& m_instance;
 		std::unique_ptr<RHICommandPool> m_command_pool;
-		std::string m_name;
+		VkPhysicalDeviceProperties m_gpu_info;
 		VkPhysicalDevice m_physical_device{ VK_NULL_HANDLE };
 		VkDevice m_logical_device{ VK_NULL_HANDLE };
 		

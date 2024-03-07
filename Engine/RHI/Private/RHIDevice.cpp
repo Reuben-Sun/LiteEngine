@@ -100,6 +100,9 @@ namespace ToolEngine
             LOG_ERROR("failed to find a suitable GPU!");
         }
 
+        // get gpu info
+        vkGetPhysicalDeviceProperties(m_physical_device, &m_gpu_info);
+
         LOG_INFO("Create Physical Device!");
     }
     void RHIDevice::createLogicalDevice()

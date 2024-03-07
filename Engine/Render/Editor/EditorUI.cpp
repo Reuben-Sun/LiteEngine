@@ -259,6 +259,11 @@ namespace ToolEngine
 	{
 		ImGui::Begin("Detail");
 
+		ImGui::Text("Detail Info");
+		ImGui::Text(m_rhi_context.m_device->getGPUInfo().deviceName);
+		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+		ImGui::Separator();
+
 		ImGui::Text("Camera Info");
 		ImGui::InputFloat3("Camera Position", m_ui_context.camera_pos.data());
 		ImGui::InputFloat3("Camera Rotation", m_ui_context.camera_rotation.data());
@@ -275,7 +280,7 @@ namespace ToolEngine
 
 		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness" };
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
-		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+		
 
 		ImGui::End();
 	}
