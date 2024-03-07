@@ -4,12 +4,12 @@
         {
             "binding_index": 1,
             "binding_type": 0,
-            "texture_path": "wateringcan_bc.png"
+            "texture_path": "Textures/WateringCan/WateringCan.png"
         },
         {
             "binding_index": 3,
             "binding_type": 1,
-            "texture_path": "wateringcan_n.png"
+            "texture_path": "Textures/WateringCan/WateringCan_N.png"
         }
     ],
     "vertex_shader_path": ""

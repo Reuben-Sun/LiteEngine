@@ -4,7 +4,7 @@
         {
             "binding_index": 1,
             "binding_type": 0,
-            "texture_path": "Calibration.png"
+            "texture_path": "Textures/Calibration.png"
         }
     ],
     "vertex_shader_path": ""

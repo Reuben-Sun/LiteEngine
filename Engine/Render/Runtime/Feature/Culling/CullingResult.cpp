@@ -12,7 +12,7 @@ namespace ToolEngine
 		m_dir_light.intensity = 1.0f;
 		m_dir_light.position = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 		m_global_ubo = std::make_unique<RHIUniformBuffer>(m_device, sizeof(GlobalUBO));
-		auto global_texture_path = Path::getInstance().getAssetPath() + "\\default.jpg";
+		auto global_texture_path = Path::getInstance().getAssetPath() + "Textures\\default.jpg";
 		m_global_default_texture = std::make_unique<RHITextureImage>(m_device, global_texture_path);
 	}
 	CullingResult::~CullingResult()
@@ -28,33 +28,33 @@ namespace ToolEngine
 		for (int i = 0; i < scene.render_entities.size(); i++)
 		{
 			auto& entity = scene.render_entities[i];
-			auto& mesh_name = entity.mesh_name;
+			auto& mesh_path = entity.mesh_path;
 			OPTICK_PUSH("Process Mesh");
 			// mesh
-			if(m_model_name_to_sub_model_name.find(mesh_name) == m_model_name_to_sub_model_name.end())
+			if(m_model_name_to_sub_model_name.find(mesh_path) == m_model_name_to_sub_model_name.end())
 			{
-				if (mesh_name == "plane")
+				if (mesh_path == "plane")
 				{
 					Mesh plane_mesh = Mesh::createPlane();
-					m_sub_mesh_name_to_index_buffer.emplace(mesh_name, 
+					m_sub_mesh_name_to_index_buffer.emplace(mesh_path, 
 						std::make_unique<RHIIndexBuffer>(m_device, plane_mesh.meshs[0].index_buffer));
-					m_sub_mesh_name_to_vertex_buffer.emplace(mesh_name, 
+					m_sub_mesh_name_to_vertex_buffer.emplace(mesh_path, 
 						std::make_unique<RHIVertexBuffer>(m_device, plane_mesh.meshs[0].vertex_buffer));
-					m_model_name_to_sub_model_name.emplace(mesh_name, std::vector<std::string>{mesh_name});
+					m_model_name_to_sub_model_name.emplace(mesh_path, std::vector<std::string>{mesh_path});
 				}
 				else 
 				{
-					std::string model_path = Path::getInstance().getAssetPath() + mesh_name + ".gltf";
+					std::string model_path = Path::getInstance().getAssetPath() + mesh_path;
 					std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
 					std::vector<std::string> sub_mesh_names;
 					for (int sub_mesh_index = 0; sub_mesh_index < loader->loaded_index_buffer.size(); sub_mesh_index++)
 					{
-						auto sub_mesh_name = mesh_name + std::to_string(sub_mesh_index);
+						auto sub_mesh_name = mesh_path + std::to_string(sub_mesh_index);
 						m_sub_mesh_name_to_index_buffer.emplace(sub_mesh_name, std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[sub_mesh_index]));
 						m_sub_mesh_name_to_vertex_buffer.emplace(sub_mesh_name, std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[sub_mesh_index]));
 						sub_mesh_names.push_back(sub_mesh_name);
 					}
-					m_model_name_to_sub_model_name.emplace(mesh_name, sub_mesh_names);
+					m_model_name_to_sub_model_name.emplace(mesh_path, sub_mesh_names);
 				}
 				
 			}

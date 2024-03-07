@@ -111,7 +111,7 @@ namespace ToolEngine
 		for (int i = 0; i < scene.render_entities.size(); i++)
 		{
 			auto& entity = scene.render_entities[i];
-			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[entity.mesh_name];
+			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[entity.mesh_path];
 			for (int sub_index = 0; sub_index < sub_model_names.size(); sub_index++)
 			{
 				auto& sub_model_name = sub_model_names[sub_index];

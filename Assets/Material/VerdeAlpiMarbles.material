@@ -4,12 +4,12 @@
         {
             "binding_index": 1,
             "binding_type": 0,
-            "texture_path": "VerdeAlpiMarbles.jpg"
+            "texture_path": "Textures/VerdeAlpiMarbles/VerdeAlpiMarbles.jpg"
         },
         {
             "binding_index": 4,
             "binding_type": 1,
-            "texture_path": "VerdeAlpiMarbles_R.jpg"
+            "texture_path": "Textures/VerdeAlpiMarbles/VerdeAlpiMarbles_R.jpg"
         }
     ],
     "vertex_shader_path": ""

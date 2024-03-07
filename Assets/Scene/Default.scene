@@ -2,7 +2,7 @@
     "game_objects": [
         {
             "material_path": ["Material/cube.material"],
-            "mesh_path": "Cube.gltf",
+            "mesh_path": "Models/Cube.gltf",
             "name": "Cube",
             "position": [
                 -2.0,
@@ -32,8 +32,8 @@
             ]
         },
         {
-            "material_path": ["Material/cube.material"],
-            "mesh_path": "Sphere.gltf",
+            "material_path": ["Material/Cube.material"],
+            "mesh_path": "Models/Sphere.gltf",
             "name": "Sphere",
             "position": [
                 2.0,
@@ -63,7 +63,7 @@
             ]
         },
         {
-            "material_path": ["Material/plane.material"],
+            "material_path": ["Material/Plane.material"],
             "mesh_path": "plane",
             "name": "plane",
             "position": [
@@ -96,9 +96,9 @@
         {
             "material_path": [
                 "Material/VerdeAlpiMarbles.material",
-                "Material/cube.material"
+                "Material/Cube.material"
             ],
-            "mesh_path": "ShaderSphere.gltf",
+            "mesh_path": "Models/ShaderSphere.gltf",
             "name": "ShaderSphere",
             "position": [
                 0.0,
@@ -131,7 +131,7 @@
             "material_path": [
                 "Material/WateringCan.material"
             ],
-            "mesh_path": "WateringCan.gltf",
+            "mesh_path": "Models/WateringCan.gltf",
             "name": "WateringCan",
             "position": [
                 2.0,

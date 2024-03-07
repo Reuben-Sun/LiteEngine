@@ -35,7 +35,7 @@ namespace ToolEngine
 
 			RenderEntity render_entity;
 			render_entity.go_id = info_component.id;
-			render_entity.mesh_name = info_component.name;
+			render_entity.mesh_path = mesh_component.mesh_path;
 			render_entity.material_names = material_component.material_paths;
 			render_entity.transform = transform_component.transform;
 			render_entity.bounding = bounding_component.bounding;
