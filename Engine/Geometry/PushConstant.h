@@ -27,4 +27,9 @@ namespace ToolEngine
 		glm::vec3 color;
 		float alpha;	// TODO: support alpha
 	};
+
+	struct SkyboxPushConstant
+	{
+		glm::mat4 model_matrix;
+	};
 }
