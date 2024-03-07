@@ -97,6 +97,10 @@ namespace ToolEngine
 		barrier.subresourceRange.levelCount = 1;
 		barrier.subresourceRange.baseArrayLayer = 0;
 		barrier.subresourceRange.layerCount = 1;
+		if (m_type == ImageType::TEXTURE_CUBE)
+		{
+			barrier.subresourceRange.layerCount = 6;
+		}
 
 		VkPipelineStageFlags source_stage;
 		VkPipelineStageFlags destination_stage;
