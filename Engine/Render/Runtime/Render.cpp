@@ -22,11 +22,13 @@ namespace ToolEngine
 		m_depth_resources = std::make_unique<DepthResources>(*m_rhi_context.m_device, width, height);
 
 		m_forward_pass = std::make_unique<ForwardPass>(*m_rhi_context.m_device, color_format, depth_format);
-		
 		m_forward_pipeline = std::make_unique<ForwardPipeline>(*m_rhi_context.m_device, m_forward_pass->getHandle());
 		
-
+		m_culling_result = std::make_unique<CullingResult>(*m_rhi_context.m_device,
+			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
 		m_render_gizmos = std::make_unique<RenderGizmos>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
+		m_render_skybox = std::make_unique<RenderSkybox>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
+		m_render_skybox->init(m_culling_result->getGlobalUBO(), m_culling_result->getDefaultTexture(), m_culling_result->getSkyboxTexture());
 
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
 		m_forward_frame_buffer = std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device,
@@ -35,9 +37,7 @@ namespace ToolEngine
 			m_depth_resources->getImageView(),
 			width, height);
 
-		m_culling_result = std::make_unique<CullingResult>(*m_rhi_context.m_device, 
-			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
-
+		// scene image for imgui
 		std::vector<RHIDescriptorType> layout_descriptor;
 		layout_descriptor.push_back(RHIDescriptorType::Sampler);
 		m_scene_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(*m_rhi_context.m_device, layout_descriptor);
@@ -134,7 +134,7 @@ namespace ToolEngine
 				push_constant.metallic *= m_ui_context.metallic;
 				push_constant.roughness *= m_ui_context.roughness;
 				push_constant.debug_mode = m_ui_context.debug_mode;
-				cmd.pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstant), &push_constant);
+				cmd.pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstant), &push_constant);
 				// draw
 				cmd.drawIndexed(frame_index, index_buffer.getIndexCount(), 1, 0, 0, 0);
 			}
@@ -147,6 +147,7 @@ namespace ToolEngine
 			m_render_gizmos->tick(cmd, frame_index, scene.camera);
 		}
 		OPTICK_POP();
+		m_render_skybox->tick(cmd, frame_index, scene.camera);
 
 		cmd.endRenderPass(frame_index);
 		cmd.endDebugUtilsLabel(frame_index);

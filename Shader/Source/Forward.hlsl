@@ -55,6 +55,8 @@ Texture2D _NormalMap : register(t3);
 
 Texture2D _RoughnessMap : register(t4);
 
+TextureCube _SkyboxMap : register(t5);
+
 static float3 _DebugColor = float3(1.0f, 0.0f, 1.0f);
 
 float4 MainPS(Varyings input) : SV_TARGET
@@ -86,6 +88,8 @@ float4 MainPS(Varyings input) : SV_TARGET
     {
         roughness *= _RoughnessMap.Sample(_BaseMap_ST, input.uv).x;
     }
+    
+    float4 skyboxColor = _SkyboxMap.Sample(_BaseMap_ST, normalWS);
     
     BRDFData data = (BRDFData) 0;
     data.albedo = albedo;

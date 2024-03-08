@@ -1,32 +1,29 @@
-#include "ForwardPipeline.h"
+#include "SkyboxPipeline.h"
 #include "RHI/Public/RHIShader.h"
 #include "Geometry/Vertex.h"
+#include "Geometry/PushConstant.h"
 
 namespace ToolEngine
 {
-	ForwardPipeline::ForwardPipeline(RHIDevice& device, VkRenderPass render_pass)
+    SkyboxPipeline::SkyboxPipeline(RHIDevice& device, VkRenderPass render_pass)
 		: m_device(device), m_render_pass(render_pass)
-	{
-		std::vector<RHIDescriptorType> layout_descriptor;
-		layout_descriptor.push_back(RHIDescriptorType::ConstantBuffer);
-		layout_descriptor.push_back(RHIDescriptorType::Sampler);
+    {
+        std::vector<RHIDescriptorType> layout_descriptor;
+        layout_descriptor.push_back(RHIDescriptorType::ConstantBuffer);
+        layout_descriptor.push_back(RHIDescriptorType::Sampler);
 		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
-		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
-		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
-		layout_descriptor.push_back(RHIDescriptorType::TextureSRV);
-		m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, layout_descriptor);
-		createPipeline();
-		LOG_INFO("Create ForwardPipeline!");
-	}
-	ForwardPipeline::~ForwardPipeline()
-	{
-	}
-
-	void ForwardPipeline::createPipeline()
-	{
+        m_ubo_descriptor_set_layout = std::make_unique<RHIDescriptorSetLayout>(m_device, layout_descriptor);
+        createPipeline();
+        LOG_INFO("Create SkyboxPipeline!");
+    }
+    SkyboxPipeline::~SkyboxPipeline()
+    {
+    }
+    void SkyboxPipeline::createPipeline()
+    {
 		// shader
-		RHIShader vertex_shader_module(m_device, "Forward.vert.spv");
-		RHIShader fragment_shader_module(m_device, "Forward.frag.spv");
+		RHIShader vertex_shader_module(m_device, "Skybox.vert.spv");
+		RHIShader fragment_shader_module(m_device, "Skybox.frag.spv");
 		VkPipelineShaderStageCreateInfo vert_shader_stage_info{};
 		vert_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		vert_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -81,7 +78,7 @@ namespace ToolEngine
 		VkPipelineDepthStencilStateCreateInfo depth_stencil_state{};
 		depth_stencil_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 		depth_stencil_state.depthTestEnable = VK_TRUE;
-		depth_stencil_state.depthWriteEnable = VK_TRUE;
+		depth_stencil_state.depthWriteEnable = VK_FALSE;
 		depth_stencil_state.depthCompareOp = VK_COMPARE_OP_LESS;
 		depth_stencil_state.depthBoundsTestEnable = VK_FALSE;
 		depth_stencil_state.minDepthBounds = 0.0f; // Optional
@@ -115,8 +112,8 @@ namespace ToolEngine
 		dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 		dynamicState.pDynamicStates = dynamicStates.data();
 
-		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle()};
-		const std::vector<VkPushConstantRange> push_constant_ranges = { { VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstant) } };
+		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle() };
+		const std::vector<VkPushConstantRange> push_constant_ranges = { { VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(SkyboxPushConstant) } };
 		VkPipelineLayoutCreateInfo pipeline_layout_info{};
 		pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();
@@ -141,5 +138,5 @@ namespace ToolEngine
 		m_state.m_subpass_index = 0;
 		m_pipeline = std::make_unique<RHIPipeline>(m_device);
 		m_pipeline->createPipeline(m_state);
-	}
+    }
 }

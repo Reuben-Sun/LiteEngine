@@ -12,7 +12,7 @@ namespace ToolEngine
 		camera.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 		camera.fov = glm::radians(45.0f);
 		camera.near_plane = 0.1f;
-		camera.far_plane = 50.0f;
+		camera.far_plane = 100.0f;
 		camera.view_size = 10;
 		camera.camera_speed = 2.0f;
 		camera_component.camera = camera;

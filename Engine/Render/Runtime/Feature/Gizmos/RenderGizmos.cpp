@@ -14,19 +14,16 @@ namespace ToolEngine
         m_global_descriptor_set = std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_gizmos_pipeline->getDescriptorSetLayout());
         m_global_descriptor_set->updateUniformBuffer(*m_global_uniform_buffer, 0);
         Mesh line = Mesh::createLine(5, { 0.3f, 0, 0 });
-        m_mesh_name_to_index_count["line"] = line.meshs[0].index_buffer.size();
         m_mesh_name_to_index_buffer["line"] = std::make_unique<RHIIndexBuffer>(m_device, line.meshs[0].index_buffer);
         m_mesh_name_to_vertex_buffer["line"] = std::make_unique<RHIVertexBuffer>(m_device, line.meshs[0].vertex_buffer);
 
         auto cube_path = Path::getInstance().getAssetPath() + "Models\\Cube.gltf";
         std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(cube_path);
-        m_mesh_name_to_index_count["cube"] = loader->loaded_index_buffer[0].size();
         m_mesh_name_to_index_buffer["cube"] = std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[0]);
         m_mesh_name_to_vertex_buffer["cube"] = std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[0]);
 
         auto sphere_path = Path::getInstance().getAssetPath() + "Models\\SimpleSphere.gltf";
         std::unique_ptr<GltfLoader> loader2 = std::make_unique<GltfLoader>(sphere_path);
-        m_mesh_name_to_index_count["sphere"] = loader2->loaded_index_buffer[0].size();
         m_mesh_name_to_index_buffer["sphere"] = std::make_unique<RHIIndexBuffer>(m_device, loader2->loaded_index_buffer[0]);
         m_mesh_name_to_vertex_buffer["sphere"] = std::make_unique<RHIVertexBuffer>(m_device, loader2->loaded_vertex_buffer[0]);
 
@@ -119,7 +116,7 @@ namespace ToolEngine
         VkDeviceSize offsets[] = { 0 };
         cmd.bindVertexBuffer(frame_index, *m_mesh_name_to_vertex_buffer[mesh_name], offsets, 0, 1);
         object.constant.model_matrix = object.transform.getModelMatrix();
-        cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GizmoPushConstant), &object.constant);
-        cmd.drawIndexed(frame_index, m_mesh_name_to_index_count[mesh_name], 1, 0, 0, 0);
+        cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(GizmoPushConstant), &object.constant);
+        cmd.drawIndexed(frame_index, m_mesh_name_to_index_buffer[mesh_name]->getIndexCount(), 1, 0, 0, 0);
     }
 }
