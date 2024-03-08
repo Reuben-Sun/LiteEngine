@@ -22,8 +22,8 @@ namespace ToolEngine
 	void RenderSkybox::init(RHIUniformBuffer& ubo, RHITextureImage& default_image, RHITextureCube& skybox_texture)
 	{
 		m_descriptor_set->updateUniformBuffer(ubo, 0);
-		//m_descriptor_set->updateTextureImage(default_image.m_descriptor, 1);
-		m_descriptor_set->updateTextureImage(skybox_texture.m_descriptor, 1, RHIDescriptorType::Sampler);
+		m_descriptor_set->updateTextureImage(default_image.m_descriptor, 1, RHIDescriptorType::Sampler);
+		m_descriptor_set->updateTextureImage(skybox_texture.m_descriptor, 2);
 	}
 	void RenderSkybox::tick(RHICommandBuffer& cmd, uint32_t frame_index)
 	{
@@ -36,7 +36,7 @@ namespace ToolEngine
 		cmd.bindVertexBuffer(frame_index, *m_skybox_vertex_buffer, offsets, 0, 1);
 		Transform transform;
 		transform.rotation = Quaternion::Identity();
-		transform.scale = glm::vec3(100, 100, 100);
+		transform.scale = glm::vec3(1, 1, 1);
 		SkyboxPushConstant constant;
 		constant.model_matrix = transform.getModelMatrix();
 		cmd.pushConstants(frame_index, m_skybox_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(SkyboxPushConstant), &constant);
