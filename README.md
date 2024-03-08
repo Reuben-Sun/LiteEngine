@@ -45,3 +45,10 @@ git submodule update
 
 - 使用entt重写logic scene逻辑
 - 使用optick进行性能测试
+
+#### 2024.3.8
+
+- 绘制天空盒（但是没有做IBL）
+- 清理一些Vulkan报错
+
+![2024_3_8](Doc/2024_3_8.png)
