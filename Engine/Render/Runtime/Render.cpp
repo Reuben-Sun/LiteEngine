@@ -147,7 +147,7 @@ namespace ToolEngine
 			m_render_gizmos->tick(cmd, frame_index, scene.camera);
 		}
 		OPTICK_POP();
-		m_render_skybox->tick(cmd, frame_index);
+		m_render_skybox->tick(cmd, frame_index, scene.camera);
 
 		cmd.endRenderPass(frame_index);
 		cmd.endDebugUtilsLabel(frame_index);

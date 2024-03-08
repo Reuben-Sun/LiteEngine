@@ -25,7 +25,7 @@ namespace ToolEngine
 		m_descriptor_set->updateTextureImage(default_image.m_descriptor, 1, RHIDescriptorType::Sampler);
 		m_descriptor_set->updateTextureImage(skybox_texture.m_descriptor, 2);
 	}
-	void RenderSkybox::tick(RHICommandBuffer& cmd, uint32_t frame_index)
+	void RenderSkybox::tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera)
 	{
 		cmd.beginDebugUtilsLabel(frame_index, "Skybox Pass");
 		cmd.bindPipeline(frame_index, m_skybox_pipeline->getHandle());
@@ -35,8 +35,8 @@ namespace ToolEngine
 		VkDeviceSize offsets[] = { 0 };
 		cmd.bindVertexBuffer(frame_index, *m_skybox_vertex_buffer, offsets, 0, 1);
 		Transform transform;
-		transform.rotation = Quaternion::Identity();
-		transform.scale = glm::vec3(1, 1, 1);
+		transform.position = camera.transform.position;
+		transform.scale = glm::vec3(50.0f, 50.0f, 50.0f);
 		SkyboxPushConstant constant;
 		constant.model_matrix = transform.getModelMatrix();
 		cmd.pushConstants(frame_index, m_skybox_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(SkyboxPushConstant), &constant);

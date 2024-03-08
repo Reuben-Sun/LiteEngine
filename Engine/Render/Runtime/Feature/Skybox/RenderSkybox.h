@@ -8,6 +8,7 @@
 #include "RHI/Public/RHIRenderPass.h"
 #include "RHI/Public/RHICommandBuffer.h"
 #include "Render/Pipeline/SkyboxPipeline.h"
+#include "Geometry/Camera.h"
 
 namespace ToolEngine
 {
@@ -18,7 +19,7 @@ namespace ToolEngine
 		~RenderSkybox();
 
 		void init(RHIUniformBuffer& ubo, RHITextureImage& default_image, RHITextureCube& skybox_texture);
-		void tick(RHICommandBuffer& cmd, uint32_t frame_index);
+		void tick(RHICommandBuffer& cmd, uint32_t frame_index, Camera& camera);
 	private:
 		RHIDevice& m_device;
 		RHIDescriptorPool& m_ubo_descriptor_pool;
