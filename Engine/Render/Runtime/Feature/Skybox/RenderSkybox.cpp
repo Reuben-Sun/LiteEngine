@@ -22,8 +22,8 @@ namespace ToolEngine
 	void RenderSkybox::init(RHIUniformBuffer& ubo, RHITextureImage& default_image, RHITextureCube& skybox_texture)
 	{
 		m_descriptor_set->updateUniformBuffer(ubo, 0);
-		m_descriptor_set->updateTextureImage(default_image.m_descriptor, 1);
-		m_descriptor_set->updateTextureImage(skybox_texture.m_descriptor, 2);
+		//m_descriptor_set->updateTextureImage(default_image.m_descriptor, 1);
+		m_descriptor_set->updateTextureImage(skybox_texture.m_descriptor, 1, RHIDescriptorType::Sampler);
 	}
 	void RenderSkybox::tick(RHICommandBuffer& cmd, uint32_t frame_index)
 	{

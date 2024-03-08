@@ -127,7 +127,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     
     if (pushConstant.debugMode == 0)
     {
-        return float4(skyboxColor.xyz, 1.0f);
+        return float4(result.xyz, 1.0f);
     }
     else
     {
