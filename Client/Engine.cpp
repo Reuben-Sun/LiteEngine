@@ -32,9 +32,9 @@ namespace ToolEngine
         Time::getInstance().tick();
         m_window->tick();
         m_rhi_context->tick();
-        m_gp_context->tick();
         LogicScene& scene = m_gp_context->getLogicScene();
         m_render_context->tick(scene);
+        m_gp_context->tick();
     }
     void Engine::cleanup()
     {
@@ -75,6 +75,7 @@ namespace ToolEngine
     }
     bool Engine::OnMouseMoved(MouseMovedEvent& e)
     {
+        m_gp_context->m_fps_camera->setCurrentMousePos(e.getX(), e.getY());
         if(m_mouse_button_state == 1)
 		{
             m_mouse_button_state = 2;

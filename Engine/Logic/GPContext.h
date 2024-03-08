@@ -20,6 +20,7 @@ namespace ToolEngine
 		std::unique_ptr<PhysicsManager> m_physics_manager;
 
 		void tick();
+
 	private:
 		LogicScene m_logic_scene;
 	};

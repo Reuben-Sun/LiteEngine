@@ -43,6 +43,9 @@ namespace ToolEngine
 		}
 		auto camera_view = scene.scene_context.view<const CameraComponent>();
 		m_scene.camera = camera_view.get<CameraComponent>(camera_view.front()).camera;
+		auto ui_info_view = scene.scene_context.view<UIInfoComponent>();
+		ui_info_view.get<UIInfoComponent>(ui_info_view.front()).scene_bounding = m_editor_ui->m_scene_bounding;
+
 		OPTICK_POP();
 		OPTICK_PUSH("Update UI info");
 		m_ui_context.camera_pos = { m_scene.camera.transform.position.x, m_scene.camera.transform.position.y, m_scene.camera.transform.position.z };

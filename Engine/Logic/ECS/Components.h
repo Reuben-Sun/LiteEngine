@@ -45,4 +45,9 @@ namespace ToolEngine
 	{
 		Camera camera;
 	};
+
+	struct UIInfoComponent
+	{
+		glm::vec4 scene_bounding;
+	};
 }

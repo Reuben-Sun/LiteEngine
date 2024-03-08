@@ -188,6 +188,14 @@ namespace ToolEngine
 	{
 		ImGui::Begin("SceneView");
 		ImVec2 window_size = ImGui::GetContentRegionAvail();
+		// save scene bounding
+		ImVec2 window_begin = ImGui::GetWindowPos();
+		ImVec2 scene_begin = ImGui::GetWindowContentRegionMin();
+		m_scene_bounding.x = window_begin.x + scene_begin.x;
+		m_scene_bounding.y = window_begin.y + scene_begin.y;
+		m_scene_bounding.z = window_begin.x + scene_begin.x + window_size.x;
+		m_scene_bounding.w = window_begin.y + scene_begin.y + window_size.y;
+		// scene size changed event
 		if (m_ui_context.m_scene_width != (uint32_t)window_size.x || 
 			m_ui_context.m_scene_height != (uint32_t)window_size.y)
 		{
@@ -195,6 +203,7 @@ namespace ToolEngine
 			m_ui_context.m_scene_height = (uint32_t)window_size.y;
 			m_ui_context.need_resize = true;
 		}
+		// show scene image
 		ImGui::Image(scene_image.getHandle(), window_size);
 		ImGui::End();
 	}
