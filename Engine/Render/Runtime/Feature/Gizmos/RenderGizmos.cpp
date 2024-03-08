@@ -116,7 +116,7 @@ namespace ToolEngine
         VkDeviceSize offsets[] = { 0 };
         cmd.bindVertexBuffer(frame_index, *m_mesh_name_to_vertex_buffer[mesh_name], offsets, 0, 1);
         object.constant.model_matrix = object.transform.getModelMatrix();
-        cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GizmoPushConstant), &object.constant);
+        cmd.pushConstants(frame_index, m_gizmos_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(GizmoPushConstant), &object.constant);
         cmd.drawIndexed(frame_index, m_mesh_name_to_index_buffer[mesh_name]->getIndexCount(), 1, 0, 0, 0);
     }
 }
