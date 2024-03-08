@@ -36,7 +36,7 @@ namespace ToolEngine
 		m_descriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		m_descriptor.imageView = m_image->getImageView();
 		m_descriptor.sampler = m_sampler->getHandle();
-		LOG_INFO("Create texture image!");
+		LOG_INFO("Create texture image {}!", path);
 	}
 	RHITextureImage::~RHITextureImage()
 	{

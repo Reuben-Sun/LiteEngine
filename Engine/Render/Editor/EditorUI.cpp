@@ -92,7 +92,7 @@ namespace ToolEngine
 			m_texture_name_to_image[name] = std::make_unique<RHITextureImage>(*m_rhi_context.m_device, icon);
 			m_texture_name_to_descriptor_set[name] = std::make_unique<RHIDescriptorSet>(*m_rhi_context.m_device,
 				*m_rhi_context.m_descriptor_pool, *m_texture_descriptor_set_layout);
-			m_texture_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[name]->m_descriptor, 0);
+			m_texture_name_to_descriptor_set[name]->updateTextureImage(m_texture_name_to_image[name]->m_descriptor, 0, RHIDescriptorType::Sampler);
 		}
 		m_current_path = Path::getInstance().getAssetPath();
 	}
