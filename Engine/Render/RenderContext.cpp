@@ -48,20 +48,7 @@ namespace ToolEngine
 		ui_info_view.get<UIInfoComponent>(ui_info_view.front()).scene_bounding = m_editor_ui->m_scene_bounding;
 
 		OPTICK_POP();
-		OPTICK_PUSH("Update UI info");
-		m_ui_context.camera_pos = { m_scene.camera.transform.position.x, m_scene.camera.transform.position.y, m_scene.camera.transform.position.z };
-		auto camera_euler = m_scene.camera.transform.rotation.getEulerDegrees();
-		m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
-		m_ui_context.camera_speed = m_scene.camera.camera_speed;
-		m_ui_context.hierarchy_objects.resize(m_scene.render_entities.size());
-		for (int i = 0; i < m_scene.render_entities.size(); i++)
-		{
-			HierarchyObject object;
-			object.name = m_scene.render_entities[i].mesh_name;
-			object.type = HierarchyObjectType::RenderEntity;
-			m_ui_context.hierarchy_objects[i] = object;
-		}
-		OPTICK_POP();
+
 		OPTICK_PUSH("RenderContext tick");
 		uint32_t image_index;
 		if (!prepareFrame(image_index))
@@ -71,7 +58,7 @@ namespace ToolEngine
 		uint32_t frame_index = getFrameIndex();
 		m_command_buffer->beginRecord(frame_index);
 		m_renderer->record(m_scene, *m_command_buffer, frame_index);
-		m_editor_ui->record(*m_command_buffer, frame_index, *m_renderer->m_scene_descriptor_set);
+		m_editor_ui->record(m_scene, *m_command_buffer, frame_index, *m_renderer->m_scene_descriptor_set);
 		m_command_buffer->endRecord(frame_index);
 		submitFrame(image_index);
 		OPTICK_POP();

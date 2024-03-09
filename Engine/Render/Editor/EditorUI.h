@@ -10,25 +10,12 @@
 #include "RHI/Public/RHICommandBuffer.h"
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHITextureImage.h"
+#include "Geometry/RenderScene.h"
 
 namespace ToolEngine
 {
-	enum class HierarchyObjectType
-	{
-		RenderEntity,
-		Light,
-		Camera
-	};
-	struct HierarchyObject
-	{
-		std::string name;
-		HierarchyObjectType type;
-	};
 	struct UIContext
 	{
-		std::vector<float> camera_rotation;
-		std::vector<float> camera_pos;
-		float camera_speed;
 		uint32_t m_scene_width = 1920;
 		uint32_t m_scene_height = 1080;
 		bool need_resize = true;
@@ -36,7 +23,6 @@ namespace ToolEngine
 		float metallic = 0.134f;
 		float roughness = 0.276f;
 		int debug_mode = 0;
-		std::vector<HierarchyObject> hierarchy_objects;
 		int m_selecting_object_index = 0;
 	};
 
@@ -46,7 +32,7 @@ namespace ToolEngine
 		EditorUI(RHIContext& rhi_context, UIContext& ui_context);
 		~EditorUI();
 
-		void record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
+		void record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
 		bool m_full_screen = false;
 		glm::vec4 m_scene_bounding;	// begin x, begin y, end x, end y
 	private:
@@ -65,10 +51,10 @@ namespace ToolEngine
 		void initImGui();
 		void setImGuiStyle();
 		void drawMainMenuBar();
-		void drawHierarchy();
+		void drawHierarchy(RenderScene& scene);
 		void drawScene(RHIDescriptorSet& scene_image);
 		void drawBrowser();
-		void drawDetail();
+		void drawDetail(RenderScene& scene);
 		std::string selectIcon(const std::string& file_name);
 	};
 }
