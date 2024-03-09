@@ -13,6 +13,17 @@
 
 namespace ToolEngine
 {
+	enum class HierarchyObjectType
+	{
+		RenderEntity,
+		Light,
+		Camera
+	};
+	struct HierarchyObject
+	{
+		std::string name;
+		HierarchyObjectType type;
+	};
 	struct UIContext
 	{
 		std::vector<float> camera_rotation;
@@ -25,6 +36,8 @@ namespace ToolEngine
 		float metallic = 0.134f;
 		float roughness = 0.276f;
 		int debug_mode = 0;
+		std::vector<HierarchyObject> hierarchy_objects;
+		int m_selecting_object_index = 0;
 	};
 
 	class EditorUI

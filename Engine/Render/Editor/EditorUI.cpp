@@ -182,6 +182,21 @@ namespace ToolEngine
 	{
 		ImGui::Begin("Hierarchy");
 
+		for (int i = 0; i < m_ui_context.hierarchy_objects.size(); i++)
+		{
+			auto& object = m_ui_context.hierarchy_objects[i];
+			ImGuiTreeNodeFlags flags = (m_ui_context.m_selecting_object_index == i) ? ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Leaf;
+			bool open = ImGui::TreeNodeEx(object.name.c_str(), flags);
+			if (ImGui::IsItemClicked())
+			{
+				m_ui_context.m_selecting_object_index = i;
+			}
+			if (open)
+			{
+				ImGui::TreePop();
+			}
+		}
+
 		ImGui::End();
 	}
 	void EditorUI::drawScene(RHIDescriptorSet& scene_image)

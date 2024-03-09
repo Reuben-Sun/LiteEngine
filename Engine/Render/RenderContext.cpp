@@ -35,6 +35,7 @@ namespace ToolEngine
 
 			RenderEntity render_entity;
 			render_entity.go_id = info_component.id;
+			render_entity.mesh_name = info_component.name;
 			render_entity.mesh_path = mesh_component.mesh_path;
 			render_entity.material_names = material_component.material_paths;
 			render_entity.transform = transform_component.transform;
@@ -52,6 +53,14 @@ namespace ToolEngine
 		auto camera_euler = m_scene.camera.transform.rotation.getEulerDegrees();
 		m_ui_context.camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
 		m_ui_context.camera_speed = m_scene.camera.camera_speed;
+		m_ui_context.hierarchy_objects.resize(m_scene.render_entities.size());
+		for (int i = 0; i < m_scene.render_entities.size(); i++)
+		{
+			HierarchyObject object;
+			object.name = m_scene.render_entities[i].mesh_name;
+			object.type = HierarchyObjectType::RenderEntity;
+			m_ui_context.hierarchy_objects[i] = object;
+		}
 		OPTICK_POP();
 		OPTICK_PUSH("RenderContext tick");
 		uint32_t image_index;

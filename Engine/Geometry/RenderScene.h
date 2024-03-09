@@ -12,6 +12,7 @@ namespace ToolEngine
 	struct RenderEntity
 	{
 		uint32_t go_id;
+		std::string mesh_name;
 		std::string mesh_path;
 		std::vector<std::string> material_names;
 		Transform transform;
