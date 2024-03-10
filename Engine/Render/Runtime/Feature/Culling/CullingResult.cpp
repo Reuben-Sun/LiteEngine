@@ -36,9 +36,9 @@ namespace ToolEngine
 	{
 		OPTICK_EVENT();
 		// TODO: currrent without culling
-		for (int i = 0; i < scene.render_entities.size(); i++)
+		for (int entity_index = 0; entity_index < scene.render_entities.size(); entity_index++)
 		{
-			auto& entity = scene.render_entities[i];
+			auto& entity = scene.render_entities[entity_index];
 			auto& mesh_path = entity.mesh_path;
 			OPTICK_PUSH("Process Mesh");
 			// mesh
@@ -72,9 +72,9 @@ namespace ToolEngine
 			OPTICK_POP();
 			OPTICK_PUSH("Process Material");
 			// material
-			for (int i = 0; i < entity.material_names.size(); i++)
+			for (int material_index = 0; material_index < entity.material_names.size(); material_index++)
 			{
-				auto& material_name = entity.material_names[i];
+				auto& material_name = entity.material_names[material_index];
 				auto material_path = Path::getInstance().getAssetPath() + material_name;
 				nlohmann::json material_json = Path::getInstance().readJson(material_path);
 				Material material = Material::deserialize(material_json);
