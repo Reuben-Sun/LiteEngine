@@ -3,7 +3,8 @@
 
 namespace ToolEngine
 {
-	EditorUI::EditorUI(RHIContext& rhi_context, UIContext& ui_context): m_rhi_context(rhi_context), m_ui_context(ui_context)
+	EditorUI::EditorUI(RHIContext& rhi_context, UIContext& ui_context, RenderScene& scene)
+		: m_rhi_context(rhi_context), m_ui_context(ui_context), m_scene(scene)
 	{
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
@@ -23,7 +24,7 @@ namespace ToolEngine
 	EditorUI::~EditorUI()
 	{
 	}
-	void EditorUI::record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image)
+	void EditorUI::record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image)
 	{
 		uint32_t width = m_rhi_context.m_swapchain->getWidth();
 		uint32_t height = m_rhi_context.m_swapchain->getHeight();
@@ -44,10 +45,10 @@ namespace ToolEngine
 		else 
 		{
 			drawMainMenuBar();
-			drawHierarchy(scene);
+			drawHierarchy();
 			drawScene(scene_image);
 			drawBrowser();
-			drawDetail(scene);
+			drawDetail();
 		}
 
 		ImGui::Render();
@@ -178,14 +179,14 @@ namespace ToolEngine
 			ImGui::EndMainMenuBar();
 		}
 	}
-	void EditorUI::drawHierarchy(RenderScene& scene)
+	void EditorUI::drawHierarchy()
 	{
 		ImGui::Begin("Hierarchy");
 
-		for (int i = 0; i < scene.render_entities.size(); i++)
+		for (int i = 0; i < m_scene.render_entities.size(); i++)
 		{
 			ImGuiTreeNodeFlags flags = (m_ui_context.m_selecting_object_index == i) ? ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Leaf;
-			bool open = ImGui::TreeNodeEx(scene.render_entities[i].mesh_name.c_str(), flags);
+			bool open = ImGui::TreeNodeEx(m_scene.render_entities[i].mesh_name.c_str(), flags);
 			if (ImGui::IsItemClicked())
 			{
 				m_ui_context.m_selecting_object_index = i;
@@ -278,7 +279,7 @@ namespace ToolEngine
 
 		ImGui::End();
 	}
-	void EditorUI::drawDetail(RenderScene& scene)
+	void EditorUI::drawDetail()
 	{
 		ImGui::Begin("Detail");
 
@@ -288,12 +289,12 @@ namespace ToolEngine
 		ImGui::Separator();
 
 		ImGui::Text("Camera Info");
-		std::vector<float> camera_position = { scene.camera.transform.position.x, scene.camera.transform.position.y, scene.camera.transform.position.z };
-		auto camera_euler = scene.camera.transform.rotation.getEulerDegrees();
+		std::vector<float> camera_position = { m_scene.camera.transform.position.x, m_scene.camera.transform.position.y, m_scene.camera.transform.position.z };
+		auto camera_euler = m_scene.camera.transform.rotation.getEulerDegrees();
 		std::vector<float> camera_rotation = { camera_euler[0], camera_euler[1], camera_euler[2] };
 		ImGui::InputFloat3("Camera Position", camera_position.data());
 		ImGui::InputFloat3("Camera Rotation", camera_rotation.data());
-		ImGui::InputFloat("Camera Speed", &scene.camera.camera_speed);
+		ImGui::InputFloat("Camera Speed", &m_scene.camera.camera_speed);
 		ImGui::Separator();
 
 		ImGui::Text("Debug Tools");
@@ -308,7 +309,7 @@ namespace ToolEngine
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
 		ImGui::Separator();
 		
-		auto& entity = scene.render_entities[m_ui_context.m_selecting_object_index];
+		auto& entity = m_scene.render_entities[m_ui_context.m_selecting_object_index];
 		ImGui::Text("Render Entity: %s", entity.mesh_name.c_str());
 		std::vector<float> entity_position = { entity.transform.position.x, entity.transform.position.y, entity.transform.position.z};
 		auto entity_euler = entity.transform.rotation.getEulerDegrees();
@@ -318,7 +319,8 @@ namespace ToolEngine
 		ImGui::InputFloat3("Position", entity_position.data());
 		ImGui::InputFloat3("Rotation", entity_rotation.data());
 		ImGui::InputFloat3("Scale", entity_scale.data());
-
+		ImGui::Text("Material");
+		
 		ImGui::End();
 	}
 	std::string EditorUI::selectIcon(const std::string& file_name)

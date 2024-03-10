@@ -29,15 +29,16 @@ namespace ToolEngine
 	class EditorUI
 	{
 	public:
-		EditorUI(RHIContext& rhi_context, UIContext& ui_context);
+		EditorUI(RHIContext& rhi_context, UIContext& ui_context, RenderScene& scene);
 		~EditorUI();
 
-		void record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
+		void record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
 		bool m_full_screen = false;
 		glm::vec4 m_scene_bounding;	// begin x, begin y, end x, end y
 	private:
 		RHIContext& m_rhi_context;
 		UIContext& m_ui_context;
+		RenderScene& m_scene;
 
 		std::unique_ptr<UIPass> m_ui_pass;
 		std::vector<std::unique_ptr<RHIFrameBuffer>> m_ui_frame_buffers;
@@ -51,10 +52,10 @@ namespace ToolEngine
 		void initImGui();
 		void setImGuiStyle();
 		void drawMainMenuBar();
-		void drawHierarchy(RenderScene& scene);
+		void drawHierarchy();
 		void drawScene(RHIDescriptorSet& scene_image);
 		void drawBrowser();
-		void drawDetail(RenderScene& scene);
+		void drawDetail();
 		std::string selectIcon(const std::string& file_name);
 	};
 }
