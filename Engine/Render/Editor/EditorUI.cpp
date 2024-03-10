@@ -303,8 +303,6 @@ namespace ToolEngine
 		{
 			m_ui_context.enable_gizmos = !m_ui_context.enable_gizmos;
 		}
-		ImGui::SliderFloat("Metallic", &m_ui_context.metallic, 0.0f, 1.0f);
-		ImGui::SliderFloat("Roughness", &m_ui_context.roughness, 0.0f, 1.0f);
 		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness" };
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
 		ImGui::Separator();
@@ -319,8 +317,17 @@ namespace ToolEngine
 		ImGui::InputFloat3("Position", entity_position.data());
 		ImGui::InputFloat3("Rotation", entity_rotation.data());
 		ImGui::InputFloat3("Scale", entity_scale.data());
-		ImGui::Text("Material");
 		
+		for (int material_index = 0; material_index < entity.material_names.size(); material_index++)
+		{
+			auto material_name = entity.material_names[material_index];
+			ImGui::Text(material_name.c_str());
+			PushConstant& push_constant = m_scene.m_resources->m_material_name_to_push_constant[material_name];
+			std::string metallic_slider_name = std::format("Metallic {0}", material_index);
+			std::string roughness_slider_name = std::format("Roughness {0}", material_index);
+			ImGui::SliderFloat(metallic_slider_name.c_str(), &push_constant.metallic, 0.0f, 1.0f);
+			ImGui::SliderFloat(roughness_slider_name.c_str(), &push_constant.roughness, 0.0f, 1.0f);
+		}
 		ImGui::End();
 	}
 	std::string EditorUI::selectIcon(const std::string& file_name)

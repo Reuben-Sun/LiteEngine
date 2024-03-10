@@ -1,7 +1,7 @@
 {
     "game_objects": [
         {
-            "material_path": ["Material/cube.material"],
+            "material_path": ["Material/Cube.material"],
             "mesh_path": "Models/Cube.gltf",
             "name": "Cube",
             "position": [

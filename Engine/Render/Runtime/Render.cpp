@@ -132,8 +132,6 @@ namespace ToolEngine
 				// push constant
 				PushConstant push_constant = m_scene.m_resources->m_material_name_to_push_constant[material_name];
 				push_constant.model_matrix = entity.transform.getModelMatrix();
-				//push_constant.metallic *= m_ui_context.metallic;
-				//push_constant.roughness *= m_ui_context.roughness;
 				push_constant.debug_mode = m_ui_context.debug_mode;
 				cmd.pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstant), &push_constant);
 				// draw
