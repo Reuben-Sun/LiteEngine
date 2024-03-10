@@ -12,5 +12,7 @@
             "texture_path": "Textures/MarblesTiles/MarblesTiles_N.jpg"
         }
     ],
-    "vertex_shader_path": ""
+    "vertex_shader_path": "",
+    "metallic": 0.134,
+    "roughness": 0.276
 }

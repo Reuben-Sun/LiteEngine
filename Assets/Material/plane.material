@@ -7,5 +7,7 @@
             "texture_path": "Textures/Calibration.png"
         }
     ],
-    "vertex_shader_path": ""
+    "vertex_shader_path": "",
+    "metallic": 0.134,
+    "roughness": 0.276
 }

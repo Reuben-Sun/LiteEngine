@@ -123,8 +123,8 @@ namespace ToolEngine
 					PushConstant push_constant;
 					push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
 					push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
-					push_constant.metallic = 1.0f;
-					push_constant.roughness = 1.0f;
+					push_constant.metallic = material.metallic;
+					push_constant.roughness = material.roughness;
 					// without texture use
 					m_material_name_to_push_constant.emplace(material_name, push_constant);
 				}

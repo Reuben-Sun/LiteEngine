@@ -16,7 +16,9 @@ namespace ToolEngine
 		// TODO: use material to select shader
 		std::string vertex_shader_path;
 		std::string frag_shader_path;
-		std::vector<TextureBinding> texture_bindings;	// current only use this
+		std::vector<TextureBinding> texture_bindings;	
+		float metallic;
+		float roughness;
 
 		nlohmann::json serialize() const
 		{
@@ -32,7 +34,9 @@ namespace ToolEngine
 			return nlohmann::json{
 				{"vertex_shader_path", vertex_shader_path},
 				{"frag_shader_path", frag_shader_path},
-				{"texture_bindings", texture_bindings}
+				{"texture_bindings", texture_bindings},
+				{"metallic", metallic},
+				{"roughness", roughness}
 			};
 		}
 
@@ -41,6 +45,8 @@ namespace ToolEngine
 			Material material;
 			material.vertex_shader_path = j.at("vertex_shader_path").get<std::string>();
 			material.frag_shader_path = j.at("frag_shader_path").get<std::string>();
+			material.metallic = j.at("metallic").get<float>();
+			material.roughness = j.at("roughness").get<float>();
 			for (const auto& tb : j.at("texture_bindings"))
 			{
 				material.texture_bindings.push_back(TextureBinding{

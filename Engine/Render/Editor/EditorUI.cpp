@@ -318,6 +318,7 @@ namespace ToolEngine
 		ImGui::InputFloat3("Rotation", entity_rotation.data());
 		ImGui::InputFloat3("Scale", entity_scale.data());
 		
+		ImGui::Text("Materials");
 		for (int material_index = 0; material_index < entity.material_names.size(); material_index++)
 		{
 			auto material_name = entity.material_names[material_index];
