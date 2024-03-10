@@ -19,10 +19,10 @@ namespace ToolEngine
 	class Renderer
 	{
 	public:
-		Renderer(RHIContext& rhi_context, UIContext& ui_context);
+		Renderer(RHIContext& rhi_context, UIContext& ui_context, RenderScene& scene);
 		~Renderer();
 
-		void record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index);
+		void record(RHICommandBuffer& cmd, uint32_t frame_index);
 		void resize();
 
 		uint32_t m_forward_pass_width;
@@ -32,6 +32,7 @@ namespace ToolEngine
 	private:
 		RHIContext& m_rhi_context;
 		UIContext& m_ui_context;
+		RenderScene& m_scene;
 		
 		std::unique_ptr<CullingResult> m_culling_result;
 		std::unique_ptr<ForwardPass> m_forward_pass;

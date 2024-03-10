@@ -27,12 +27,8 @@ namespace ToolEngine
 
 		RHIVertexBuffer& getVertexBuffer(const std::string& sub_model_name);
 		RHIIndexBuffer& getIndexBuffer(const std::string& sub_model_name);
-		RHIUniformBuffer& getGlobalUBO() { return *m_global_ubo; }
 		RHIDescriptorSet& getDescriptorSet(const std::string& material_name);
 		PushConstant getPushConstant(const std::string& material_name);
-		Light& getDirLight() { return m_dir_light; }
-		RHITextureImage& getDefaultTexture() { return *m_global_default_texture; }
-		RHITextureCube& getSkyboxTexture() { return *m_skybox_texture; }
 
 		std::unordered_map<std::string, std::vector<std::string>> m_model_name_to_sub_model_name;
 	private:
@@ -40,10 +36,6 @@ namespace ToolEngine
 		RHIDescriptorSetLayout& m_ubo_descriptor_set_layout;
 		RHIDescriptorPool& m_ubo_descriptor_pool;
 
-		std::unique_ptr<RHIUniformBuffer> m_global_ubo;
-		std::unique_ptr<RHITextureImage> m_global_default_texture;
-		std::unique_ptr<RHITextureCube> m_skybox_texture;
-		Light m_dir_light;
 
 		// TODO: unload useless buffer
 		std::unordered_map<std::string, std::unique_ptr<RHIVertexBuffer>> m_sub_mesh_name_to_vertex_buffer;

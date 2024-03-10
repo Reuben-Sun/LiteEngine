@@ -8,7 +8,8 @@
 
 namespace ToolEngine
 {
-	Renderer::Renderer(RHIContext& rhi_context, UIContext& ui_context) : m_rhi_context(rhi_context), m_ui_context(ui_context)
+	Renderer::Renderer(RHIContext& rhi_context, UIContext& ui_context, RenderScene& scene) 
+		: m_rhi_context(rhi_context), m_ui_context(ui_context), m_scene(scene)
 	{
 		LOG_INFO("Create Renderer!")
 		VkFormat color_format = m_rhi_context.m_swapchain->getFormat();
@@ -28,7 +29,7 @@ namespace ToolEngine
 			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
 		m_render_gizmos = std::make_unique<RenderGizmos>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
 		m_render_skybox = std::make_unique<RenderSkybox>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
-		m_render_skybox->init(m_culling_result->getGlobalUBO(), m_culling_result->getDefaultTexture(), m_culling_result->getSkyboxTexture());
+		m_render_skybox->init(*m_scene.m_resources->m_global_ubo, *m_scene.m_resources->m_global_default_texture, *m_scene.m_resources->m_skybox_texture);
 
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
 		m_forward_frame_buffer = std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device,
@@ -73,7 +74,7 @@ namespace ToolEngine
 		m_scene_descriptor_set->updateTextureImage(m_color_resources->m_descriptor, 0, RHIDescriptorType::Sampler);
 	}
 	
-	void Renderer::record(RenderScene& scene, RHICommandBuffer& cmd, uint32_t frame_index)
+	void Renderer::record(RHICommandBuffer& cmd, uint32_t frame_index)
 	{
 		OPTICK_EVENT();
 		if (m_ui_context.need_resize)
@@ -95,20 +96,20 @@ namespace ToolEngine
 		cmd.setScissor(frame_index, w_start, w_width, h_start, h_height, 0, 1);
 
 		// culling
-		m_culling_result->cull(scene);
+		m_culling_result->cull(m_scene);
 		OPTICK_PUSH("Draw Forward");
 		// global ubo
 		GlobalUBO ubo{};
-		scene.camera.aspect = m_forward_pass_width / (float)m_forward_pass_height;
-		ubo.view_matrix = scene.camera.getViewMatrix();
-		ubo.projection_matrix = scene.camera.getProjectionMatrix();
-		ubo.camera_position = glm::vec4(scene.camera.transform.position, 0.0f);
-		ubo.directional_light = m_culling_result->getDirLight();
-		m_culling_result->getGlobalUBO().updateBuffer(&ubo);
+		m_scene.camera.aspect = m_forward_pass_width / (float)m_forward_pass_height;
+		ubo.view_matrix = m_scene.camera.getViewMatrix();
+		ubo.projection_matrix = m_scene.camera.getProjectionMatrix();
+		ubo.camera_position = glm::vec4(m_scene.camera.transform.position, 0.0f);
+		ubo.directional_light = m_scene.m_resources->m_dir_light;
+		m_scene.m_resources->m_global_ubo->updateBuffer(&ubo);
 		// draw culling result
-		for (int i = 0; i < scene.render_entities.size(); i++)
+		for (int i = 0; i < m_scene.render_entities.size(); i++)
 		{
-			auto& entity = scene.render_entities[i];
+			auto& entity = m_scene.render_entities[i];
 			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[entity.mesh_path];
 			for (int sub_index = 0; sub_index < sub_model_names.size(); sub_index++)
 			{
@@ -143,11 +144,11 @@ namespace ToolEngine
 		OPTICK_PUSH("Draw Gizmos");
 		if (m_ui_context.enable_gizmos)
 		{
-			m_render_gizmos->processRenderScene(scene);
-			m_render_gizmos->tick(cmd, frame_index, scene.camera);
+			m_render_gizmos->processRenderScene(m_scene);
+			m_render_gizmos->tick(cmd, frame_index, m_scene.camera);
 		}
 		OPTICK_POP();
-		m_render_skybox->tick(cmd, frame_index, scene.camera);
+		m_render_skybox->tick(cmd, frame_index, m_scene.camera);
 
 		cmd.endRenderPass(frame_index);
 		cmd.endDebugUtilsLabel(frame_index);
