@@ -130,7 +130,7 @@ namespace ToolEngine
 				const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 				cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 				// push constant
-				PushConstant push_constant = m_culling_result->getPushConstant(material_name);
+				PushConstant push_constant = m_scene.m_resources->m_material_name_to_push_constant[material_name];
 				push_constant.model_matrix = entity.transform.getModelMatrix();
 				push_constant.metallic *= m_ui_context.metallic;
 				push_constant.roughness *= m_ui_context.roughness;

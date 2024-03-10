@@ -14,7 +14,7 @@ namespace ToolEngine
 	void CullingResult::cull(RenderScene& scene)
 	{
 		OPTICK_EVENT();
-		// TODO: currrent without culling
+		// TODO: currrent without culling, just create descriptor set for each material
 		for (int entity_index = 0; entity_index < scene.render_entities.size(); entity_index++)
 		{
 			auto& entity = scene.render_entities[entity_index];
@@ -26,7 +26,6 @@ namespace ToolEngine
 				auto material_path = Path::getInstance().getAssetPath() + material_name;
 				nlohmann::json material_json = Path::getInstance().readJson(material_path);
 				Material material = Material::deserialize(material_json);
-				// texture
 				
 				// material descriptor set
 				OPTICK_PUSH("Process Material Descriptor Set");
@@ -67,14 +66,8 @@ namespace ToolEngine
 						uint32_t enable_byte = 1 << material.texture_bindings[j].binding_index;
 						texture_enable |= enable_byte;
 					}
-					// push constant
-					PushConstant push_constant;
-					push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
-					push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
-					push_constant.metallic = 1.0f;
-					push_constant.roughness = 1.0f;
-					push_constant.texture_enable = texture_enable;
-					m_material_name_to_push_constant.emplace(material_name, push_constant);
+					// update push constant texture use
+					scene.m_resources->m_material_name_to_push_constant[material_name].texture_enable = texture_enable;
 				}
 				OPTICK_POP();
 			}
@@ -87,9 +80,5 @@ namespace ToolEngine
 		auto it = m_material_name_to_descriptor_set.find(material_name);
 		RHIDescriptorSet& descriptor_set_ref = *(it->second.get());
 		return descriptor_set_ref;
-	}
-	PushConstant CullingResult::getPushConstant(const std::string& material_name)
-	{
-		return m_material_name_to_push_constant[material_name];;
 	}
 }

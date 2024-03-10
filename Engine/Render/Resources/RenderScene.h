@@ -45,6 +45,7 @@ namespace ToolEngine
 		Light m_dir_light;
 		std::unordered_map<std::string, std::vector<std::string>> m_model_name_to_sub_model_name;
 		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
+		std::unordered_map<std::string, PushConstant> m_material_name_to_push_constant;
 	private:
 		RHIDevice& m_device;
 

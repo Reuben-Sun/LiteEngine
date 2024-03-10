@@ -22,27 +22,15 @@ namespace ToolEngine
 		CullingResult(RHIDevice& device, RHIDescriptorSetLayout& layout, RHIDescriptorPool& pool);
 		~CullingResult();
 
-		// TODO: cull with camera
 		void cull(RenderScene& scene);
-
-		
 		RHIDescriptorSet& getDescriptorSet(const std::string& material_name);
-		PushConstant getPushConstant(const std::string& material_name);
 
-		
 	private:
 		RHIDevice& m_device;
 		RHIDescriptorSetLayout& m_ubo_descriptor_set_layout;
 		RHIDescriptorPool& m_ubo_descriptor_pool;
-
-
-		// TODO: unload useless buffer
-		
-
-		std::unordered_map<std::string, PushConstant> m_material_name_to_push_constant;
 		std::unordered_map<std::string, std::unique_ptr<RHIDescriptorSet>> m_material_name_to_descriptor_set;
 		
-
 		const uint32_t TEXTURE_MIN_BINDING = 1;
 		const uint32_t TEXTURE_MAX_BINDING = 5;
 	};
