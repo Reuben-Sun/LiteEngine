@@ -44,6 +44,7 @@ namespace ToolEngine
 		std::unique_ptr<RHITextureCube> m_skybox_texture;
 		Light m_dir_light;
 		std::unordered_map<std::string, std::vector<std::string>> m_model_name_to_sub_model_name;
+		std::unordered_map<std::string, std::unique_ptr<RHITextureImage>> m_texture_name_to_image;
 	private:
 		RHIDevice& m_device;
 

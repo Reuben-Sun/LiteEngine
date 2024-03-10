@@ -60,6 +60,7 @@ namespace ToolEngine
 		m_sub_mesh_name_to_vertex_buffer.clear();
 		m_sub_mesh_name_to_index_buffer.clear();
 		m_model_name_to_sub_model_name.clear();
+		m_texture_name_to_image.clear();
 	}
 	void SceneResources::tick(std::vector<RenderEntity>& entities)
 	{
@@ -93,6 +94,29 @@ namespace ToolEngine
 					}
 					m_model_name_to_sub_model_name.emplace(mesh_path, sub_mesh_names);
 				}
+			}
+			OPTICK_POP();
+
+			OPTICK_PUSH("Process Material");
+			// material
+			for (int material_index = 0; material_index < entities[entity_index].material_names.size(); material_index++)
+			{
+				auto& material_name = entities[entity_index].material_names[material_index];
+				auto material_path = Path::getInstance().getAssetPath() + material_name;
+				nlohmann::json material_json = Path::getInstance().readJson(material_path);
+				Material material = Material::deserialize(material_json);
+				// texture
+				OPTICK_PUSH("Process Texture");
+				for (int j = 0; j < material.texture_bindings.size(); j++)
+				{
+					std::string texture_name = material.texture_bindings[j].texture_path;
+					if (m_texture_name_to_image.find(texture_name) == m_texture_name_to_image.end())
+					{
+						std::string texture_path = Path::getInstance().getAssetPath() + texture_name;
+						m_texture_name_to_image.emplace(texture_name, std::make_unique<RHITextureImage>(m_device, texture_path));
+					}
+				}
+				OPTICK_POP();
 			}
 			OPTICK_POP();
 		}

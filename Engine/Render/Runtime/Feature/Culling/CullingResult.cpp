@@ -10,7 +10,6 @@ namespace ToolEngine
 	}
 	CullingResult::~CullingResult()
 	{
-		m_texture_name_to_image.clear();
 	}
 	void CullingResult::cull(RenderScene& scene)
 	{
@@ -19,7 +18,6 @@ namespace ToolEngine
 		for (int entity_index = 0; entity_index < scene.render_entities.size(); entity_index++)
 		{
 			auto& entity = scene.render_entities[entity_index];
-			auto& mesh_path = entity.mesh_path;
 			OPTICK_PUSH("Process Material");
 			// material
 			for (int material_index = 0; material_index < entity.material_names.size(); material_index++)
@@ -29,17 +27,7 @@ namespace ToolEngine
 				nlohmann::json material_json = Path::getInstance().readJson(material_path);
 				Material material = Material::deserialize(material_json);
 				// texture
-				OPTICK_PUSH("Process Texture");
-				for (int j = 0; j < material.texture_bindings.size(); j++)
-				{
-					std::string texture_name = material.texture_bindings[j].texture_path;
-					if (m_texture_name_to_image.find(texture_name) == m_texture_name_to_image.end())
-					{
-						std::string texture_path = Path::getInstance().getAssetPath() + texture_name;
-						m_texture_name_to_image.emplace(texture_name, std::make_unique<RHITextureImage>(m_device, texture_path));
-					}
-				}
-				OPTICK_POP();
+				
 				// material descriptor set
 				OPTICK_PUSH("Process Material Descriptor Set");
 				if (m_material_name_to_descriptor_set.find(material_name) == m_material_name_to_descriptor_set.end())
@@ -73,7 +61,7 @@ namespace ToolEngine
 						{
 							binding_type = RHIDescriptorType::TextureSRV;
 						}
-						m_material_name_to_descriptor_set[material_name]->updateTextureImage(m_texture_name_to_image[texture_name]->m_descriptor,
+						m_material_name_to_descriptor_set[material_name]->updateTextureImage(scene.m_resources->m_texture_name_to_image[texture_name]->m_descriptor,
 							material.texture_bindings[j].binding_index, binding_type);
 
 						uint32_t enable_byte = 1 << material.texture_bindings[j].binding_index;
