@@ -5,7 +5,7 @@
 namespace ToolEngine
 {
 	ForwardPipeline::ForwardPipeline(RHIDevice& device, VkRenderPass render_pass)
-		: m_device(device), m_render_pass(render_pass)
+		: RenderPipeline(device, render_pass)
 	{
 		std::vector<RHIDescriptorType> layout_descriptor;
 		layout_descriptor.push_back(RHIDescriptorType::ConstantBuffer);

@@ -13,6 +13,7 @@
 #include "Render/Runtime/Feature/Skybox/RenderSkybox.h"
 #include "Render/Editor/EditorUI.h"
 #include "Render/Resources/RenderScene.h"
+#include "Render/Pass/ForwardPass.h"
 
 namespace ToolEngine
 {
