@@ -1,5 +1,6 @@
 #include "RenderScene.h"
 #include "Core/Path/Path.h"
+#include "Geometry/GltfLoader.h"
 
 namespace ToolEngine
 {
@@ -29,6 +30,10 @@ namespace ToolEngine
 		auto camera_view = logic_scene.scene_context.view<const CameraComponent>();
 		camera = camera_view.get<CameraComponent>(camera_view.front()).camera;
 	}
+	void RenderScene::tick()
+	{
+		m_resources->tick(render_entities);
+	}
 	SceneResources::SceneResources(RHIDevice& device): m_device(device)
 	{
 		m_dir_light.color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
@@ -52,5 +57,56 @@ namespace ToolEngine
 	}
 	SceneResources::~SceneResources()
 	{
+		m_sub_mesh_name_to_vertex_buffer.clear();
+		m_sub_mesh_name_to_index_buffer.clear();
+		m_model_name_to_sub_model_name.clear();
+	}
+	void SceneResources::tick(std::vector<RenderEntity>& entities)
+	{
+		OPTICK_EVENT();
+		for (int entity_index = 0; entity_index < entities.size(); entity_index++)
+		{
+			auto& mesh_path = entities[entity_index].mesh_path;
+			OPTICK_PUSH("Process Mesh");
+			if (m_model_name_to_sub_model_name.find(mesh_path) == m_model_name_to_sub_model_name.end())
+			{
+				if (mesh_path == "plane")
+				{
+					Mesh plane_mesh = Mesh::createPlane();
+					m_sub_mesh_name_to_index_buffer.emplace(mesh_path,
+						std::make_unique<RHIIndexBuffer>(m_device, plane_mesh.meshs[0].index_buffer));
+					m_sub_mesh_name_to_vertex_buffer.emplace(mesh_path,
+						std::make_unique<RHIVertexBuffer>(m_device, plane_mesh.meshs[0].vertex_buffer));
+					m_model_name_to_sub_model_name.emplace(mesh_path, std::vector<std::string>{mesh_path});
+				}
+				else
+				{
+					std::string model_path = Path::getInstance().getAssetPath() + mesh_path;
+					std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
+					std::vector<std::string> sub_mesh_names;
+					for (int sub_mesh_index = 0; sub_mesh_index < loader->loaded_index_buffer.size(); sub_mesh_index++)
+					{
+						auto sub_mesh_name = mesh_path + std::to_string(sub_mesh_index);
+						m_sub_mesh_name_to_index_buffer.emplace(sub_mesh_name, std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[sub_mesh_index]));
+						m_sub_mesh_name_to_vertex_buffer.emplace(sub_mesh_name, std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[sub_mesh_index]));
+						sub_mesh_names.push_back(sub_mesh_name);
+					}
+					m_model_name_to_sub_model_name.emplace(mesh_path, sub_mesh_names);
+				}
+			}
+			OPTICK_POP();
+		}
+	}
+	RHIVertexBuffer& SceneResources::getVertexBuffer(const std::string& sub_model_name)
+	{
+		auto it = m_sub_mesh_name_to_vertex_buffer.find(sub_model_name);
+		RHIVertexBuffer& vertex_buffer_ref = *(it->second.get());
+		return vertex_buffer_ref;
+	}
+	RHIIndexBuffer& SceneResources::getIndexBuffer(const std::string& sub_model_name)
+	{
+		auto it = m_sub_mesh_name_to_index_buffer.find(sub_model_name);
+		RHIIndexBuffer& index_buffer_ref = *(it->second.get());
+		return index_buffer_ref;
 	}
 }

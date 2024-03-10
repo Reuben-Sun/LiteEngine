@@ -10,8 +10,6 @@ namespace ToolEngine
 	}
 	CullingResult::~CullingResult()
 	{
-		m_sub_mesh_name_to_index_buffer.clear();
-		m_sub_mesh_name_to_vertex_buffer.clear();
 		m_texture_name_to_image.clear();
 	}
 	void CullingResult::cull(RenderScene& scene)
@@ -22,36 +20,6 @@ namespace ToolEngine
 		{
 			auto& entity = scene.render_entities[entity_index];
 			auto& mesh_path = entity.mesh_path;
-			OPTICK_PUSH("Process Mesh");
-			// mesh
-			if(m_model_name_to_sub_model_name.find(mesh_path) == m_model_name_to_sub_model_name.end())
-			{
-				if (mesh_path == "plane")
-				{
-					Mesh plane_mesh = Mesh::createPlane();
-					m_sub_mesh_name_to_index_buffer.emplace(mesh_path, 
-						std::make_unique<RHIIndexBuffer>(m_device, plane_mesh.meshs[0].index_buffer));
-					m_sub_mesh_name_to_vertex_buffer.emplace(mesh_path, 
-						std::make_unique<RHIVertexBuffer>(m_device, plane_mesh.meshs[0].vertex_buffer));
-					m_model_name_to_sub_model_name.emplace(mesh_path, std::vector<std::string>{mesh_path});
-				}
-				else 
-				{
-					std::string model_path = Path::getInstance().getAssetPath() + mesh_path;
-					std::unique_ptr<GltfLoader> loader = std::make_unique<GltfLoader>(model_path);
-					std::vector<std::string> sub_mesh_names;
-					for (int sub_mesh_index = 0; sub_mesh_index < loader->loaded_index_buffer.size(); sub_mesh_index++)
-					{
-						auto sub_mesh_name = mesh_path + std::to_string(sub_mesh_index);
-						m_sub_mesh_name_to_index_buffer.emplace(sub_mesh_name, std::make_unique<RHIIndexBuffer>(m_device, loader->loaded_index_buffer[sub_mesh_index]));
-						m_sub_mesh_name_to_vertex_buffer.emplace(sub_mesh_name, std::make_unique<RHIVertexBuffer>(m_device, loader->loaded_vertex_buffer[sub_mesh_index]));
-						sub_mesh_names.push_back(sub_mesh_name);
-					}
-					m_model_name_to_sub_model_name.emplace(mesh_path, sub_mesh_names);
-				}
-				
-			}
-			OPTICK_POP();
 			OPTICK_PUSH("Process Material");
 			// material
 			for (int material_index = 0; material_index < entity.material_names.size(); material_index++)
@@ -125,19 +93,7 @@ namespace ToolEngine
 			OPTICK_POP();
 		}
 	}
-	RHIVertexBuffer& CullingResult::getVertexBuffer(const std::string& model_name)
-	{
-		auto it = m_sub_mesh_name_to_vertex_buffer.find(model_name);
-		RHIVertexBuffer& vertex_buffer_ref = *(it->second.get());
-		return vertex_buffer_ref;
-	}
-	RHIIndexBuffer& CullingResult::getIndexBuffer(const std::string& model_name)
-	{
-		auto it = m_sub_mesh_name_to_index_buffer.find(model_name);
-		RHIIndexBuffer& index_buffer_ref = *(it->second.get());
-		return index_buffer_ref;
-	}
-	
+
 	RHIDescriptorSet& CullingResult::getDescriptorSet(const std::string& material_name)
 	{
 		auto it = m_material_name_to_descriptor_set.find(material_name);

@@ -24,6 +24,7 @@ namespace ToolEngine
 	{
 		OPTICK_PUSH("Process Logic scene to Render scene");
 		m_scene.init(scene);
+		m_scene.tick();
 		auto ui_info_view = scene.scene_context.view<UIInfoComponent>();
 		ui_info_view.get<UIInfoComponent>(ui_info_view.front()).scene_bounding = m_editor_ui->m_scene_bounding;
 		OPTICK_POP();

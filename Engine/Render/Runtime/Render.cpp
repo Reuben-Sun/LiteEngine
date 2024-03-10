@@ -110,7 +110,7 @@ namespace ToolEngine
 		for (int i = 0; i < m_scene.render_entities.size(); i++)
 		{
 			auto& entity = m_scene.render_entities[i];
-			auto& sub_model_names = m_culling_result->m_model_name_to_sub_model_name[entity.mesh_path];
+			auto& sub_model_names = m_scene.m_resources->m_model_name_to_sub_model_name[entity.mesh_path];
 			for (int sub_index = 0; sub_index < sub_model_names.size(); sub_index++)
 			{
 				auto& sub_model_name = sub_model_names[sub_index];
@@ -120,8 +120,8 @@ namespace ToolEngine
 					material_index = entity.material_names.size() - 1;
 				}
 				auto& material_name = entity.material_names[material_index];
-				RHIIndexBuffer& index_buffer = m_culling_result->getIndexBuffer(sub_model_name);
-				RHIVertexBuffer& vertex_buffer = m_culling_result->getVertexBuffer(sub_model_name);
+				RHIIndexBuffer& index_buffer = m_scene.m_resources->getIndexBuffer(sub_model_name);
+				RHIVertexBuffer& vertex_buffer = m_scene.m_resources->getVertexBuffer(sub_model_name);
 				VkDeviceSize offsets[] = { 0 };
 				cmd.bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
 				cmd.bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
