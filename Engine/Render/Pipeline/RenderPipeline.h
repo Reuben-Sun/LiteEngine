@@ -6,6 +6,7 @@
 #include "RHI/Public/RHIPipeline.h"
 #include "RHI/Public/RHIPipelineLayout.h"
 #include "RHI/Public/RHIDescriptorSet.h"
+#include "RHI/Public/RHIShader.h"
 #include "Render/Resources/PushConstant.h"
 
 namespace ToolEngine
