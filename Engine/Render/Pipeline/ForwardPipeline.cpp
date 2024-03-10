@@ -27,16 +27,10 @@ namespace ToolEngine
 		// shader
 		RHIShader vertex_shader_module(m_device, "Forward.vert.spv");
 		RHIShader fragment_shader_module(m_device, "Forward.frag.spv");
-		VkPipelineShaderStageCreateInfo vert_shader_stage_info{};
-		vert_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		vert_shader_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-		vert_shader_stage_info.module = vertex_shader_module.getHandle();
-		vert_shader_stage_info.pName = "MainVS";
-		VkPipelineShaderStageCreateInfo frag_shader_stage_info{};
-		frag_shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		frag_shader_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-		frag_shader_stage_info.module = fragment_shader_module.getHandle();
-		frag_shader_stage_info.pName = "MainPS";
+		RHIPipelineVertexShaderStage vert_shader_stage_info;
+		vert_shader_stage_info.shader_module = vertex_shader_module.getHandle();
+		RHIPipelineFragmentShaderStage frag_shader_stage_info;
+		frag_shader_stage_info.shader_module = fragment_shader_module.getHandle();
 
 		// vertex input
 		auto vertex_binding_description = Vertex::getBindingDescription();

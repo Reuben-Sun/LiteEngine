@@ -16,7 +16,10 @@ namespace ToolEngine
 	{
 		m_pipeline_state = pipeline_state;
 
-        std::vector<VkPipelineShaderStageCreateInfo> shader_stages = { m_pipeline_state.m_vertex_shader_stage, m_pipeline_state.m_fragment_shader_stage };
+        std::vector<VkPipelineShaderStageCreateInfo> shader_stages = { 
+            m_pipeline_state.m_vertex_shader_stage.getHandle(), 
+            m_pipeline_state.m_fragment_shader_stage.getHandle()
+        };
 
         VkGraphicsPipelineCreateInfo pipeline_info{};
         pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
