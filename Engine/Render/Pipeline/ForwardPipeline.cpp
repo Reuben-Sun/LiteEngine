@@ -69,19 +69,19 @@ namespace ToolEngine
 		m_pipeline_layout = std::make_unique<RHIPipelineLayout>(m_device, pipeline_layout_info);
 
 		RHIPipelineState m_state;
-		m_state.m_vertex_shader_stage = vert_shader_stage_info;
-		m_state.m_fragment_shader_stage = frag_shader_stage_info;
-		m_state.m_pipeline_layout = m_pipeline_layout->getHandle();
-		m_state.m_render_pass = m_render_pass;
-		m_state.m_vertex_input_state = vertex_input_state;
-		m_state.m_input_assembly_state = input_assembly_state;
-		m_state.m_viewport_state = viewport_state;
-		m_state.m_rasterization_state = rasterization_state;
-		m_state.m_multisample_state = multi_sample_state;
-		m_state.m_depth_stencil_state = depth_stencil_state;
-		m_state.m_color_blend_state = color_blending;
-		m_state.m_dynamic_state = dynamicState;
-		m_state.m_subpass_index = 0;
+		m_state.vertex_shader_stage = vert_shader_stage_info;
+		m_state.fragment_shader_stage = frag_shader_stage_info;
+		m_state.pipeline_layout = m_pipeline_layout->getHandle();
+		m_state.render_pass = m_render_pass;
+		m_state.vertex_input_state = vertex_input_state;
+		m_state.input_assembly_state = input_assembly_state;
+		m_state.viewport_state = viewport_state;
+		m_state.rasterization_state = rasterization_state;
+		m_state.multisample_state = multi_sample_state;
+		m_state.depth_stencil_state = depth_stencil_state;
+		m_state.color_blend_state = color_blending;
+		m_state.dynamic_state = dynamicState;
+		m_state.subpass_index = 0;
 		m_pipeline = std::make_unique<RHIPipeline>(m_device);
 		m_pipeline->createPipeline(m_state);
 	}

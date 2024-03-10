@@ -175,20 +175,20 @@ namespace ToolEngine
 
 	struct RHIPipelineState
 	{
-		RHIPipelineVertexShaderStage m_vertex_shader_stage{};
-		RHIPipelineFragmentShaderStage m_fragment_shader_stage{};
-		VkPipelineLayout m_pipeline_layout{};	
-		VkRenderPass m_render_pass{};	
+		RHIPipelineVertexShaderStage vertex_shader_stage{};
+		RHIPipelineFragmentShaderStage fragment_shader_stage{};
+		VkPipelineLayout pipeline_layout{};	
+		VkRenderPass render_pass{};	
 		// TODO: constant state
-		RHIPipelineVertexInputState m_vertex_input_state{};
-		RHIPipelineInputAssemblyState m_input_assembly_state{};
+		RHIPipelineVertexInputState vertex_input_state{};
+		RHIPipelineInputAssemblyState input_assembly_state{};
 		// TODO: tessellation state
-		RHIPipelineViewportState m_viewport_state{};
-		RHIPipelineRasterizationState m_rasterization_state{};
-		RHIPipelineMultisampleState m_multisample_state{};
-		RHIPipelineDepthStencilState m_depth_stencil_state{};
-		RHIPipelineColorBlendState m_color_blend_state{};
-		RHIPipelineDynamicState m_dynamic_state{};
-		uint32_t m_subpass_index{ 0 };	
+		RHIPipelineViewportState viewport_state{};
+		RHIPipelineRasterizationState rasterization_state{};
+		RHIPipelineMultisampleState multisample_state{};
+		RHIPipelineDepthStencilState depth_stencil_state{};
+		RHIPipelineColorBlendState color_blend_state{};
+		RHIPipelineDynamicState dynamic_state{};
+		uint32_t subpass_index{ 0 };	
 	};
 }
