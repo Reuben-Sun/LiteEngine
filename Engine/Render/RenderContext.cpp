@@ -21,32 +21,10 @@ namespace ToolEngine
 	}
 	void RenderContext::tick(LogicScene& scene)
 	{
-		OPTICK_PUSH("Logic scene to render scene");
-		m_scene.render_entities.clear();
-		auto view = scene.scene_context.view<const InfoComponent,
-			const MeshComponent, const MaterialComponent, const TransformComponent, const BoundingComponent>();
-		for (auto entity : view)
-		{
-			auto& info_component = view.get<InfoComponent>(entity);
-			auto& mesh_component = view.get<MeshComponent>(entity);
-			auto& material_component = view.get<MaterialComponent>(entity);
-			auto& transform_component = view.get<TransformComponent>(entity);
-			auto& bounding_component = view.get<BoundingComponent>(entity);
-
-			RenderEntity render_entity;
-			render_entity.go_id = info_component.id;
-			render_entity.mesh_name = info_component.name;
-			render_entity.mesh_path = mesh_component.mesh_path;
-			render_entity.material_names = material_component.material_paths;
-			render_entity.transform = transform_component.transform;
-			render_entity.bounding = bounding_component.bounding;
-			m_scene.render_entities.push_back(render_entity);
-		}
-		auto camera_view = scene.scene_context.view<const CameraComponent>();
-		m_scene.camera = camera_view.get<CameraComponent>(camera_view.front()).camera;
+		OPTICK_PUSH("Process Logic scene to Render scene");
+		m_scene.init(scene);
 		auto ui_info_view = scene.scene_context.view<UIInfoComponent>();
 		ui_info_view.get<UIInfoComponent>(ui_info_view.front()).scene_bounding = m_editor_ui->m_scene_bounding;
-
 		OPTICK_POP();
 
 		OPTICK_PUSH("RenderContext tick");

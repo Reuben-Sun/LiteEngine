@@ -6,6 +6,7 @@
 #include "Geometry/Camera.h"
 #include "Geometry/Bounding.h"
 #include "Core/Math/Transform.h"
+#include "Logic/ECS/LogicScene.h"
 
 namespace ToolEngine
 {
@@ -22,5 +23,7 @@ namespace ToolEngine
 	{
 		std::vector<RenderEntity> render_entities;
 		Camera camera;
+
+		void init(LogicScene& logic_scene);
 	};
 }
