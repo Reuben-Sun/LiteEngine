@@ -19,6 +19,7 @@ namespace ToolEngine
 		std::vector<TextureBinding> texture_bindings;	
 		float metallic;
 		float roughness;
+		std::vector<float> base_color;
 
 		nlohmann::json serialize() const
 		{
@@ -36,7 +37,8 @@ namespace ToolEngine
 				{"frag_shader_path", frag_shader_path},
 				{"texture_bindings", texture_bindings},
 				{"metallic", metallic},
-				{"roughness", roughness}
+				{"roughness", roughness},
+				{"base_color", base_color}
 			};
 		}
 
@@ -47,6 +49,7 @@ namespace ToolEngine
 			material.frag_shader_path = j.at("frag_shader_path").get<std::string>();
 			material.metallic = j.at("metallic").get<float>();
 			material.roughness = j.at("roughness").get<float>();
+			material.base_color = j.at("base_color").get<std::vector<float>>();
 			for (const auto& tb : j.at("texture_bindings"))
 			{
 				material.texture_bindings.push_back(TextureBinding{

@@ -121,7 +121,7 @@ namespace ToolEngine
 				if (m_material_name_to_push_constant.find(material_name) == m_material_name_to_push_constant.end())
 				{
 					PushConstant push_constant;
-					push_constant.base_color = glm::vec3(1.0f, 1.0f, 1.0f);
+					push_constant.base_color = { material.base_color[0], material.base_color[1], material.base_color[2] };
 					push_constant.emission_color = glm::vec3(0.0f, 0.0f, 0.0f);
 					push_constant.metallic = material.metallic;
 					push_constant.roughness = material.roughness;

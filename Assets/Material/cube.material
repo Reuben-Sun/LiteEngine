@@ -13,6 +13,7 @@
         }
     ],
     "vertex_shader_path": "",
+    "base_color": [1.0, 1.0, 1.0],
     "metallic": 0.134,
     "roughness": 0.276
 }
