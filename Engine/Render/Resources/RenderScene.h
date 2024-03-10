@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Marco.h"
-#include "Mesh.h"
-#include "Material.h"
-#include "Core/Math/Transform.h"
+#include "Geometry/Mesh.h"
+#include "Geometry/Material.h"
 #include "Geometry/Camera.h"
-#include "Bounding.h"
+#include "Geometry/Bounding.h"
+#include "Core/Math/Transform.h"
 
 namespace ToolEngine
 {

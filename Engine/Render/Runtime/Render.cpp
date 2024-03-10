@@ -3,7 +3,7 @@
 #include "Core/Time/Time.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Geometry/UBO.h"
+#include "Render/Resources/UBO.h"
 #include "Core/Path/Path.h"
 
 namespace ToolEngine

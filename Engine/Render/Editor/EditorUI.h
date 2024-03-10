@@ -10,7 +10,7 @@
 #include "RHI/Public/RHICommandBuffer.h"
 #include "RHI/Public/RHIDescriptorSet.h"
 #include "RHI/Public/RHITextureImage.h"
-#include "Geometry/RenderScene.h"
+#include "Render/Resources/RenderScene.h"
 
 namespace ToolEngine
 {

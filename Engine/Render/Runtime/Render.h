@@ -8,11 +8,11 @@
 #include "Render/Pipeline/ForwardPipeline.h"
 #include "Render/Resources/ColorResources.h"
 #include "Render/Resources/DepthResources.h"
-#include "Geometry/RenderScene.h"
 #include "Render/Runtime/Feature/Culling/CullingResult.h"
 #include "Render/Runtime/Feature/Gizmos/RenderGizmos.h"
 #include "Render/Runtime/Feature/Skybox/RenderSkybox.h"
 #include "Render/Editor/EditorUI.h"
+#include "Render/Resources/RenderScene.h"
 
 namespace ToolEngine
 {
