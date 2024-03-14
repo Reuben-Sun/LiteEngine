@@ -32,7 +32,7 @@ namespace ToolEngine
 	}
 	void RenderScene::tick()
 	{
-		m_resources->tick(render_entities);
+		resources->tick(render_entities);
 	}
 	SceneResources::SceneResources(RHIDevice& device): m_device(device)
 	{

@@ -32,4 +32,12 @@ namespace ToolEngine
 	{
 		glm::mat4 model_matrix;
 	};
+
+	struct OutlinePushConstant
+	{
+		glm::mat4 model_matrix;
+		glm::mat4 inv_m_v_matrix;
+		glm::vec3 color;
+		float width;	
+	};
 }

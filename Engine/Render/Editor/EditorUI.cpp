@@ -185,11 +185,11 @@ namespace ToolEngine
 
 		for (int i = 0; i < m_scene.render_entities.size(); i++)
 		{
-			ImGuiTreeNodeFlags flags = (m_ui_context.m_selecting_object_index == i) ? ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Leaf;
+			ImGuiTreeNodeFlags flags = (m_scene.m_selecting_index == i) ? ImGuiTreeNodeFlags_Bullet : ImGuiTreeNodeFlags_Leaf;
 			bool open = ImGui::TreeNodeEx(m_scene.render_entities[i].mesh_name.c_str(), flags);
 			if (ImGui::IsItemClicked())
 			{
-				m_ui_context.m_selecting_object_index = i;
+				m_scene.m_selecting_index = i;
 			}
 			if (open)
 			{
@@ -305,9 +305,10 @@ namespace ToolEngine
 		}
 		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness" };
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
+		ImGui::SliderFloat("Outline Width", &m_ui_context.outline_width, 0.0f, 0.1f);
 		ImGui::Separator();
 		
-		auto& entity = m_scene.render_entities[m_ui_context.m_selecting_object_index];
+		auto& entity = m_scene.render_entities[m_scene.m_selecting_index];
 		ImGui::Text("Render Entity: %s", entity.mesh_name.c_str());
 		std::vector<float> entity_position = { entity.transform.position.x, entity.transform.position.y, entity.transform.position.z};
 		auto entity_euler = entity.transform.rotation.getEulerDegrees();
@@ -323,7 +324,7 @@ namespace ToolEngine
 		{
 			auto material_name = entity.material_names[material_index];
 			ImGui::Text(material_name.c_str());
-			PushConstant& push_constant = m_scene.m_resources->m_material_name_to_push_constant[material_name];
+			PushConstant& push_constant = m_scene.resources->m_material_name_to_push_constant[material_name];
 			std::string base_color_name = std::format("BaseColor {0}", material_index);
 			std::string metallic_slider_name = std::format("Metallic {0}", material_index);
 			std::string roughness_slider_name = std::format("Roughness {0}", material_index);

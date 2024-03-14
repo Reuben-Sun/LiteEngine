@@ -5,11 +5,11 @@
 
 namespace ToolEngine
 {
-	class BlitPipeline final : public RenderPipeline
+	class OutlinePipeline final : public RenderPipeline
 	{
 	public:
-		BlitPipeline(RHIDevice& device, VkRenderPass render_pass);
-		~BlitPipeline();
+		OutlinePipeline(RHIDevice& device, VkRenderPass render_pass);
+		~OutlinePipeline();
 	private:
 		void createPipeline() override;
 	};

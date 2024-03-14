@@ -29,7 +29,9 @@ namespace ToolEngine
 			m_forward_pipeline->getDescriptorSetLayout(), *m_rhi_context.m_descriptor_pool);
 		m_render_gizmos = std::make_unique<RenderGizmos>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
 		m_render_skybox = std::make_unique<RenderSkybox>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
-		m_render_skybox->init(*m_scene.m_resources->m_global_ubo, *m_scene.m_resources->m_global_default_texture, *m_scene.m_resources->m_skybox_texture);
+		m_render_skybox->init(*m_scene.resources->m_global_ubo, *m_scene.resources->m_global_default_texture, *m_scene.resources->m_skybox_texture);
+		m_render_outline = std::make_unique<RenderOutline>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
+		m_render_outline->init(*m_scene.resources->m_global_ubo);
 
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
 		m_forward_frame_buffer = std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device,
@@ -104,13 +106,13 @@ namespace ToolEngine
 		ubo.view_matrix = m_scene.camera.getViewMatrix();
 		ubo.projection_matrix = m_scene.camera.getProjectionMatrix();
 		ubo.camera_position = glm::vec4(m_scene.camera.transform.position, 0.0f);
-		ubo.directional_light = m_scene.m_resources->m_dir_light;
-		m_scene.m_resources->m_global_ubo->updateBuffer(&ubo);
+		ubo.directional_light = m_scene.resources->m_dir_light;
+		m_scene.resources->m_global_ubo->updateBuffer(&ubo);
 		// draw culling result
 		for (int i = 0; i < m_scene.render_entities.size(); i++)
 		{
 			auto& entity = m_scene.render_entities[i];
-			auto& sub_model_names = m_scene.m_resources->m_model_name_to_sub_model_name[entity.mesh_path];
+			auto& sub_model_names = m_scene.resources->m_model_name_to_sub_model_name[entity.mesh_path];
 			for (int sub_index = 0; sub_index < sub_model_names.size(); sub_index++)
 			{
 				auto& sub_model_name = sub_model_names[sub_index];
@@ -120,8 +122,8 @@ namespace ToolEngine
 					material_index = entity.material_names.size() - 1;
 				}
 				auto& material_name = entity.material_names[material_index];
-				RHIIndexBuffer& index_buffer = m_scene.m_resources->getIndexBuffer(sub_model_name);
-				RHIVertexBuffer& vertex_buffer = m_scene.m_resources->getVertexBuffer(sub_model_name);
+				RHIIndexBuffer& index_buffer = m_scene.resources->getIndexBuffer(sub_model_name);
+				RHIVertexBuffer& vertex_buffer = m_scene.resources->getVertexBuffer(sub_model_name);
 				VkDeviceSize offsets[] = { 0 };
 				cmd.bindIndexBuffer(frame_index, index_buffer, 0, VK_INDEX_TYPE_UINT32);
 				cmd.bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
@@ -130,7 +132,7 @@ namespace ToolEngine
 				const std::vector<VkDescriptorSet> descriptorsets = { descriptor_set.getHandle() };
 				cmd.bindDescriptorSets(frame_index, VK_PIPELINE_BIND_POINT_GRAPHICS, m_forward_pipeline->getLayout(), descriptorsets, 0, 1);
 				// push constant
-				PushConstant push_constant = m_scene.m_resources->m_material_name_to_push_constant[material_name];
+				PushConstant push_constant = m_scene.resources->m_material_name_to_push_constant[material_name];
 				push_constant.model_matrix = entity.transform.getModelMatrix();
 				push_constant.debug_mode = m_ui_context.debug_mode;
 				cmd.pushConstants(frame_index, m_forward_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstant), &push_constant);
@@ -144,6 +146,7 @@ namespace ToolEngine
 		{
 			m_render_gizmos->processRenderScene(m_scene);
 			m_render_gizmos->tick(cmd, frame_index, m_scene.camera);
+			m_render_outline->tick(cmd, frame_index, m_scene, m_ui_context.outline_width);
 		}
 		OPTICK_POP();
 		m_render_skybox->tick(cmd, frame_index, m_scene.camera);
