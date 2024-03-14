@@ -34,18 +34,18 @@ namespace ToolEngine
 					// create descriptor set and update uniform buffer
 					m_material_name_to_descriptor_set.emplace(material_name,
 						std::make_unique<RHIDescriptorSet>(m_device, m_ubo_descriptor_pool, m_ubo_descriptor_set_layout));
-					m_material_name_to_descriptor_set[material_name]->updateUniformBuffer(*scene.m_resources->m_global_ubo, 0);
+					m_material_name_to_descriptor_set[material_name]->updateUniformBuffer(*scene.resources->m_global_ubo, 0);
 
 					// update texture
 					uint32_t texture_enable = 0;
 					for (int j = TEXTURE_MIN_BINDING; j <= TEXTURE_MAX_BINDING; j++)
 					{
 						// Hack: give each binding point default texture
-						m_material_name_to_descriptor_set[material_name]->updateTextureImage(scene.m_resources->m_global_default_texture->m_descriptor, j);
+						m_material_name_to_descriptor_set[material_name]->updateTextureImage(scene.resources->m_global_default_texture->m_descriptor, j);
 						if (j == 5)
 						{
 							// the 5 texture is skybox texture
-							m_material_name_to_descriptor_set[material_name]->updateTextureImage(scene.m_resources->m_skybox_texture->m_descriptor, j);
+							m_material_name_to_descriptor_set[material_name]->updateTextureImage(scene.resources->m_skybox_texture->m_descriptor, j);
 						}
 					}
 					for (int j = 0; j < material.texture_bindings.size(); j++)
@@ -60,14 +60,14 @@ namespace ToolEngine
 						{
 							binding_type = RHIDescriptorType::TextureSRV;
 						}
-						m_material_name_to_descriptor_set[material_name]->updateTextureImage(scene.m_resources->m_texture_name_to_image[texture_name]->m_descriptor,
+						m_material_name_to_descriptor_set[material_name]->updateTextureImage(scene.resources->m_texture_name_to_image[texture_name]->m_descriptor,
 							material.texture_bindings[j].binding_index, binding_type);
 
 						uint32_t enable_byte = 1 << material.texture_bindings[j].binding_index;
 						texture_enable |= enable_byte;
 					}
 					// update push constant texture use
-					scene.m_resources->m_material_name_to_push_constant[material_name].texture_enable = texture_enable;
+					scene.resources->m_material_name_to_push_constant[material_name].texture_enable = texture_enable;
 				}
 				OPTICK_POP();
 			}

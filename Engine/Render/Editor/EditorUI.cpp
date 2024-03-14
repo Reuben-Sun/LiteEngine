@@ -323,7 +323,7 @@ namespace ToolEngine
 		{
 			auto material_name = entity.material_names[material_index];
 			ImGui::Text(material_name.c_str());
-			PushConstant& push_constant = m_scene.m_resources->m_material_name_to_push_constant[material_name];
+			PushConstant& push_constant = m_scene.resources->m_material_name_to_push_constant[material_name];
 			std::string base_color_name = std::format("BaseColor {0}", material_index);
 			std::string metallic_slider_name = std::format("Metallic {0}", material_index);
 			std::string roughness_slider_name = std::format("Roughness {0}", material_index);

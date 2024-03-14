@@ -57,7 +57,7 @@ namespace ToolEngine
 	{
 		std::vector<RenderEntity> render_entities;
 		Camera camera;
-		std::unique_ptr<SceneResources> m_resources{ nullptr };
+		std::unique_ptr<SceneResources> resources{ nullptr };
 		void init(LogicScene& logic_scene);
 		void tick();
 	};

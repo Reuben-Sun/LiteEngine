@@ -5,7 +5,7 @@ namespace ToolEngine
 {
 	RenderContext::RenderContext(RHIContext& rhi_context): m_rhi_context(rhi_context)
 	{
-		m_scene.m_resources = std::make_unique<SceneResources>(*rhi_context.m_device);
+		m_scene.resources = std::make_unique<SceneResources>(*rhi_context.m_device);
 		m_editor_ui = std::make_unique<EditorUI>(m_rhi_context, m_ui_context, m_scene);
 		m_renderer = std::make_unique<Renderer>(m_rhi_context, m_ui_context, m_scene);
 		m_max_frames_in_flight = m_rhi_context.m_swapchain->getImageCount();
