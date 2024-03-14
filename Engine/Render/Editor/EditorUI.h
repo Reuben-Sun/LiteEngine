@@ -21,7 +21,6 @@ namespace ToolEngine
 		bool need_resize = true;
 		bool enable_gizmos = false;
 		int debug_mode = 0;
-		int m_selecting_object_index = 0;
 	};
 
 	class EditorUI

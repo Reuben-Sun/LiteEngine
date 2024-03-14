@@ -56,6 +56,7 @@ namespace ToolEngine
 	struct RenderScene
 	{
 		std::vector<RenderEntity> render_entities;
+		int m_selecting_index = 0;
 		Camera camera;
 		std::unique_ptr<SceneResources> resources{ nullptr };
 		void init(LogicScene& logic_scene);
