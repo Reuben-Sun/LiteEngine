@@ -91,7 +91,10 @@ namespace ToolEngine
 		vkMapMemory(m_device.getLogicalDevice(), staging_buffer_memory, 0, image_buffer_size, 0, &data);
 		memcpy(data, all_pixels, static_cast<size_t>(image_buffer_size));
 		vkUnmapMemory(m_device.getLogicalDevice(), staging_buffer_memory);
-		stbi_image_free(pixels[0]);
+		for (int i = 0; i < pixels.size(); i++)
+		{
+			stbi_image_free(pixels[i]);
+		}
 		delete[] all_pixels;
 		VkExtent2D extent{ texture_widths[0], texture_heights[0] };
 		m_image = std::make_unique<RHIImage>(m_device, extent, VK_FORMAT_R8G8B8A8_SRGB,
