@@ -11,6 +11,7 @@
 #include "Render/Runtime/Feature/Culling/CullingResult.h"
 #include "Render/Runtime/Feature/Gizmos/RenderGizmos.h"
 #include "Render/Runtime/Feature/Skybox/RenderSkybox.h"
+#include "Render/Runtime/Feature/Outline/RenderOutline.h"
 #include "Render/Editor/EditorUI.h"
 #include "Render/Resources/RenderScene.h"
 #include "Render/Pass/ForwardPass.h"
@@ -44,6 +45,7 @@ namespace ToolEngine
 		
 		std::unique_ptr<RenderGizmos> m_render_gizmos;
 		std::unique_ptr<RenderSkybox> m_render_skybox;
+		std::unique_ptr<RenderOutline> m_render_outline;
 
 		std::unique_ptr<RHIDescriptorSetLayout> m_scene_descriptor_set_layout;
 		

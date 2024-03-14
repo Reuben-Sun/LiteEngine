@@ -37,14 +37,14 @@ namespace ToolEngine
 
 		// rasterizer
 		RHIPipelineRasterizationState rasterization_state{};
-		rasterization_state.cull_mode = VK_CULL_MODE_FRONT_BIT;
+		rasterization_state.cull_mode = VK_CULL_MODE_NONE;
 
 		// multisampling
 		RHIPipelineMultisampleState multi_sample_state{};
 
 		// depth stencil
 		RHIPipelineDepthStencilState depth_stencil_state{};
-		depth_stencil_state.depth_write_enable = false;
+		//depth_stencil_state.depth_write_enable = false;
 
 		// color blending
 		RHIPipelineColorBlendState color_blending{};
@@ -53,7 +53,7 @@ namespace ToolEngine
 		RHIPipelineDynamicState dynamicState{};
 
 		const std::vector<VkDescriptorSetLayout> descriptor_set_layouts = { m_ubo_descriptor_set_layout->getHandle() };
-		const std::vector<VkPushConstantRange> push_constant_ranges = { { VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(GizmoPushConstant) } };
+		const std::vector<VkPushConstantRange> push_constant_ranges = { { VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(OutlinePushConstant) } };
 		VkPipelineLayoutCreateInfo pipeline_layout_info{};
 		pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipeline_layout_info.setLayoutCount = descriptor_set_layouts.size();

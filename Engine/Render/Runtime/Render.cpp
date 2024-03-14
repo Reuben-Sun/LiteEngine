@@ -30,6 +30,8 @@ namespace ToolEngine
 		m_render_gizmos = std::make_unique<RenderGizmos>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
 		m_render_skybox = std::make_unique<RenderSkybox>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
 		m_render_skybox->init(*m_scene.resources->m_global_ubo, *m_scene.resources->m_global_default_texture, *m_scene.resources->m_skybox_texture);
+		m_render_outline = std::make_unique<RenderOutline>(*m_rhi_context.m_device, *m_forward_pass, *m_rhi_context.m_descriptor_pool);
+		m_render_outline->init(*m_scene.resources->m_global_ubo);
 
 		uint32_t swapchain_image_count = m_rhi_context.m_swapchain->getImageCount();
 		m_forward_frame_buffer = std::make_unique<RHIFrameBuffer>(*m_rhi_context.m_device,
@@ -144,6 +146,7 @@ namespace ToolEngine
 		{
 			m_render_gizmos->processRenderScene(m_scene);
 			m_render_gizmos->tick(cmd, frame_index, m_scene.camera);
+			m_render_outline->tick(cmd, frame_index, m_scene, m_ui_context.outline_width);
 		}
 		OPTICK_POP();
 		m_render_skybox->tick(cmd, frame_index, m_scene.camera);
