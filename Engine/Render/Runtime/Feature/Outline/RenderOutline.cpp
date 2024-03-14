@@ -1,4 +1,5 @@
 #include "RenderOutline.h"
+#include <glm/gtc/matrix_inverse.hpp>
 
 namespace ToolEngine
 {
@@ -32,9 +33,9 @@ namespace ToolEngine
             cmd.bindVertexBuffer(frame_index, vertex_buffer, offsets, 0, 1);
             OutlinePushConstant constant;
             constant.model_matrix = entity.transform.getModelMatrix();
-            constant.color = glm::vec3(0.0f, 0.0f, 1.0f);
+            constant.color = glm::vec3(1.0f, 0.9f, 0.0f);
             constant.width = outline_width;
-            constant.inv_m_v_matrix = glm::inverse(scene.camera.getViewMatrix() * constant.model_matrix);
+            constant.inv_m_v_matrix = glm::inverseTranspose(scene.camera.getViewMatrix() * constant.model_matrix);
             cmd.pushConstants(frame_index, m_outline_pipeline->getLayout(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(OutlinePushConstant), &constant);
             cmd.drawIndexed(frame_index, index_buffer.getIndexCount(), 1, 0, 0, 0);
         }

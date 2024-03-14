@@ -20,7 +20,7 @@ namespace ToolEngine
 		uint32_t m_scene_height = 1080;
 		bool need_resize = true;
 		bool enable_gizmos = false;
-		float outline_width = 0.0f;
+		float outline_width = 0.03f;
 		int debug_mode = 0;
 	};
 

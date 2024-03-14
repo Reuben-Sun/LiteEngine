@@ -37,7 +37,7 @@ namespace ToolEngine
 
 		// rasterizer
 		RHIPipelineRasterizationState rasterization_state{};
-		rasterization_state.cull_mode = VK_CULL_MODE_NONE;
+		rasterization_state.cull_mode = VK_CULL_MODE_FRONT_BIT;
 
 		// multisampling
 		RHIPipelineMultisampleState multi_sample_state{};

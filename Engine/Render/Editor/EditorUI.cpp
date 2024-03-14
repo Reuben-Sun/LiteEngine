@@ -305,7 +305,7 @@ namespace ToolEngine
 		}
 		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness" };
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
-		ImGui::SliderFloat("Outline Width", &m_ui_context.outline_width, 0.0f, 100.0f);
+		ImGui::SliderFloat("Outline Width", &m_ui_context.outline_width, 0.0f, 0.1f);
 		ImGui::Separator();
 		
 		auto& entity = m_scene.render_entities[m_scene.m_selecting_index];
