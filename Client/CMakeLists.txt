@@ -10,3 +10,7 @@ add_custom_command(TARGET Client POST_BUILD
 add_custom_command(TARGET Client POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:OptickCore> $<TARGET_FILE_DIR:Client>)
+
+add_custom_command(TARGET Client POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/ktx/bin/ktx.dll" $<TARGET_FILE_DIR:Client>)
