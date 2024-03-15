@@ -52,7 +52,7 @@ namespace ToolEngine
 		skybox_images.push_back(image_path + "py.png");		// -y
 		skybox_images.push_back(image_path + "nz.png");		// +z
 		skybox_images.push_back(image_path + "pz.png");		// -z
-		auto ktx_image_path = Path::getInstance().getAssetPath() + "Texture\\Cubemap\\skybox.ktx2";
+		auto ktx_image_path = Path::getInstance().getAssetPath() + "Textures\\Cubemap\\skybox.ktx2";
 		//m_skybox_texture = std::make_unique<RHITextureCube>(m_device, skybox_images);
 		m_skybox_texture = std::make_unique<RHITextureCube>(m_device, ktx_image_path);
 	}
