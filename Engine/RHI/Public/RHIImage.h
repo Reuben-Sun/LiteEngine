@@ -14,7 +14,7 @@ namespace ToolEngine
 	class RHIImage
 	{
 	public:
-		RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties, ImageType type = ImageType::TEXTURE_2D);
+		RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties, ImageType type = ImageType::TEXTURE_2D, uint32_t mipmap_count = 1);
 		~RHIImage();
 
 		void transitionImageLayout(VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_flags = VK_IMAGE_ASPECT_COLOR_BIT);
@@ -28,6 +28,7 @@ namespace ToolEngine
 		VkDeviceMemory m_image_memory{ VK_NULL_HANDLE };
 		VkFormat m_format = VK_FORMAT_R8G8B8A8_SRGB;
 		ImageType m_type = ImageType::TEXTURE_2D;
+		uint32_t m_mipmap_count;
 
 		uint32_t findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties);
 	};
