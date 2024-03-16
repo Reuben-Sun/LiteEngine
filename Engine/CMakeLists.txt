@@ -29,6 +29,8 @@ target_link_libraries(Engine PUBLIC imgui)
 target_link_libraries(Engine PUBLIC Jolt)
 target_link_libraries(Engine PUBLIC EnTT)
 target_link_libraries(Engine PUBLIC OptickCore)
+target_include_directories(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/ktx/include")
+target_link_libraries(Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/ktx/lib/ktx.lib")
 target_compile_options(Engine PRIVATE /wd4996)
 
 # Compile shaders

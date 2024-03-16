@@ -3,8 +3,8 @@
 
 namespace ToolEngine
 {
-	RHIImage::RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties, ImageType type)
-		: m_device(device), m_format(format), m_type(type)
+	RHIImage::RHIImage(RHIDevice& device, VkExtent2D extent, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageAspectFlags aspect_flags, VkMemoryPropertyFlags properties, ImageType type, uint32_t mipmap_count)
+		: m_device(device), m_format(format), m_type(type), m_mipmap_count(mipmap_count)
 	{
 		VkImageCreateInfo image_create_info{};
 		image_create_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -12,7 +12,7 @@ namespace ToolEngine
 		image_create_info.extent.width = extent.width;
 		image_create_info.extent.height = extent.height;
 		image_create_info.extent.depth = 1;
-		image_create_info.mipLevels = 1;
+		image_create_info.mipLevels = m_mipmap_count;
 		image_create_info.arrayLayers = 1;
 		image_create_info.format = format;
 		image_create_info.tiling = tiling;
@@ -58,7 +58,7 @@ namespace ToolEngine
 		image_view_create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
 		image_view_create_info.subresourceRange.aspectMask = aspect_flags;
 		image_view_create_info.subresourceRange.baseMipLevel = 0;
-		image_view_create_info.subresourceRange.levelCount = 1;
+		image_view_create_info.subresourceRange.levelCount = m_mipmap_count;
 		image_view_create_info.subresourceRange.baseArrayLayer = 0;
 		image_view_create_info.subresourceRange.layerCount = 1;
 		if (m_type == ImageType::TEXTURE_CUBE)
@@ -94,7 +94,7 @@ namespace ToolEngine
 		barrier.image = m_image;
 		barrier.subresourceRange.aspectMask = aspect_flags;
 		barrier.subresourceRange.baseMipLevel = 0;
-		barrier.subresourceRange.levelCount = 1;
+		barrier.subresourceRange.levelCount = m_mipmap_count;
 		barrier.subresourceRange.baseArrayLayer = 0;
 		barrier.subresourceRange.layerCount = 1;
 		if (m_type == ImageType::TEXTURE_CUBE)

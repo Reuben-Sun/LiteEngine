@@ -5,6 +5,7 @@
 #include "RHI/Public/RHIDevice.h"
 #include "RHI/Public/RHISampler.h"
 #include "RHI/Public/RHIImage.h"
+#include "ktx.h"
 
 namespace ToolEngine
 {
@@ -26,6 +27,7 @@ namespace ToolEngine
 	{
 	public:
 		RHITextureCube(RHIDevice& device, const std::vector<std::string>& paths);
+		RHITextureCube(RHIDevice& device, const std::string& ktx_path);
 		~RHITextureCube();
 		VkDescriptorImageInfo m_descriptor;
 	private:
@@ -34,5 +36,6 @@ namespace ToolEngine
 		std::unique_ptr<RHISampler> m_sampler;
 
 		void createCubeImageFormBuffer(VkBuffer buffer, uint32_t width, uint32_t height);
+		void createCubeImageFormKtxAndBuffer(VkBuffer buffer, uint32_t width, uint32_t height, ktxTexture* texture);
 	};
 }
