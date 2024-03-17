@@ -31,7 +31,6 @@ namespace ToolEngine
 		void updateMoveState(uint32_t keycode, bool pressed);
 		void updateRotation(float delta_x, float delta_y);
 		void updateCameraSpeed(float delta_speed);
-		void setCurrentMousePos(uint32_t x, uint32_t y);
 
 		void tick();
 
@@ -41,7 +40,5 @@ namespace ToolEngine
 		
 	private:
 		LogicScene& m_scene;
-		uint32_t m_current_mouse_x;
-		uint32_t m_current_mouse_y;
 	};
 }
