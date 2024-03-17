@@ -53,12 +53,20 @@ namespace ToolEngine
 		uint32_t current_mouse_y;
 		bool pickup_update = false;
 		std::string pickup_entity_mesh_name;
+		glm::vec3 test_pos;
 
 		bool inSceneBounding() const
 		{
 			bool result = scene_bounding.x < current_mouse_x && current_mouse_x < scene_bounding.z &&
 				scene_bounding.y < current_mouse_y && current_mouse_y < scene_bounding.w;
 			return result;
+		}
+
+		glm::vec2 getScreenUV() const
+		{
+			float u = (current_mouse_x - scene_bounding.x) / (scene_bounding.z - scene_bounding.x);
+			float v = (current_mouse_y - scene_bounding.y) / (scene_bounding.w - scene_bounding.y);
+			return glm::vec2(u, v);
 		}
 	};
 }

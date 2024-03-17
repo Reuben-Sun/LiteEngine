@@ -12,6 +12,10 @@
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
+#include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
+#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseQuery.h>
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/CastResult.h>
 #include "Logic/ECS/LogicScene.h"
 #include "JoltUtils.h"
 #include "Listener.h"
@@ -25,7 +29,7 @@ namespace ToolEngine
 		~PhysicsManager();
 
 		void tick();
-		
+		void pickup();
 	private:
 		LogicScene& m_scene;
 

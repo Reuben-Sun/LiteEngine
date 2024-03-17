@@ -95,6 +95,10 @@ namespace ToolEngine
     }
     bool Engine::OnMouseButtonPressed(MouseButtonPressedEvent& e)
     {
+        if (e.getMouseButton() == 0)
+        {
+            m_gp_context->m_physics_manager->pickup();
+        }
         if (e.getMouseButton() == 1)    // 1 is right mouse button
         {
             m_mouse_button_state = 1;

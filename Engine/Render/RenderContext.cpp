@@ -25,8 +25,15 @@ namespace ToolEngine
 		OPTICK_PUSH("Process Logic scene to Render scene");
 		m_scene.init(scene);
 		m_scene.tick();
+		
 		auto ui_info_view = scene.scene_context.view<UIInfoComponent>();
 		ui_info_view.get<UIInfoComponent>(ui_info_view.front()).scene_bounding = m_editor_ui->m_scene_bounding;
+		RenderEntity render_entity;
+		render_entity.mesh_name = "sphere";
+		render_entity.mesh_path = "Models/Sphere.gltf";
+		render_entity.material_names = { "Material/Cube.material" };
+		render_entity.transform.position = ui_info_view.get<UIInfoComponent>(ui_info_view.front()).test_pos;
+		m_scene.render_entities.push_back(render_entity);
 		OPTICK_POP();
 
 		OPTICK_PUSH("RenderContext tick");

@@ -124,4 +124,45 @@ namespace ToolEngine
 		}
 		OPTICK_POP();
 	}
+
+	void PhysicsManager::pickup()
+	{
+		auto view = m_scene.scene_context.view<CameraComponent>();
+		auto& camera = view.get<CameraComponent>(view.front()).camera;
+		auto ui_view = m_scene.scene_context.view<UIInfoComponent>();
+		auto& ui_info = ui_view.get<UIInfoComponent>(ui_view.front());
+		if (ui_info.inSceneBounding())
+		{
+			LOG_INFO("Pickup");
+			glm::vec3 begin = camera.transform.position;
+			glm::vec2 uv = ui_info.getScreenUV();
+			float ndc_x = 2.0f * uv.x - 1.0f;
+			float ndc_y = 1.0f - 2.0f * uv.y;
+			glm::mat inv_projection_mat = glm::inverse(camera.getProjectionMatrix());
+			glm::mat inv_view_mat = glm::inverse(camera.getViewMatrix());
+			
+			glm::vec3 target = inv_view_mat * glm::vec4(ndc_x, ndc_y, camera.near_plane, 0.0f);
+			//glm::vec3 target = inv_projection_mat * glm::vec4(ndc_x, ndc_y, -1.0, 1.0f);
+			//target = inv_view_mat * glm::vec4(target.x, target.y, -1.0f, 0.0f);
+			LOG_INFO("Camera position x:{0} y:{1} z:{2}", begin.x, begin.y, begin.z);
+			LOG_INFO("Hit target x:{0} y:{1} z:{2}", target.x, target.y, target.z);
+			glm::vec3 dir = target - begin;
+			JPH::BodyInterface& body_interface = m_physics_system->GetBodyInterface();
+			JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
+			const JPH::BroadPhaseQuery& bp = m_physics_system->GetBroadPhaseQuery();
+			JPH::RayCast ray_cast(JPH::RVec3(begin.x, begin.y, begin.z), JPH::RVec3(dir.x, dir.y, dir.z));
+			bp.CastRay(ray_cast, collector);
+			size_t nums = collector.mHits.size();
+			JPH::BroadPhaseCastResult* results = collector.mHits.data();
+			for (int i = 0; i < nums; i++)
+			{
+				glm::vec3 hit_pos = begin + dir * results[i].mFraction;
+				
+				LOG_INFO("Hit position: {0}, {1}, {2}", hit_pos.x, hit_pos.y, hit_pos.z);
+				ui_info.test_pos = hit_pos;
+				break;
+			}
+		}
+		
+	}
 }
