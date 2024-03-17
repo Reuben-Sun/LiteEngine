@@ -49,5 +49,16 @@ namespace ToolEngine
 	struct UIInfoComponent
 	{
 		glm::vec4 scene_bounding;
+		uint32_t current_mouse_x;
+		uint32_t current_mouse_y;
+		bool pickup_update = false;
+		std::string pickup_entity_mesh_name;
+
+		bool inSceneBounding() const
+		{
+			bool result = scene_bounding.x < current_mouse_x && current_mouse_x < scene_bounding.z &&
+				scene_bounding.y < current_mouse_y && current_mouse_y < scene_bounding.w;
+			return result;
+		}
 	};
 }

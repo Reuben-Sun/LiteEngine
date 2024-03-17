@@ -56,8 +56,7 @@ namespace ToolEngine
 		auto ui_view = m_scene.scene_context.view<const UIInfoComponent>();
 		auto& ui_info = ui_view.get<const UIInfoComponent>(ui_view.front());
 		// only mouse on scene image can rotate camera
-		if (ui_info.scene_bounding.x < m_current_mouse_x && m_current_mouse_x < ui_info.scene_bounding.z &&
-			ui_info.scene_bounding.y < m_current_mouse_y && m_current_mouse_y < ui_info.scene_bounding.w)
+		if (ui_info.inSceneBounding())
 		{
 			auto euler = camera.transform.rotation.getEulerRandians();
 			euler.x += delta_y * 0.001f;
@@ -70,11 +69,6 @@ namespace ToolEngine
 		auto view = m_scene.scene_context.view<CameraComponent>();
 		auto& camera = view.get<CameraComponent>(view.front()).camera;
 		camera.camera_speed = std::clamp(camera.camera_speed + delta_speed, 0.0f, 100.0f);
-	}
-	void FPSCamera::setCurrentMousePos(uint32_t x, uint32_t y)
-	{
-		m_current_mouse_x = x;
-		m_current_mouse_y = y;
 	}
 	void FPSCamera::tick()
 	{

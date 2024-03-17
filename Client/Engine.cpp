@@ -75,7 +75,7 @@ namespace ToolEngine
     }
     bool Engine::OnMouseMoved(MouseMovedEvent& e)
     {
-        m_gp_context->m_fps_camera->setCurrentMousePos(e.getX(), e.getY());
+        m_gp_context->setCurrentMousePosition(e.getX(), e.getY());
         if(m_mouse_button_state == 1)
 		{
             m_mouse_button_state = 2;

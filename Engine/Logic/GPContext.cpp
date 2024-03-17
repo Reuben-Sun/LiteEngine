@@ -20,4 +20,11 @@ namespace ToolEngine
         m_fps_camera->tick();
         m_scene_manager->tick();
     }
+    void GPContext::setCurrentMousePosition(uint32_t x, uint32_t y)
+    {
+        auto ui_view = m_logic_scene.scene_context.view<UIInfoComponent>();
+        auto& ui_info = ui_view.get<UIInfoComponent>(ui_view.front());
+        ui_info.current_mouse_x = x;
+        ui_info.current_mouse_y = y;
+    }
 }
