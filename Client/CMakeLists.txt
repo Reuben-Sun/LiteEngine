@@ -1,4 +1,4 @@
-add_executable(Client Engine.h Engine.cpp Main.cpp)
+add_executable(Client Main.cpp)
 target_compile_options(Client PRIVATE /wd4996)
 target_link_libraries(Client PRIVATE Engine)
 
