@@ -25,6 +25,7 @@ namespace ToolEngine
         m_gp_context = std::make_unique<GPContext>();
         m_rhi_context = std::make_unique<RHIContext>(*m_window);
         m_render_context = std::make_unique<RenderContext>(*m_rhi_context);
+        m_render_context->setReloadFunc(std::bind(&Engine::reloadScene, this));
     }
     void Engine::tick()
     {
@@ -117,5 +118,10 @@ namespace ToolEngine
         }
         
         return true;
+    }
+    bool Engine::reloadScene()
+    {
+        LOG_INFO("Reload Scene");
+        return false;
     }
 }

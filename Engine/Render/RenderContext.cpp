@@ -47,6 +47,10 @@ namespace ToolEngine
 	{
 		m_editor_ui->m_full_screen = !m_editor_ui->m_full_screen;
 	}
+	void RenderContext::setReloadFunc(std::function<bool()> func)
+	{
+		m_editor_ui->test_func = func;
+	}
 	bool RenderContext::prepareFrame(uint32_t& image_index)
 	{
 		OPTICK_EVENT();

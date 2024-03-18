@@ -44,5 +44,6 @@ namespace ToolEngine
         bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
         bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
         bool OnMouseScrolled(MouseScrolledEvent& e);
+        bool reloadScene();
     };
 }

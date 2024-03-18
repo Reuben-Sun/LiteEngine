@@ -23,6 +23,7 @@ namespace ToolEngine
 		void tick(LogicScene& scene);
 
 		void setFullScreen();
+		void setReloadFunc(std::function<bool()> func);
 	private:
 		RHIContext& m_rhi_context;
 		RenderScene m_scene;

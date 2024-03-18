@@ -270,6 +270,11 @@ namespace ToolEngine
 			ImGui::PopStyleColor();
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
+				std::string extension = Path::getInstance().getFileExtension(items[i]);
+				if (extension == ".scene")
+				{
+					test_func();
+				}
 				LOG_INFO("Click!");
 			}
 			std::string name = Path::getInstance().getFileName(items[i]);

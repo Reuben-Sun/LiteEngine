@@ -33,6 +33,7 @@ namespace ToolEngine
 		void record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image);
 		bool m_full_screen = false;
 		glm::vec4 m_scene_bounding;	// begin x, begin y, end x, end y
+		std::function<bool()> test_func;
 	private:
 		RHIContext& m_rhi_context;
 		UIContext& m_ui_context;
