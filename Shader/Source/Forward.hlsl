@@ -1,4 +1,4 @@
-#include "ShaderLibrary/LitInput.hlsl"
+#include "ShaderLibrary/Input.hlsl"
 #include "ShaderLibrary/BRDF.hlsl"
 
 struct Attributes
