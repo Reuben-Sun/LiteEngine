@@ -47,6 +47,10 @@ namespace ToolEngine
 	{
 		m_editor_ui->m_full_screen = !m_editor_ui->m_full_screen;
 	}
+	void RenderContext::setUICallbackFunc(std::function<void(Event&)> func)
+	{
+		m_editor_ui->m_event_callback = func;
+	}
 	bool RenderContext::prepareFrame(uint32_t& image_index)
 	{
 		OPTICK_EVENT();

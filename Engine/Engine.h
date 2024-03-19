@@ -4,6 +4,7 @@
 #include "Core/Event/ApplicationEvent.h"
 #include "Core/Event/KeyEvent.h"
 #include "Core/Event/MouseEvent.h"
+#include "Core/Event/ImGuiEvent.h"
 #include "Window/GlfwWindow.h"
 #include "RHI/Public/RHIContext.h"
 #include "Logic/GPContext.h"
@@ -22,6 +23,7 @@ namespace ToolEngine
         void tick();
         void cleanup();
         void processEvent(Event& e);
+        void processUIEvent(Event& e);
 
         bool isRunning() const { return m_running; }
 
@@ -40,9 +42,10 @@ namespace ToolEngine
         bool onWindowClose(WindowCloseEvent& e);
         bool onKeyPressed(KeyPressedEvent& e);
         bool onKeyReleased(KeyReleasedEvent& e);
-        bool OnMouseMoved(MouseMovedEvent& e);
-        bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
-        bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
-        bool OnMouseScrolled(MouseScrolledEvent& e);
+        bool onMouseMoved(MouseMovedEvent& e);
+        bool onMouseButtonPressed(MouseButtonPressedEvent& e);
+        bool onMouseButtonReleased(MouseButtonReleasedEvent& e);
+        bool onMouseScrolled(MouseScrolledEvent& e);
+        bool onUIReloadScene(UIReloadSceneEvent& e);
     };
 }

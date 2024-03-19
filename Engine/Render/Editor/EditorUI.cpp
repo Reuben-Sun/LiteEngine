@@ -265,14 +265,20 @@ namespace ToolEngine
 		for (uint32_t i = 0; i < items.size(); i++)
 		{
 			auto icon_name = selectIcon(items[i]);
+			std::string name = Path::getInstance().getFileName(items[i]);
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 			ImGui::ImageButton(m_texture_name_to_descriptor_set[icon_name]->getHandle(), ImVec2(m_browser_button_size, m_browser_button_size), { 0, 0 }, { 1, 1 });
 			ImGui::PopStyleColor();
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
+				std::string extension = Path::getInstance().getFileExtension(items[i]);
+				if (extension == ".scene")
+				{
+					UIReloadSceneEvent event(std::format("Scene\\{0}", name));
+					m_event_callback(event);
+				}
 				LOG_INFO("Click!");
 			}
-			std::string name = Path::getInstance().getFileName(items[i]);
 			ImGui::TextWrapped(name.c_str());
 			ImGui::NextColumn();
 		}

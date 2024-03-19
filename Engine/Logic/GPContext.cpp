@@ -27,4 +27,11 @@ namespace ToolEngine
         ui_info.current_mouse_x = x;
         ui_info.current_mouse_y = y;
     }
+    void GPContext::reloadScene(std::string scene_name)
+    {
+        m_logic_scene.scene_context.clear();
+        m_scene_manager = std::make_unique<SceneManager>(m_logic_scene, scene_name);
+        m_fps_camera = std::make_unique<FPSCamera>(m_logic_scene);
+        m_physics_manager = std::make_unique<PhysicsManager>(m_logic_scene);
+    }
 }
