@@ -44,16 +44,7 @@ namespace ToolEngine
 		auto global_texture_path = Path::getInstance().getAssetPath() + "Textures\\1024.png";
 		m_global_default_texture = std::make_unique<RHITextureImage>(m_device, global_texture_path);
 
-		std::vector<std::string> skybox_images;
-		auto image_path = Path::getInstance().getAssetPath() + "Textures\\Cubemap\\";
-		skybox_images.push_back(image_path + "nx.png");		// +x 
-		skybox_images.push_back(image_path + "px.png");		// -x
-		skybox_images.push_back(image_path + "ny.png");		// +y
-		skybox_images.push_back(image_path + "py.png");		// -y
-		skybox_images.push_back(image_path + "nz.png");		// +z
-		skybox_images.push_back(image_path + "pz.png");		// -z
-		auto ktx_image_path = Path::getInstance().getAssetPath() + "Textures\\Cubemap\\skidpan.ktx2";
-		//m_skybox_texture = std::make_unique<RHITextureCube>(m_device, skybox_images);
+		auto ktx_image_path = Path::getInstance().getAssetPath() + "Textures\\Cubemap\\spaichingen_hill.ktx2";
 		m_skybox_texture = std::make_unique<RHITextureCube>(m_device, ktx_image_path);
 	}
 	SceneResources::~SceneResources()

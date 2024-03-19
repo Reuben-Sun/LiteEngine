@@ -27,7 +27,7 @@ Varyings MainVS(Attributes input)
 {
     Varyings output = (Varyings) 0;
     output.positionCS = mul(ubo.projectionMatrix, mul(ubo.viewMatrix, mul(pushConstant.modelMatrix, float4(input.positionOS, 1.0f))));
-    output.uvw = input.positionOS;
+    output.uvw = float3(input.positionOS.x, input.positionOS.z, -input.positionOS.y);
     return output;
 }
 
@@ -38,6 +38,6 @@ TextureCube _SkyboxMap : register(t2);
 
 float4 MainPS(Varyings input) : SV_TARGET
 {
-    float3 color = _SkyboxMap.Sample(_BaseMap_ST, input.uvw).xyz;
+    float3 color = _SkyboxMap.SampleLevel(_BaseMap_ST, input.uvw, 0).xyz;
     return float4(color, 1.0f);
 }
