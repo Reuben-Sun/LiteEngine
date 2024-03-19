@@ -1,0 +1,5 @@
+#ifndef CORE_HLSL_INCLUDED
+#define CORE_HLSL_INCLUDED
+
+
+#endif
