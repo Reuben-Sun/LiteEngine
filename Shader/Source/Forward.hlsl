@@ -70,10 +70,10 @@ float4 MainPS(Varyings input) : SV_TARGET
     {
         albedo *= _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     }
-    
+    float3 emission = float3(0.0f, 0.0f, 0.0f);
     if (pushConstant.textureEnable & ENABLE_EMISSION)
     {
-        
+        emission = _EmissionMap.Sample(_BaseMap_ST, input.uv).xyz;
     }
     float3 normalWS = input.normalWS;
     if (pushConstant.textureEnable & ENABLE_NORMAL)

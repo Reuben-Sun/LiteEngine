@@ -1,0 +1,29 @@
+{
+    "frag_shader_path": "",
+    "texture_bindings": [
+        {
+            "binding_index": 1,
+            "binding_type": 0,
+            "texture_path": "Textures/Helmat/Helmat.jpg"
+        },
+        {
+            "binding_index": 2,
+            "binding_type": 1,
+            "texture_path": "Textures/Helmat/Helmat_E.jpg"
+        },
+        {
+            "binding_index": 3,
+            "binding_type": 1,
+            "texture_path": "Textures/Helmat/Helmat_N.jpg"
+        },
+        {
+            "binding_index": 4,
+            "binding_type": 1,
+            "texture_path": "Textures/Helmat/Helmat_OMR.png"
+        }
+    ],
+    "vertex_shader_path": "",
+    "base_color": [1.0, 1.0, 1.0],
+    "metallic": 0.134,
+    "roughness": 0.276
+}
