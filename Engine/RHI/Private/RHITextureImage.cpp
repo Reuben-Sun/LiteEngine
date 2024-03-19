@@ -132,7 +132,7 @@ namespace ToolEngine
 		vkUnmapMemory(m_device.getLogicalDevice(), staging_buffer_memory);
 
 		VkExtent2D extent{ width, height };
-		m_image = std::make_unique<RHIImage>(m_device, extent, VK_FORMAT_R8G8B8A8_SRGB,
+		m_image = std::make_unique<RHIImage>(m_device, extent, VK_FORMAT_BC6H_UFLOAT_BLOCK,
 			VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VK_IMAGE_ASPECT_COLOR_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, ImageType::TEXTURE_CUBE, mipmap_count);
 		m_image->transitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
