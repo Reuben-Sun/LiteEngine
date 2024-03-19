@@ -1,5 +1,5 @@
-#ifndef SURFACE_DATA_HLSL
-#define SURFACE_DATA_HLSL
+#ifndef SURFACE_DATA_HLSL_INCLUDED
+#define SURFACE_DATA_HLSL_INCLUDED
 
 struct SurfaceData
 {

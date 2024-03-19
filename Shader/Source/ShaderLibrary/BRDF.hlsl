@@ -1,5 +1,5 @@
-#ifndef BRDF_HLSL
-#define BRDF_HLSL
+#ifndef BRDF_HLSL_INCLUDED
+#define BRDF_HLSL_INCLUDED
 struct BRDFData
 {
     float3 albedo;

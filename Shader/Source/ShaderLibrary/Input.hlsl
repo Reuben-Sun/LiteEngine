@@ -1,5 +1,5 @@
-#ifndef LITINPUT_HLSL
-#define LITINPUT_HLSL
+#ifndef INPUT_HLSL_INCLUDED
+#define INPUT_HLSL_INCLUDED
 struct Light
 {
     float3 position;
