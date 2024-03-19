@@ -24,7 +24,7 @@
     ],
     "vertex_shader_path": "",
     "base_color": [1.0, 1.0, 1.0],
-    "metallic": 0.134,
-    "roughness": 0.276,
+    "metallic": 1.0,
+    "roughness": 1.0,
     "emission": [1.0, 1.0, 1.0]
 }

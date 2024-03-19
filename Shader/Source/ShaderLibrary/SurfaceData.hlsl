@@ -6,7 +6,7 @@ struct SurfaceData
     float3 albedo;
     float3 specular; // TODO
     float metallic;
-    float smoothness;
+    float roughness;
     float3 normalTS;
     float3 emission;
     float occlusion;
