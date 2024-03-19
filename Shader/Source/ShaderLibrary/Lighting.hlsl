@@ -50,7 +50,7 @@ float4 FragmentPBR(SurfaceInput inputData, SurfaceData surfaceData, LightList li
     InitializeBRDFData(surfaceData, brdfData);
     float3 giColor = GlobalIllumination(brdfData, inputData.bakedGI, inputData.normalWS, inputData.viewDirectionWS);
     float3 mainLightColor = LightingPhysicallyBased(brdfData, lightData.mainLight, inputData.normalWS, inputData.viewDirectionWS);
-    float3 result = mainLightColor + giColor;
+    float3 result = mainLightColor + giColor + surfaceData.emission;
     return float4(result, 1);
 }
 
