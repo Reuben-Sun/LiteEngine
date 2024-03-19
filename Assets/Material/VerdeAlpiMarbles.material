@@ -9,7 +9,7 @@
         {
             "binding_index": 4,
             "binding_type": 1,
-            "texture_path": "Textures/VerdeAlpiMarbles/VerdeAlpiMarbles_R.jpg"
+            "texture_path": "Textures/VerdeAlpiMarbles/VerdeAlpiMarbles_OMR.png"
         }
     ],
     "vertex_shader_path": "",

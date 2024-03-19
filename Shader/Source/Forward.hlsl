@@ -49,11 +49,11 @@ Varyings MainVS(Attributes input)
 Texture2D _BaseMap : register(t1);
 SamplerState _BaseMap_ST : register(s1);
 
-Texture2D _MetallicMap : register(t2);
+Texture2D _EmissionMap : register(t2);
 
 Texture2D _NormalMap : register(t3);
 
-Texture2D _RoughnessMap : register(t4);
+Texture2D _OMRMap : register(t4);
 
 TextureCube _SkyboxMap : register(t5);
 
@@ -70,10 +70,10 @@ float4 MainPS(Varyings input) : SV_TARGET
     {
         albedo *= _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     }
-    float metallic = pushConstant.metallic;
-    if (pushConstant.textureEnable & ENABLE_METALLIC)
+    
+    if (pushConstant.textureEnable & ENABLE_EMISSION)
     {
-        metallic *= _MetallicMap.Sample(_BaseMap_ST, input.uv).x;
+        
     }
     float3 normalWS = input.normalWS;
     if (pushConstant.textureEnable & ENABLE_NORMAL)
@@ -83,10 +83,15 @@ float4 MainPS(Varyings input) : SV_TARGET
         float3 normalTS = _NormalMap.Sample(_BaseMap_ST, input.uv).xyz;
         normalWS = normalize(mul(normalTS, TBN));
     }
+    float metallic = pushConstant.metallic;
     float roughness = pushConstant.roughness;
-    if (pushConstant.textureEnable & ENABLE_ROUGHNESS)
+    float occulusion = 1.0f;
+    if (pushConstant.textureEnable & ENABLE_OMR)
     {
-        roughness *= _RoughnessMap.Sample(_BaseMap_ST, input.uv).x;
+        float3 omr = _OMRMap.Sample(_BaseMap_ST, input.uv).xyz;
+        occulusion *= omr.r;
+        metallic *= omr.g;
+        roughness *= omr.b;
     }
     
     float4 skyboxColor = _SkyboxMap.Sample(_BaseMap_ST, normalWS);
