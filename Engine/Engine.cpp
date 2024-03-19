@@ -25,7 +25,7 @@ namespace ToolEngine
         m_gp_context = std::make_unique<GPContext>();
         m_rhi_context = std::make_unique<RHIContext>(*m_window);
         m_render_context = std::make_unique<RenderContext>(*m_rhi_context);
-        m_render_context->setReloadFunc(std::bind(&Engine::reloadScene, this));
+        m_render_context->setUICallbackFunc(std::bind(&Engine::processUIEvent, this, std::placeholders::_1));
     }
     void Engine::tick()
     {
@@ -51,6 +51,11 @@ namespace ToolEngine
         dispatcher.dispatch<MouseButtonPressedEvent>(std::bind(&Engine::OnMouseButtonPressed, this, std::placeholders::_1));
         dispatcher.dispatch<MouseButtonReleasedEvent>(std::bind(&Engine::OnMouseButtonReleased, this, std::placeholders::_1));
         dispatcher.dispatch<MouseScrolledEvent>(std::bind(&Engine::OnMouseScrolled, this, std::placeholders::_1));
+    }
+    void Engine::processUIEvent(Event& e)
+    {
+        EventDispatcher dispatcher(e);
+		dispatcher.dispatch<UIReloadSceneEvent>(std::bind(&Engine::OnUIReloadScene, this, std::placeholders::_1));
     }
     bool Engine::onWindowClose(WindowCloseEvent& e)
     {
@@ -119,7 +124,7 @@ namespace ToolEngine
         
         return true;
     }
-    bool Engine::reloadScene()
+    bool Engine::OnUIReloadScene(UIReloadSceneEvent& e)
     {
         LOG_INFO("Reload Scene");
         return false;

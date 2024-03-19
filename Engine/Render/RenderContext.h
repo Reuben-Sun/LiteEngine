@@ -23,7 +23,8 @@ namespace ToolEngine
 		void tick(LogicScene& scene);
 
 		void setFullScreen();
-		void setReloadFunc(std::function<bool()> func);
+		// set UI event callback, so that ui can driver upper layer
+		void setUICallbackFunc(std::function<void(Event&)> func);
 	private:
 		RHIContext& m_rhi_context;
 		RenderScene m_scene;

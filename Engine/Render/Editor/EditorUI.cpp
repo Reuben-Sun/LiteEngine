@@ -273,7 +273,8 @@ namespace ToolEngine
 				std::string extension = Path::getInstance().getFileExtension(items[i]);
 				if (extension == ".scene")
 				{
-					test_func();
+					UIReloadSceneEvent event(items[i]);
+					m_event_callback(event);
 				}
 				LOG_INFO("Click!");
 			}
