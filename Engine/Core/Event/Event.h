@@ -9,7 +9,8 @@ namespace ToolEngine
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
+		ImGuiEvent
 	};
 
 	enum EventCategory
@@ -19,7 +20,8 @@ namespace ToolEngine
 		EventCategoryInput = BIT(1),
 		EventCategoryKeyboard = BIT(2),
 		EventCategoryMouse = BIT(3),
-		EventCategoryMouseButton = BIT(4)
+		EventCategoryMouseButton = BIT(4),
+		EventCategoryUI = BIT(5),
 	};
 
 	class Event
