@@ -1,5 +1,5 @@
 #include "ShaderLibrary/Input.hlsl"
-#include "ShaderLibrary/BRDF.hlsl"
+#include "ShaderLibrary/Lighting.hlsl"
 
 struct Attributes
 {
@@ -63,56 +63,52 @@ float4 MainPS(Varyings input) : SV_TARGET
 {
     float3 lightDir = ubo.dirLight.direction.xyz;
     float3 lightColor = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
-    float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
     
+    SurfaceData surfaceData = (SurfaceData) 0;
     float3 albedo = pushConstant.baseColor;
     if (pushConstant.textureEnable & ENABLE_BASECOLOR)
     {
         albedo *= _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     }
+    surfaceData.albedo = albedo;
     float3 emission = pushConstant.emissionColor;
     if (pushConstant.textureEnable & ENABLE_EMISSION)
     {
         emission *= _EmissionMap.Sample(_BaseMap_ST, input.uv).xyz;
     }
+    surfaceData.emission = emission;
+    if (pushConstant.textureEnable & ENABLE_NORMAL)
+    {
+        float3 normalTS = _NormalMap.Sample(_BaseMap_ST, input.uv).xyz;
+        surfaceData.normalTS = normalTS;   
+    }
+    float metallic = pushConstant.metallic;
+    float roughness = pushConstant.roughness;
+    float occlusion = 1.0f;
+    if (pushConstant.textureEnable & ENABLE_OMR)
+    {
+        float3 omr = _OMRMap.Sample(_BaseMap_ST, input.uv).xyz;
+        occlusion *= omr.r;
+        metallic *= omr.g;
+        roughness *= omr.b;
+    }
+    surfaceData.metallic = metallic;
+    surfaceData.occlusion = occlusion;
+    surfaceData.smoothness = 1.0f - roughness;
+    
+    SurfaceInput inputData = (SurfaceInput) 0;
+    float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
+    inputData.viewDirectionWS = viewDir;
     float3 normalWS = input.normalWS;
     if (pushConstant.textureEnable & ENABLE_NORMAL)
     {
         float3 bitangent = cross(input.normalWS, input.tangentOS.xyz) * input.tangentOS.w;
         float3x3 TBN = float3x3(input.tangentOS.xyz, bitangent, input.normalWS);
-        float3 normalTS = _NormalMap.Sample(_BaseMap_ST, input.uv).xyz;
-        normalWS = normalize(mul(normalTS, TBN));
+        normalWS = normalize(mul(TBN, surfaceData.normalTS));
     }
-    float metallic = pushConstant.metallic;
-    float roughness = pushConstant.roughness;
-    float occulusion = 1.0f;
-    if (pushConstant.textureEnable & ENABLE_OMR)
-    {
-        float3 omr = _OMRMap.Sample(_BaseMap_ST, input.uv).xyz;
-        occulusion *= omr.r;
-        metallic *= omr.g;
-        roughness *= omr.b;
-    }
+    inputData.normalWS = normalWS;
     
-    float4 skyboxColor = _SkyboxMap.Sample(_BaseMap_ST, normalWS);
-    
-    BRDFData data = (BRDFData) 0;
-    data.albedo = albedo;
-    data.metallic = metallic;
-    data.emissionColor = emission;
-    data.roughness = roughness;
-    
-    Input litInput = (Input) 0;
-    litInput.L = lightDir;
-    litInput.radiance = lightColor;
-    litInput.H = normalize(lightDir + viewDir);
-    litInput.NoV = max(0.0f, dot(normalWS, viewDir));
-    litInput.NoL = max(0.0f, dot(normalWS, lightDir));
-    litInput.NoH = max(0.0f, dot(normalWS, litInput.H));
-    litInput.VoH = max(0.0f, dot(viewDir, litInput.H));
-    
-    float4 lightingResult = BRDF(data, litInput);
-    float3 result = lightingResult.xyz + emission;
+    float4 result = FragmentPBR(inputData, surfaceData);
 
     if(pushConstant.debugMode == 1)
     {
@@ -137,7 +133,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     
     if (pushConstant.debugMode == 0)
     {
-        return float4(result, 1.0f);
+        return float4(result.xyz, 1.0f);
     }
     else
     {
