@@ -21,6 +21,7 @@ namespace ToolEngine
 
 		void tick();
 		void setCurrentMousePosition(uint32_t x, uint32_t y);
+		void reloadScene(std::string scene_name);
 	private:
 		LogicScene m_logic_scene;
 	};

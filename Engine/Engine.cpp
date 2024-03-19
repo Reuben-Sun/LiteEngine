@@ -127,6 +127,7 @@ namespace ToolEngine
     bool Engine::OnUIReloadScene(UIReloadSceneEvent& e)
     {
         LOG_INFO("Reload Scene");
+        m_gp_context->reloadScene(e.getSceneName());
         return false;
     }
 }
