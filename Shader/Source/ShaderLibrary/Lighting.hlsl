@@ -8,19 +8,6 @@
 #define HALF_MIN_SQRT 0.0078125
 #define HALF_MIN 6.103515625e-5
 
-Texture2D _BaseMap : register(t1);
-SamplerState _BaseMap_ST : register(s1);
-
-Texture2D _EmissionMap : register(t2);
-
-Texture2D _NormalMap : register(t3);
-
-Texture2D _OMRMap : register(t4);
-
-TextureCube _SkyboxMap : register(t5);
-
-static float3 _DebugColor = float3(1.0f, 0.0f, 1.0f);
-
 void InitializeBRDFData(inout SurfaceData surfaceData, out BRDFData brdfData)
 {
     float oneMinusReflectivity = OneMinusReflectivityMetallic(surfaceData.metallic);
@@ -50,7 +37,7 @@ float3 LightingPhysicallyBased(BRDFData brdfData, DirectionalLight mainLight, fl
     float NoL = saturate(dot(normalWS, mainLight.direction));
     float3 radiance = mainLight.color * NoL;
     float3 brdf = brdfData.diffuse;
-    
+    brdf = brdfData.specular * SpecularBRDF(brdfData, normalWS, viewDir, mainLight.direction);
     return brdf * radiance;
 }
 
