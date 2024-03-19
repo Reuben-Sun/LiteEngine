@@ -4,8 +4,12 @@ struct BRDFData
 {
     float3 albedo;
     float metallic;
-    float3 emissionColor;
+    float reflectivity;
+    float3 diffuse;
+    float3 specular;
     float roughness;
+    float roughness2;
+    float grazingTerm;
 };
 
 struct Input
@@ -20,6 +24,12 @@ struct Input
 };
 
 static const float PI = 3.14159265359f;
+
+inline float OneMinusReflectivityMetallic(float metallic)
+{
+    float oneMinusDielectricSpec = 1.0 - 0.04;
+    return oneMinusDielectricSpec - metallic * oneMinusDielectricSpec;
+}
 
 float4 BRDF(BRDFData data, Input input)
 {
