@@ -20,6 +20,7 @@ namespace ToolEngine
 		float metallic;
 		float roughness;
 		std::vector<float> base_color;
+		std::vector<float> emission;
 
 		nlohmann::json serialize() const
 		{
@@ -38,7 +39,8 @@ namespace ToolEngine
 				{"texture_bindings", texture_bindings},
 				{"metallic", metallic},
 				{"roughness", roughness},
-				{"base_color", base_color}
+				{"base_color", base_color},
+				{"emission", emission}
 			};
 		}
 
@@ -50,6 +52,7 @@ namespace ToolEngine
 			material.metallic = j.at("metallic").get<float>();
 			material.roughness = j.at("roughness").get<float>();
 			material.base_color = j.at("base_color").get<std::vector<float>>();
+			material.emission = j.at("emission").get<std::vector<float>>();
 			for (const auto& tb : j.at("texture_bindings"))
 			{
 				material.texture_bindings.push_back(TextureBinding{

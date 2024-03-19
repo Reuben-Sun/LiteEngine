@@ -70,10 +70,10 @@ float4 MainPS(Varyings input) : SV_TARGET
     {
         albedo *= _BaseMap.Sample(_BaseMap_ST, input.uv).xyz;
     }
-    float3 emission = float3(0.0f, 0.0f, 0.0f);
+    float3 emission = pushConstant.emissionColor;
     if (pushConstant.textureEnable & ENABLE_EMISSION)
     {
-        emission = _EmissionMap.Sample(_BaseMap_ST, input.uv).xyz;
+        emission *= _EmissionMap.Sample(_BaseMap_ST, input.uv).xyz;
     }
     float3 normalWS = input.normalWS;
     if (pushConstant.textureEnable & ENABLE_NORMAL)
@@ -99,7 +99,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     BRDFData data = (BRDFData) 0;
     data.albedo = albedo;
     data.metallic = metallic;
-    data.emissionColor = pushConstant.emissionColor;
+    data.emissionColor = emission;
     data.roughness = roughness;
     
     Input litInput = (Input) 0;
@@ -111,7 +111,8 @@ float4 MainPS(Varyings input) : SV_TARGET
     litInput.NoH = max(0.0f, dot(normalWS, litInput.H));
     litInput.VoH = max(0.0f, dot(viewDir, litInput.H));
     
-    float4 result = BRDF(data, litInput);
+    float4 lightingResult = BRDF(data, litInput);
+    float3 result = lightingResult.xyz + emission;
 
     if(pushConstant.debugMode == 1)
     {
@@ -129,10 +130,14 @@ float4 MainPS(Varyings input) : SV_TARGET
     {
         _DebugColor = roughness.xxx;
     }
+    else if(pushConstant.debugMode == 5)
+    {
+        _DebugColor = emission;
+    }
     
     if (pushConstant.debugMode == 0)
     {
-        return float4(result.xyz, 1.0f);
+        return float4(result, 1.0f);
     }
     else
     {

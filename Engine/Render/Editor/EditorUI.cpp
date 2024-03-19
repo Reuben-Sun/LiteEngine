@@ -309,7 +309,7 @@ namespace ToolEngine
 		{
 			m_ui_context.enable_gizmos = !m_ui_context.enable_gizmos;
 		}
-		static const char* items[] = { "Shadered", "NormalWS","NormalWS Mapped", "Metallic", "Roughness" };
+		static const char* items[] = { "Shadered", "NormalWS", "NormalWS Mapped", "Metallic", "Roughness", "Emission"};
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
 		ImGui::SliderFloat("Outline Width", &m_ui_context.outline_width, 0.0f, 0.1f);
 		ImGui::Separator();
@@ -334,11 +334,15 @@ namespace ToolEngine
 			std::string base_color_name = std::format("BaseColor {0}", material_index);
 			std::string metallic_slider_name = std::format("Metallic {0}", material_index);
 			std::string roughness_slider_name = std::format("Roughness {0}", material_index);
+			std::string emission_color_name = std::format("EmissionColor {0}", material_index);
 			std::vector<float> base_color = { push_constant.base_color[0], push_constant.base_color[1], push_constant.base_color[2] };
 			ImGui::ColorEdit3(base_color_name.c_str(), base_color.data());
 			push_constant.base_color = { base_color[0], base_color[1], base_color[2] };
 			ImGui::SliderFloat(metallic_slider_name.c_str(), &push_constant.metallic, 0.0f, 1.0f);
 			ImGui::SliderFloat(roughness_slider_name.c_str(), &push_constant.roughness, 0.0f, 1.0f);
+			std::vector<float> emission_color = { push_constant.emission_color[0], push_constant.emission_color[1], push_constant.emission_color[2] };
+			ImGui::ColorEdit3(emission_color_name.c_str(), emission_color.data());
+			push_constant.emission_color = { emission_color[0], emission_color[1], emission_color[2] };
 		}
 		ImGui::End();
 	}
