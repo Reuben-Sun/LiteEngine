@@ -38,12 +38,28 @@ void InitializeBRDFData(inout SurfaceData surfaceData, out BRDFData brdfData)
     brdfData.grazingTerm = saturate(1 - surfaceData.roughness + reflectivity);
 }
 
+float3 GlobalIllumination(BRDFData brdfData, float occlusion, float3 normalWS)
+{
+    float3 color = 0;
+    // TODO: sample cubemap
+    return color * occlusion;
+}
+
+float3 LightingPhysicallyBased(BRDFData brdfData, DirectionalLight mainLight, float3 normalWS, float3 viewDir)
+{
+    float3 result = 0;
+    return result;
+}
+
 
 float4 FragmentPBR(SurfaceInput inputData, SurfaceData surfaceData, LightList lightData)
 {
     BRDFData brdfData;
     InitializeBRDFData(surfaceData, brdfData);
-    return float4(1, 0, 1, 1);
+    float3 giColor = GlobalIllumination(brdfData, surfaceData.occlusion, inputData.normalWS);
+    float3 mainLightColor = LightingPhysicallyBased(brdfData, lightData.mainLight, inputData.normalWS, inputData.viewDirectionWS);
+    float3 result = giColor + mainLightColor;
+    return float4(result, 1);
 }
 
 #endif

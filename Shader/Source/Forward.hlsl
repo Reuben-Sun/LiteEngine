@@ -96,7 +96,6 @@ float4 MainPS(Varyings input) : SV_TARGET
     lightData.mainLight.direction = ubo.dirLight.direction.xyz;
     lightData.mainLight.color = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
 
-    
     float4 result = FragmentPBR(inputData, surfaceData, lightData);
 
     if(pushConstant.debugMode == 1)
