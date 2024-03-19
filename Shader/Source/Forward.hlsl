@@ -110,6 +110,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     lightData.mainLight.color = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
 
     float4 result = FragmentPBR(inputData, surfaceData, lightData);
+    // TODO: giColor
 
     if(pushConstant.debugMode == 1)
     {
