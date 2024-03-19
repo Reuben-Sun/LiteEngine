@@ -48,9 +48,6 @@ Varyings MainVS(Attributes input)
 
 float4 MainPS(Varyings input) : SV_TARGET
 {
-    float3 lightDir = ubo.dirLight.direction.xyz;
-    float3 lightColor = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
-    
     SurfaceData surfaceData = (SurfaceData) 0;
     float3 albedo = pushConstant.baseColor;
     if (pushConstant.textureEnable & ENABLE_BASECOLOR)
@@ -95,7 +92,12 @@ float4 MainPS(Varyings input) : SV_TARGET
     }
     inputData.normalWS = normalWS;
     
-    float4 result = FragmentPBR(inputData, surfaceData);
+    LightList lightData = (LightList) 0;
+    lightData.mainLight.direction = ubo.dirLight.direction.xyz;
+    lightData.mainLight.color = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
+
+    
+    float4 result = FragmentPBR(inputData, surfaceData, lightData);
 
     if(pushConstant.debugMode == 1)
     {

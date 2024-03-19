@@ -3,6 +3,7 @@
 
 #include "SurfaceData.hlsl"
 #include "BRDF.hlsl"
+#include "RealtimeLights.hlsl"
 
 Texture2D _BaseMap : register(t1);
 SamplerState _BaseMap_ST : register(s1);
@@ -17,7 +18,7 @@ TextureCube _SkyboxMap : register(t5);
 
 static float3 _DebugColor = float3(1.0f, 0.0f, 1.0f);
 
-float4 FragmentPBR(SurfaceInput inputData, SurfaceData surfaceData)
+float4 FragmentPBR(SurfaceInput inputData, SurfaceData surfaceData, LightList lightData)
 {
     return float4(1, 0, 1, 1);
 }
