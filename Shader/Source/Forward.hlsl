@@ -104,7 +104,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     {
         float3 bitangent = cross(input.normalWS, input.tangentOS.xyz) * input.tangentOS.w;
         float3x3 TBN = float3x3(input.tangentOS.xyz, bitangent, input.normalWS);
-        normalWS = normalize(mul(TBN, surfaceData.normalTS));
+        normalWS = normalize(mul(surfaceData.normalTS, TBN));
     }
     inputData.normalWS = normalWS;
     
