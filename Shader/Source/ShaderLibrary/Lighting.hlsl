@@ -37,7 +37,7 @@ float3 LightingPhysicallyBased(BRDFData brdfData, DirectionalLight mainLight, fl
     float NoL = saturate(dot(normalWS, mainLight.direction));
     float3 radiance = mainLight.color * NoL;
     float3 brdf = brdfData.diffuse;
-    brdf = brdfData.specular * SpecularBRDF(brdfData, normalWS, viewDir, mainLight.direction);
+    brdf += brdfData.specular * SpecularBRDF(brdfData, normalWS, viewDir, mainLight.direction);
     return brdf * radiance;
 }
 
