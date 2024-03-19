@@ -42,10 +42,10 @@ namespace ToolEngine
         bool onWindowClose(WindowCloseEvent& e);
         bool onKeyPressed(KeyPressedEvent& e);
         bool onKeyReleased(KeyReleasedEvent& e);
-        bool OnMouseMoved(MouseMovedEvent& e);
-        bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
-        bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
-        bool OnMouseScrolled(MouseScrolledEvent& e);
-        bool OnUIReloadScene(UIReloadSceneEvent& e);
+        bool onMouseMoved(MouseMovedEvent& e);
+        bool onMouseButtonPressed(MouseButtonPressedEvent& e);
+        bool onMouseButtonReleased(MouseButtonReleasedEvent& e);
+        bool onMouseScrolled(MouseScrolledEvent& e);
+        bool onUIReloadScene(UIReloadSceneEvent& e);
     };
 }

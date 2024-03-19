@@ -47,15 +47,15 @@ namespace ToolEngine
         dispatcher.dispatch<WindowCloseEvent>(std::bind(&Engine::onWindowClose, this, std::placeholders::_1));
         dispatcher.dispatch<KeyPressedEvent>(std::bind(&Engine::onKeyPressed, this, std::placeholders::_1));
         dispatcher.dispatch<KeyReleasedEvent>(std::bind(&Engine::onKeyReleased, this, std::placeholders::_1));
-        dispatcher.dispatch<MouseMovedEvent>(std::bind(&Engine::OnMouseMoved, this, std::placeholders::_1));
-        dispatcher.dispatch<MouseButtonPressedEvent>(std::bind(&Engine::OnMouseButtonPressed, this, std::placeholders::_1));
-        dispatcher.dispatch<MouseButtonReleasedEvent>(std::bind(&Engine::OnMouseButtonReleased, this, std::placeholders::_1));
-        dispatcher.dispatch<MouseScrolledEvent>(std::bind(&Engine::OnMouseScrolled, this, std::placeholders::_1));
+        dispatcher.dispatch<MouseMovedEvent>(std::bind(&Engine::onMouseMoved, this, std::placeholders::_1));
+        dispatcher.dispatch<MouseButtonPressedEvent>(std::bind(&Engine::onMouseButtonPressed, this, std::placeholders::_1));
+        dispatcher.dispatch<MouseButtonReleasedEvent>(std::bind(&Engine::onMouseButtonReleased, this, std::placeholders::_1));
+        dispatcher.dispatch<MouseScrolledEvent>(std::bind(&Engine::onMouseScrolled, this, std::placeholders::_1));
     }
     void Engine::processUIEvent(Event& e)
     {
         EventDispatcher dispatcher(e);
-		dispatcher.dispatch<UIReloadSceneEvent>(std::bind(&Engine::OnUIReloadScene, this, std::placeholders::_1));
+		dispatcher.dispatch<UIReloadSceneEvent>(std::bind(&Engine::onUIReloadScene, this, std::placeholders::_1));
     }
     bool Engine::onWindowClose(WindowCloseEvent& e)
     {
@@ -79,7 +79,7 @@ namespace ToolEngine
         m_gp_context->m_fps_camera->updateMoveState(e.getKeyCode(), false);
         return true;
     }
-    bool Engine::OnMouseMoved(MouseMovedEvent& e)
+    bool Engine::onMouseMoved(MouseMovedEvent& e)
     {
         m_gp_context->setCurrentMousePosition(e.getX(), e.getY());
         if(m_mouse_button_state == 1)
@@ -99,7 +99,7 @@ namespace ToolEngine
 		}
         return true;
     }
-    bool Engine::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+    bool Engine::onMouseButtonPressed(MouseButtonPressedEvent& e)
     {
         if (e.getMouseButton() == 1)    // 1 is right mouse button
         {
@@ -107,7 +107,7 @@ namespace ToolEngine
         }
         return true;
     }
-    bool Engine::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+    bool Engine::onMouseButtonReleased(MouseButtonReleasedEvent& e)
     {
         if (e.getMouseButton() == 1)    // 1 is right mouse button
         {
@@ -115,7 +115,7 @@ namespace ToolEngine
         }
         return true;
     }
-    bool Engine::OnMouseScrolled(MouseScrolledEvent& e)
+    bool Engine::onMouseScrolled(MouseScrolledEvent& e)
     {
         if (m_mouse_button_state == 2)  // scroll when press right mouse button can change camera speed
         {
@@ -124,7 +124,7 @@ namespace ToolEngine
         
         return true;
     }
-    bool Engine::OnUIReloadScene(UIReloadSceneEvent& e)
+    bool Engine::onUIReloadScene(UIReloadSceneEvent& e)
     {
         LOG_INFO("Reload Scene");
         m_gp_context->reloadScene(e.getSceneName());
