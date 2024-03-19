@@ -47,8 +47,11 @@ float3 GlobalIllumination(BRDFData brdfData, float occlusion, float3 normalWS)
 
 float3 LightingPhysicallyBased(BRDFData brdfData, DirectionalLight mainLight, float3 normalWS, float3 viewDir)
 {
-    float3 result = 0;
-    return result;
+    float NoL = saturate(dot(normalWS, mainLight.direction));
+    float3 radiance = mainLight.color * NoL;
+    float3 brdf = brdfData.diffuse;
+    
+    return brdf * radiance;
 }
 
 
