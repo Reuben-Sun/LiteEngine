@@ -25,11 +25,13 @@ void InitializeBRDFData(inout SurfaceData surfaceData, out BRDFData brdfData)
     brdfData.grazingTerm = saturate(1 - surfaceData.roughness + reflectivity);
 }
 
-float3 GlobalIllumination(BRDFData brdfData, float occlusion, float3 normalWS)
+float3 GlobalIllumination(BRDFData brdfData, float3 indirectSpecular, float3 normalWS, float3 viewDir)
 {
-    float3 color = 0;
-    // TODO: sample cubemap
-    return color * occlusion;
+    float NoV = saturate(dot(normalWS, viewDir));
+    float fresnelTerm = pow(1.0 - NoV, 4.0);
+    float surfaceReduction = 1.0 / (brdfData.roughness2 + 1.0);
+    float3 brdf = float3(surfaceReduction * lerp(brdfData.specular, brdfData.grazingTerm, fresnelTerm));
+    return indirectSpecular * brdf;
 }
 
 float3 LightingPhysicallyBased(BRDFData brdfData, DirectionalLight mainLight, float3 normalWS, float3 viewDir)
@@ -46,8 +48,9 @@ float4 FragmentPBR(SurfaceInput inputData, SurfaceData surfaceData, LightList li
 {
     BRDFData brdfData;
     InitializeBRDFData(surfaceData, brdfData);
+    float3 giColor = GlobalIllumination(brdfData, inputData.bakedGI, inputData.normalWS, inputData.viewDirectionWS);
     float3 mainLightColor = LightingPhysicallyBased(brdfData, lightData.mainLight, inputData.normalWS, inputData.viewDirectionWS);
-    float3 result = mainLightColor;
+    float3 result = mainLightColor + giColor;
     return float4(result, 1);
 }
 

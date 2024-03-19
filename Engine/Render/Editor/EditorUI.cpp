@@ -309,7 +309,7 @@ namespace ToolEngine
 		{
 			m_ui_context.enable_gizmos = !m_ui_context.enable_gizmos;
 		}
-		static const char* items[] = { "Shadered", "NormalWS", "NormalWS Mapped", "Metallic", "Roughness", "Emission"};
+		static const char* items[] = { "Shadered", "NormalWS", "NormalWS Mapped", "Metallic", "Roughness", "Emission", "EnvReflection"};
 		ImGui::Combo("Debug Mode", &m_ui_context.debug_mode, items, IM_ARRAYSIZE(items));
 		ImGui::SliderFloat("Outline Width", &m_ui_context.outline_width, 0.0f, 0.1f);
 		ImGui::Separator();

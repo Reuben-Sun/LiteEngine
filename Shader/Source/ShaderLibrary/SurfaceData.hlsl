@@ -24,7 +24,7 @@ struct SurfaceInput
     float4 shadowCoord; // TODO
     float fogCoord; // TODO
     float3 vertexLighting; // TODO
-    float3 bakedGI; // TODO
+    float3 bakedGI; 
     float2 normalizedScreenSpaceUV; // TODO
     float4 shadowMask; // TODO
     float3x3 tangentToWorld;

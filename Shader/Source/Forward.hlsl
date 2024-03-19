@@ -56,6 +56,7 @@ Texture2D _NormalMap : register(t3);
 Texture2D _OMRMap : register(t4);
 
 TextureCube _SkyboxMap : register(t5);
+#define SPECCUBE_LOD_STEPS 11.0f
 
 static float3 _DebugColor = float3(1.0f, 0.0f, 1.0f);
 
@@ -93,6 +94,7 @@ float4 MainPS(Varyings input) : SV_TARGET
     surfaceData.occlusion = occlusion;
     surfaceData.roughness = roughness;
     
+    
     SurfaceInput inputData = (SurfaceInput) 0;
     float3 viewDir = normalize(ubo.cameraPosition.xyz - input.positionWS);
     inputData.viewDirectionWS = viewDir;
@@ -104,14 +106,18 @@ float4 MainPS(Varyings input) : SV_TARGET
         normalWS = normalize(mul(surfaceData.normalTS, TBN));
     }
     inputData.normalWS = normalWS;
+    float skybox_mip = roughness * SPECCUBE_LOD_STEPS;
+    float3 uvw = reflect(-viewDir, input.normalWS);
+    uvw = normalize(float3(uvw.x, uvw.z, -uvw.y));
+    float3 envReflection = _SkyboxMap.SampleLevel(_BaseMap_ST, uvw, skybox_mip).xyz * occlusion;
+    inputData.bakedGI = envReflection;
     
     LightList lightData = (LightList) 0;
     lightData.mainLight.direction = ubo.dirLight.direction.xyz;
     lightData.mainLight.color = ubo.dirLight.color.xyz * ubo.dirLight.intensity;
 
     float4 result = FragmentPBR(inputData, surfaceData, lightData);
-    // TODO: giColor
-
+    
     if(pushConstant.debugMode == 1)
     {
         _DebugColor = input.normalWS;
@@ -131,6 +137,10 @@ float4 MainPS(Varyings input) : SV_TARGET
     else if(pushConstant.debugMode == 5)
     {
         _DebugColor = emission;
+    }
+    else if(pushConstant.debugMode == 6)
+    {
+        _DebugColor = envReflection;
     }
     
     if (pushConstant.debugMode == 0)
