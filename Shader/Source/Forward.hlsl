@@ -56,7 +56,7 @@ Texture2D _NormalMap : register(t3);
 Texture2D _OMRMap : register(t4);
 
 TextureCube _SkyboxMap : register(t5);
-#define SPECCUBE_LOD_STEPS 11.0f
+#define SPECCUBE_LOD_STEPS 11
 
 static float3 _DebugColor = float3(1.0f, 0.0f, 1.0f);
 
