@@ -1,0 +1,68 @@
+{
+    "game_objects": [
+        {
+            "material_path": ["Material/Plane.material"],
+            "mesh_path": "plane",
+            "name": "plane",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                10.0,
+                10.0,
+                10.0
+            ],
+            "bounding_type": "Box",
+            "bounding_position":[
+                0.0,
+                0.0,
+                -0.1
+            ],
+            "bounding_data":[
+                5.0,
+                5.0,
+                0.1
+            ]
+        },
+        {
+            "material_path": [
+                "Material/Stocking.material"
+            ],
+            "mesh_path": "Models/Stocking.gltf",
+            "name": "Stocking",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                180.0,
+                90.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "bounding_type": "Box",
+            "bounding_position":[
+                0.0,
+                0.0,
+                0.0
+            ],
+            "bounding_data":[
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ]
+}
