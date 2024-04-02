@@ -80,7 +80,8 @@ namespace ToolEngine
 		init_info.DescriptorPool = m_rhi_context.m_descriptor_pool->getHandle();
 		init_info.MinImageCount = m_rhi_context.m_swapchain->getImageCount();	// 3
 		init_info.ImageCount = m_rhi_context.m_swapchain->getImageCount();	// 3;
-		ImGui_ImplVulkan_Init(&init_info, m_ui_pass->getHandle());
+		init_info.RenderPass = m_ui_pass->getHandle();
+		ImGui_ImplVulkan_Init(&init_info);
 
 		std::vector<RHIDescriptorType> layout_descriptor;
 		layout_descriptor.push_back(RHIDescriptorType::Sampler);
