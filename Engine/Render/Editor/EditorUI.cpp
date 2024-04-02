@@ -47,6 +47,7 @@ namespace ToolEngine
 			drawMainMenuBar();
 			drawHierarchy();
 			drawScene(scene_image);
+			drawSequencer();
 			drawBrowser();
 			drawDetail();
 		}
@@ -175,6 +176,19 @@ namespace ToolEngine
 				}
 				if (ImGui::MenuItem("Save as..")) {
 				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Layout")) {
+				if (ImGui::MenuItem("Save Default Layout")) {
+					std::string ini_path = Path::getInstance().getAssetPath() + "imgui.ini";
+					ImGui::SaveIniSettingsToDisk(ini_path.c_str());
+				}
+
+				if (ImGui::MenuItem("Load Default Layout")) {
+					std::string ini_path = Path::getInstance().getAssetPath() + "imgui.ini";
+					ImGui::LoadIniSettingsFromDisk(ini_path.c_str());
+				}
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
@@ -344,6 +358,20 @@ namespace ToolEngine
 			std::vector<float> emission_color = { push_constant.emission_color[0], push_constant.emission_color[1], push_constant.emission_color[2] };
 			ImGui::ColorEdit3(emission_color_name.c_str(), emission_color.data());
 			push_constant.emission_color = { emission_color[0], emission_color[1], emission_color[2] };
+		}
+
+		ImGui::End();
+	}
+	void EditorUI::drawSequencer()
+	{
+		ImGui::Begin("Sequencer");
+		int32_t currentFrame = 0;
+		int32_t startFrame = -10;
+		int32_t endFrame = 64;
+
+		if (ImGui::BeginNeoSequencer("Sequencer", &currentFrame, &startFrame, &endFrame)) {
+			// Timeline code here
+			ImGui::EndNeoSequencer();
 		}
 		ImGui::End();
 	}
