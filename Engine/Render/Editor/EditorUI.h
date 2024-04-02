@@ -4,6 +4,8 @@
 #include <imgui.h>
 #include <backends/imgui_impl_vulkan.h>
 #include <backends/imgui_impl_glfw.h>
+#include <imgui_neo_internal.h>
+#include <imgui_neo_sequencer.h>
 #include "RHI/Public/RHIContext.h"
 #include "Render/Pass/UIPass.h"
 #include "RHI/Public/RHIFrameBuffer.h"
@@ -56,6 +58,7 @@ namespace ToolEngine
 		void drawScene(RHIDescriptorSet& scene_image);
 		void drawBrowser();
 		void drawDetail();
+		void drawSequencer();
 		std::string selectIcon(const std::string& file_name);
 	};
 }
