@@ -17,7 +17,7 @@ endif()
 
 # imgui
 set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
-file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS ${IMGUI_DIR}/*.cpp)
+file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS ${IMGUI_DIR}/*.cpp ${IMGUI_DIR}/*.inl)
 file(GLOB IMGUI_IMPL_SOURCES CONFIGURE_DEPENDS 
   ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp 
   ${IMGUI_DIR}/backends/imgui_impl_glfw.h 

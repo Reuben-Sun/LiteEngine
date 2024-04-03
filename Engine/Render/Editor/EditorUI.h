@@ -6,6 +6,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <imgui_neo_internal.h>
 #include <imgui_neo_sequencer.h>
+#include <imgui_node_editor.h>
 #include "RHI/Public/RHIContext.h"
 #include "Render/Pass/UIPass.h"
 #include "RHI/Public/RHIFrameBuffer.h"
@@ -14,6 +15,8 @@
 #include "RHI/Public/RHITextureImage.h"
 #include "Render/Resources/RenderScene.h"
 #include "Core/Event/ImGuiEvent.h"
+
+namespace ed = ax::NodeEditor;
 
 namespace ToolEngine
 {
@@ -51,6 +54,8 @@ namespace ToolEngine
 		float m_browser_button_size = 100.0f;
 		float m_browser_button_spacing = 10.0f;
 
+		ed::EditorContext* m_node_editor_context;
+
 		void initImGui();
 		void setImGuiStyle();
 		void drawMainMenuBar();
@@ -59,6 +64,7 @@ namespace ToolEngine
 		void drawBrowser();
 		void drawDetail();
 		void drawSequencer();
+		void drawNodeEditor();
 		std::string selectIcon(const std::string& file_name);
 	};
 }
