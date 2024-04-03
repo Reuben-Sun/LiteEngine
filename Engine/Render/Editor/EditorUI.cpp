@@ -386,16 +386,17 @@ namespace ToolEngine
 		ed::Begin("My Editor");
 		int uniqueId = 1;
 		ed::BeginNode(uniqueId++);
-		ImGui::Text("Node A");
-		ed::BeginPin(uniqueId++, ed::PinKind::Input);
-		ImGui::Text("-> In");
-		ed::EndPin();
-		ImGui::SameLine();
-		ed::BeginPin(uniqueId++, ed::PinKind::Output);
-		ImGui::Text("Out ->");
-		ed::EndPin();
+			ImGui::Text("Node A");
+			ed::BeginPin(uniqueId++, ed::PinKind::Input);
+				ImGui::Text("-> In");
+			ed::EndPin();
+			ImGui::SameLine();
+			ed::BeginPin(uniqueId++, ed::PinKind::Output);
+				ImGui::Text("Out ->");
+			ed::EndPin();
 		ed::EndNode();
 		ed::End();
+		ed::SetCurrentEditor(nullptr);
 		ImGui::End();
 	}
 	std::string EditorUI::selectIcon(const std::string& file_name)
