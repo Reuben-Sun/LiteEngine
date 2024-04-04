@@ -6,7 +6,7 @@ namespace ToolEngine
 {
     GPContext::GPContext()
     {
-        m_scene_manager = std::make_unique<SceneManager>(m_logic_scene, "Scene\\Helmat.scene");
+        m_scene_manager = std::make_unique<SceneManager>(m_logic_scene, "Scene\\Woman.scene");
         m_fps_camera = std::make_unique<FPSCamera>(m_logic_scene);
         m_physics_manager = std::make_unique<PhysicsManager>(m_logic_scene);
     }
