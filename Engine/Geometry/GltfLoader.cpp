@@ -11,11 +11,18 @@ namespace ToolEngine
 
 		if (gltf_load_result)
 		{
+			// get all buffer count
+			int buffer_count = 0;
+			for (auto mesh : m_model.meshes)
+			{
+				buffer_count += mesh.primitives.size();
+			}
+			loaded_vertex_buffer.resize(buffer_count);
+			loaded_index_buffer.resize(buffer_count);
 			// load mesh
+			int current_buffer_index = 0;
 			for (auto& mesh : m_model.meshes)
 			{
-				loaded_vertex_buffer.resize(mesh.primitives.size());
-				loaded_index_buffer.resize(mesh.primitives.size());
 				for (int primitive_index = 0; primitive_index < mesh.primitives.size(); primitive_index++)
 				{
 					auto primitive = mesh.primitives[primitive_index];
@@ -91,7 +98,7 @@ namespace ToolEngine
 					// append local vertex buffer to loaded vertex buffer
 					for (int i = 0; i < vertex_count; i++)
 					{
-						loaded_vertex_buffer[primitive_index].push_back(local_vertex_buffer[i]);
+						loaded_vertex_buffer[current_buffer_index].push_back(local_vertex_buffer[i]);
 					}
 					// index
 					if (primitive.indices >= 0)
@@ -112,7 +119,7 @@ namespace ToolEngine
 							for (int i = 0; i < elements_count; i++)
 							{
 								uint32_t local_index = buf[i];
-								loaded_index_buffer[primitive_index].push_back(local_index);
+								loaded_index_buffer[current_buffer_index].push_back(local_index);
 							}
 							break;
 						}
@@ -121,7 +128,7 @@ namespace ToolEngine
 							for (int i = 0; i < elements_count; i++)
 							{
 								uint32_t local_index = buf[i];
-								loaded_index_buffer[primitive_index].push_back(local_index);
+								loaded_index_buffer[current_buffer_index].push_back(local_index);
 							}
 							break;
 						}
@@ -130,7 +137,7 @@ namespace ToolEngine
 							for (int i = 0; i < elements_count; i++)
 							{
 								uint32_t local_index = buf[i];
-								loaded_index_buffer[primitive_index].push_back(local_index);
+								loaded_index_buffer[current_buffer_index].push_back(local_index);
 							}
 							break;
 						}
@@ -139,6 +146,8 @@ namespace ToolEngine
 							return;
 						}
 					}
+					// next buffer
+					current_buffer_index++;
 				}
 			}
 		}

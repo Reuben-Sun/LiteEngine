@@ -33,8 +33,8 @@
         },
         {
             "material_path": [
-                "Material/Stocking.material",
-                "Material/Stocking.material"
+                "Material/WomanJoint.material",
+                "Material/WomanSurface.material"
             ],
             "mesh_path": "Models/Woman.gltf",
             "name": "Woman",
@@ -45,8 +45,8 @@
             ],
             "rotation": [
                 0.0,
-                180.0,
-                90.0
+                0.0,
+                -90.0
             ],
             "scale": [
                 2.0,

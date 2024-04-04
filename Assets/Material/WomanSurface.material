@@ -1,0 +1,11 @@
+{
+    "frag_shader_path": "",
+    "texture_bindings": [
+        
+    ],
+    "vertex_shader_path": "",
+    "base_color": [0.88, 0.3, 0.3],
+    "metallic": 0.0,
+    "roughness": 1.0,
+    "emission": [0.0, 0.0, 0.0]
+}
