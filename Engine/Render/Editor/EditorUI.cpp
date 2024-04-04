@@ -20,9 +20,11 @@ namespace ToolEngine
 		}
 		initImGui();
 		setImGuiStyle();
+		m_node_editor_context = ed::CreateEditor();
 	}
 	EditorUI::~EditorUI()
 	{
+		ed::DestroyEditor(m_node_editor_context);
 	}
 	void EditorUI::record(RHICommandBuffer& cmd, uint32_t frame_index, RHIDescriptorSet& scene_image)
 	{
@@ -46,10 +48,12 @@ namespace ToolEngine
 		{
 			drawMainMenuBar();
 			drawHierarchy();
+			drawNodeEditor();
 			drawScene(scene_image);
 			drawSequencer();
 			drawBrowser();
 			drawDetail();
+
 		}
 
 		ImGui::Render();
@@ -373,6 +377,26 @@ namespace ToolEngine
 			// Timeline code here
 			ImGui::EndNeoSequencer();
 		}
+		ImGui::End();
+	}
+	void EditorUI::drawNodeEditor()
+	{
+		ImGui::Begin("Graph");
+		ed::SetCurrentEditor(m_node_editor_context);
+		ed::Begin("My Editor");
+		int uniqueId = 1;
+		ed::BeginNode(uniqueId++);
+			ImGui::Text("Node A");
+			ed::BeginPin(uniqueId++, ed::PinKind::Input);
+				ImGui::Text("-> In");
+			ed::EndPin();
+			ImGui::SameLine();
+			ed::BeginPin(uniqueId++, ed::PinKind::Output);
+				ImGui::Text("Out ->");
+			ed::EndPin();
+		ed::EndNode();
+		ed::End();
+		ed::SetCurrentEditor(nullptr);
 		ImGui::End();
 	}
 	std::string EditorUI::selectIcon(const std::string& file_name)
