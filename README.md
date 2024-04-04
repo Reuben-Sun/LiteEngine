@@ -25,6 +25,13 @@ git submodule update
 
 ### 开发进度
 
+#### 2024.4.3
+
+- 添加[imgui sequencer](https://gitlab.com/GroGy/im-neo-sequencer)支持
+- 添加[imgui node editor](https://github.com/thedmd/imgui-node-editor/ )支持
+
+![2024_4_4](Doc/2024_4_4.png)
+
 #### 2024.3.20
 
 - 参考Unity URP重置Shader
