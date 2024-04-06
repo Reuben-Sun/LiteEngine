@@ -150,9 +150,21 @@ namespace ToolEngine
 					current_buffer_index++;
 				}
 			}
+			// load skin
+			for (auto& skin : m_model.skins)
+			{
+				for (int joint_index = 0; joint_index < skin.joints.size(); joint_index++)
+				{
+					tinygltf::Node* joint = &m_model.nodes[skin.joints[joint_index]];
+					LOG_INFO("Joint {} name: {}", joint_index, joint->name);
+				}
+			}
+			// load animation
+
 		}
 	}
 	GltfLoader::~GltfLoader()
 	{
 	}
+	
 }
